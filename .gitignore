@@ -1,0 +1,9 @@
+# Ignorer les dépendances et les fichiers générés
+/vendor/
+/node_modules/
+/public/build/
+/storage/*.key
+.env
+
+# Ignorer le phar de Composer
+composer.phar
