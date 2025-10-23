@@ -14,7 +14,3 @@
     *   [ ] Implement the login logic.
     *   [ ] Write backend tests for login.
     *   [ ] Write frontend/browser tests for login.
-*   [ ] **Start Implement User Story 3: AI-Powered Item Listing.**
-    *   [ ] Create the item database migration.
-    *   [ ] Create the item listing form (photo upload and short description).
-    *   [ ] Set up the basic structure for the AI service integration.
