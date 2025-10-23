@@ -74,6 +74,13 @@ if [ -d "pifpaf" ]; then
         echo "Le fichier .env.dusk.local existe déjà."
     fi
 
+    echo "Lancement des migrations pour la base de données de test Dusk..."
+    php artisan migrate --env=dusk
+
+    echo "Installation du ChromeDriver pour Dusk..."
+    mkdir -p vendor/laravel/dusk/bin
+    php artisan dusk:chrome-driver --detect
+
     echo "Installation des dépendances front-end (NPM)..."
     npm install
 
