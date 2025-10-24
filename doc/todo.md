@@ -10,11 +10,11 @@
 
 ## Sprint 1 : Le Vendeur au Cœur du Système (À faire)
 
-- [ ] **Implémenter la User Story 3 : Création d'une annonce (manuelle).**
-    - [ ] Créer la migration de la base de données pour les articles (`items`).
-    - [ ] Créer le formulaire de création d'annonce.
-    - [ ] Implémenter la logique pour sauvegarder une nouvelle annonce.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 3 : Création d'une annonce (manuelle).**
+    - [x] Créer la migration de la base de données pour les articles (`items`).
+    - [x] Créer le formulaire de création d'annonce.
+    - [x] Implémenter la logique pour sauvegarder une nouvelle annonce.
+    - [x] Rédiger les tests back-end et front-end.
 - [ ] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
     - [ ] Créer la page "Tableau de bord Vendeur".
     - [ ] Afficher la liste des annonces de l'utilisateur connecté.
