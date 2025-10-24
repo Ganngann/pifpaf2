@@ -38,7 +38,7 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
                 ->press('Log in')
-                ->waitForText('These credentials do not match our records.')
+                ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->screenshot('login-error')
                 ->assertPathIs('/login');
         });
