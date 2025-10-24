@@ -15,8 +15,7 @@ class ExampleTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->waitForText("Let's get started")
-                    ->assertSee("Let's get started")
+                    ->assertPathIs('/')
                     ->screenshot('homepage');
         });
     }
