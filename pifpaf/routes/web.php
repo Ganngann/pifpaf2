@@ -18,6 +18,10 @@ Route::get('register', [RegisteredUserController::class, 'create'])
 
 Route::post('register', [RegisteredUserController::class, 'store']);
 
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->middleware('auth')
+                ->name('logout');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');

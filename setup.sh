@@ -1,4 +1,5 @@
 #!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
 # Ce script est destiné à initialiser l'environnement de développement pour le projet Pifpaf.
 
 echo "--- Initialisation de l'environnement de développement Pifpaf ---"
