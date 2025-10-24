@@ -9,8 +9,8 @@
     *   [x] Implement the registration logic.
     *   [x] Write backend tests for registration.
     *   [x] Write frontend/browser tests for registration.
-*   [ ] **Implement User Story 2: User Login.**
-    *   [ ] Create the login form.
-    *   [ ] Implement the login logic.
-    *   [ ] Write backend tests for login.
-    *   [ ] Write frontend/browser tests for login.
+*   [x] **Implement User Story 2: User Login.**
+    *   [x] Create the login form.
+    *   [x] Implement the login logic.
+    *   [x] Write backend tests for login.
+    *   [x] Write frontend/browser tests for login.

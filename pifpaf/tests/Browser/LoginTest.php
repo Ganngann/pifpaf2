@@ -20,11 +20,40 @@ class LoginTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
+                    ->screenshot('login-page')
                     ->type('email', $user->email)
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
                     ->assertPathIs('/dashboard')
-                    ->assertSee("Dashboard"); // A simple check for the dashboard page
+                    ->assertSee("You're logged in!");
+        });
+    }
+
+    public function test_a_user_cannot_login_with_invalid_credentials(): void
+    {
+        $user = User::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->visit('/login')
+                ->type('email', $user->email)
+                ->type('password', 'wrong-password')
+                ->press('Log in')
+                ->waitForText('These credentials do not match our records.')
+                ->screenshot('login-error')
+                ->assertPathIs('/login');
+        });
+    }
+
+    public function test_a_logged_in_user_can_logout(): void
+    {
+        $user = User::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit('/dashboard')
+                ->press('Log Out') // Assuming there's a logout button with this text
+                ->assertPathIs('/')
+                ->assertGuest();
         });
     }
 }
