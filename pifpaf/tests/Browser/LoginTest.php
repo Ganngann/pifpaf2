@@ -25,7 +25,7 @@ class LoginTest extends DuskTestCase
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
                     ->assertPathIs('/dashboard')
-                    ->assertSee("You're logged in!");
+                    ->assertSee("Vous êtes connecté !");
         });
     }
 
@@ -38,7 +38,7 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
                 ->press('Log in')
-                ->waitForText('These credentials do not match our records.')
+                ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->screenshot('login-error')
                 ->assertPathIs('/login');
         });
@@ -51,7 +51,8 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/dashboard')
-                ->press('Log Out') // Assuming there's a logout button with this text
+                ->click('.relative button') // Ouvre le menu déroulant
+                ->clickLink('Déconnexion')
                 ->assertPathIs('/')
                 ->assertGuest();
         });

@@ -27,7 +27,7 @@ class UserRegistrationBrowserTest extends DuskTestCase
                     ->type('password_confirmation', 'password')
                     ->press('Register')
                     ->assertPathIs('/dashboard')
-                ->assertSee("You're logged in!")
+                ->assertSee("Vous êtes connecté !")
                     ->screenshot('dashboard');
         });
     }
