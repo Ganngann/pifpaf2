@@ -6,7 +6,7 @@ deployment:
     - export DEPLOY_DIR="$HOME/deploy/pifpaf"
     - export SHARED_DIR="$HOME/deploy/shared/pifpaf"
     - export REPO_DIR="$PWD"
-    - export LOG_FILE="$SHARED_DIR/storage/logs/deployment.log"
+    - export LOG_FILE="$DEPLOY_DIR/deployment.log"
     - mkdir -p $DEPLOY_DIR
     - mkdir -p $SHARED_DIR/storage/app/public
     - mkdir -p $SHARED_DIR/storage/framework/sessions
