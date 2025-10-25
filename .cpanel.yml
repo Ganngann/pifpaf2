@@ -2,26 +2,26 @@
 deployment:
   tasks:
     # --- 1. SETUP ---
-    # Définition des chemins et création des répertoires nécessaires.
     - echo "=== ETAPE 1: SETUP ==="
     - export DEPLOY_DIR="$HOME/deploy/pifpaf"
     - export SHARED_DIR="$HOME/deploy/shared/pifpaf"
     - export REPO_DIR="$PWD"
+    - export LOG_FILE="$SHARED_DIR/storage/logs/deployment.log"
     - mkdir -p $DEPLOY_DIR
     - mkdir -p $SHARED_DIR/storage/app/public
     - mkdir -p $SHARED_DIR/storage/framework/sessions
     - mkdir -p $SHARED_DIR/storage/framework/views
     - mkdir -p $SHARED_DIR/storage/framework/cache
     - mkdir -p $SHARED_DIR/storage/logs
+    - echo -e "\n\n--- DEPLOYMENT STARTED AT $(date) ---" >> $LOG_FILE
 
     # --- 2. SYNC ---
-    # Copie des nouveaux fichiers du dépôt vers le répertoire de déploiement.
     - echo "=== ETAPE 2: Synchronisation des fichiers ==="
-    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/"
+    - echo "--- rsync output ---" >> $LOG_FILE
+    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/" >> $LOG_FILE 2>&1
     - cd $DEPLOY_DIR/pifpaf
 
     # --- 3. LINK ---
-    # Création des liens symboliques pour les fichiers et dossiers persistants.
     - echo "=== ETAPE 3: Liaison des fichiers partagés (.env, storage) ==="
     - rm -f .env
     - ln -s $SHARED_DIR/.env .env
@@ -29,25 +29,27 @@ deployment:
     - ln -s $SHARED_DIR/storage storage
 
     # --- 4. BUILD FRONTEND ---
-    # Installation des dépendances NPM et build des assets.
-    # Node.js est supposé être disponible globalement sur le serveur.
     - echo "=== ETAPE 4: Build des assets frontend (NPM) ==="
-    - npm install
-    - npm run build
+    - echo "--- npm install output ---" >> $LOG_FILE
+    - npm install >> $LOG_FILE 2>&1
+    - echo "--- npm run build output ---" >> $LOG_FILE
+    - npm run build >> $LOG_FILE 2>&1
 
     # --- 5. BUILD BACKEND ---
-    # Installation des dépendances Composer et optimisation de l'application Laravel.
     - echo "=== ETAPE 5: Build de l'application Laravel (Composer & Artisan) ==="
-    - composer install --no-dev --optimize-autoloader
+    - echo "--- composer install output ---" >> $LOG_FILE
+    - composer install --no-dev --optimize-autoloader >> $LOG_FILE 2>&1
     - |
-      /usr/local/bin/php artisan migrate --force
-      /usr/local/bin/php artisan config:cache
-      /usr/local/bin/php artisan route:cache
-      /usr/local/bin/php artisan view:cache
+      echo "--- artisan commands output ---" >> $LOG_FILE
+      /usr/local/bin/php artisan migrate --force >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan config:cache >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan route:cache >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan view:cache >> $LOG_FILE 2>&1
 
     # --- 6. FINALIZE ---
-    # Correction des permissions pour s'assurer que le serveur web peut lire les fichiers.
     - echo "=== ETAPE 6: Finalisation et correction des permissions ==="
-    - find $DEPLOY_DIR -type d -exec chmod 755 {} \;
-    - find $DEPLOY_DIR -type f -exec chmod 644 {} \;
-    - echo "--- Déploiement terminé avec succès ! ---"
+    - echo "--- chmod output ---" >> $LOG_FILE
+    - find $DEPLOY_DIR -type d -exec chmod 755 {} \; >> $LOG_FILE 2>&1
+    - find $DEPLOY_DIR -type f -exec chmod 644 {} \; >> $LOG_FILE 2>&1
+    - echo "--- Déploiement terminé. Vérifiez $LOG_FILE pour les détails. ---"
+    - echo "--- DEPLOYMENT FINISHED AT $(date) ---" >> $LOG_FILE
