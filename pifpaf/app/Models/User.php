@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Obtenir les annonces de l'utilisateur.
+     */
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }

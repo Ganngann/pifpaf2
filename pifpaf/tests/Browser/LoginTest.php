@@ -25,7 +25,7 @@ class LoginTest extends DuskTestCase
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
                     ->assertPathIs('/dashboard')
-                    ->assertSee("Vous êtes connecté !");
+                    ->assertSee("Tableau de bord");
         });
     }
 

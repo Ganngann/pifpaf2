@@ -15,10 +15,10 @@
     - [x] Créer le formulaire de création d'annonce.
     - [x] Implémenter la logique pour sauvegarder une nouvelle annonce.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
-    - [ ] Créer la page "Tableau de bord Vendeur".
-    - [ ] Afficher la liste des annonces de l'utilisateur connecté.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
+    - [x] Créer la page "Tableau de bord Vendeur".
+    - [x] Afficher la liste des annonces de l'utilisateur connecté.
+    - [x] Rédiger les tests back-end et front-end.
 - [ ] **Implémenter la User Story 5 : Modification d'une annonce.**
     - [ ] Créer le formulaire de modification d'annonce.
     - [ ] Implémenter la logique de mise à jour.
