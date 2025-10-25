@@ -44,6 +44,7 @@ class ItemCreationTest extends TestCase
         $itemData = [
             'title' => 'Mon Super Article',
             'description' => 'Ceci est une description de l\'article.',
+            'category' => 'Électronique',
             'price' => 99.99,
             'image' => $imageData,
         ];
@@ -83,5 +84,9 @@ class ItemCreationTest extends TestCase
         // Test sans l'image
         $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10]);
         $response->assertSessionHasErrors('image');
+
+        // Test sans la catégorie
+        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10, 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response->assertSessionHasErrors('category');
     }
 }
