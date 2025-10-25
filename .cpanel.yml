@@ -2,45 +2,44 @@
 deployment:
   tasks:
     # --- Définition des chemins ---
-    - export DEST_DIR="$HOME/deploy/pifpaf"
-    - export SOURCE_DIR="$PWD" # Le dossier où cPanel clone le code
+    - export DEPLOY_DIR="$HOME/deploy/pifpaf"
+    - export SHARED_DIR="$HOME/deploy/shared/pifpaf"
+    - export REPO_DIR="$PWD"
 
     # --- Étape de sécurité ---
     - |
-      # VERROU DE SÉCURITÉ : Ne jamais déployer vers un dossier système
-      if [ "$DEST_DIR" = "/" ] || [ "$DEST_DIR" = "$HOME" ]; then
-        echo "ERREUR CRITIQUE : Le déploiement vers un dossier système est interdit."
-        exit 1
-      fi
-      # Créer le dossier de destination s'il n'existe pas
-      mkdir -p $DEST_DIR
+      mkdir -p $DEPLOY_DIR
+      mkdir -p $SHARED_DIR/storage/app/public # Assure que les dossiers partagés existent
 
     # --- Étape de déploiement ---
-    - echo "Déploiement de $SOURCE_DIR vers $DEST_DIR..."
-    - /usr/bin/rsync -a --delete --exclude=".git/" "$SOURCE_DIR/" "$DEST_DIR/"
-    - cd $DEST_DIR/pifpaf
+    - echo "Déploiement des fichiers de l'application..."
+    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/"
+    - cd $DEPLOY_DIR/pifpaf
+
+    # --- Étape de liaison (la magie est ici) ---
+    - |
+      echo "Liaison des fichiers de configuration et de stockage..."
+      # On supprime le .env d'exemple s'il existe
+      rm -f .env
+      # On crée le lien symbolique vers le VRAI fichier .env
+      ln -s $SHARED_DIR/.env .env
+
+      # On supprime le dossier storage du dépôt
+      rm -rf storage
+      # On crée le lien symbolique vers le VRAI dossier storage
+      ln -s $SHARED_DIR/storage storage
 
     # --- Étape de build ---
     - |
-      echo "Activation de l'environnement Node.js..."
-      # La commande que vous avez fournie pour activer Node.js et npm
+      echo "Activation de Node.js et build des assets..."
       source /home/sc1wrpg9004/nodevenv/deploy/pifpaf/pifpaf/22/bin/activate
-      
-      echo "Lancement de npm install..."
       npm install
-      
-      echo "Lancement de npm run build..."
       npm run build
 
-    - echo "Installation des dépendances Composer..."
+    - echo "Installation des dépendances et configuration de Laravel..."
     - /usr/local/bin/php composer.phar install --no-dev --optimize-autoloader
-
-    - echo "Configuration de l'application Laravel..."
-    - if [ ! -f .env ]; then cp .env.example .env; fi
-    - /usr/local/bin/php artisan key:generate
     - /usr/local/bin/php artisan migrate --force
-    - /usr/local/bin/php artisan storage:link
     - /usr/local/bin/php artisan config:cache
     - /usr/local/bin/php artisan route:cache
     - /usr/local/bin/php artisan view:cache
-    - echo "Déploiement terminé avec succès !"
+    - echo "Déploiement terminé. Vos fichiers .env et storage sont protégés."
