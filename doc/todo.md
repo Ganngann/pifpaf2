@@ -23,9 +23,9 @@
     - [x] Créer le formulaire de modification d'annonce.
     - [x] Implémenter la logique de mise à jour.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 6 : Suppression d'une annonce.**
-    - [ ] Implémenter la logique de suppression avec confirmation.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 6 : Suppression d'une annonce.**
+    - [x] Implémenter la logique de suppression avec confirmation.
+    - [x] Rédiger les tests back-end et front-end.
 
 ---
 

@@ -92,4 +92,19 @@ class ItemController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Annonce mise à jour avec succès.');
     }
+
+    /**
+     * Supprime une annonce de la base de données.
+     */
+    public function destroy(Item $item)
+    {
+        $this->authorize('delete', $item);
+
+        // Supprimer l'image associée
+        Storage::disk('public')->delete($item->image_path);
+
+        $item->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Annonce supprimée avec succès.');
+    }
 }
