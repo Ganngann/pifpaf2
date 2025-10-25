@@ -19,10 +19,10 @@
     - [x] Créer la page "Tableau de bord Vendeur".
     - [x] Afficher la liste des annonces de l'utilisateur connecté.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 5 : Modification d'une annonce.**
-    - [ ] Créer le formulaire de modification d'annonce.
-    - [ ] Implémenter la logique de mise à jour.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 5 : Modification d'une annonce.**
+    - [x] Créer le formulaire de modification d'annonce.
+    - [x] Implémenter la logique de mise à jour.
+    - [x] Rédiger les tests back-end et front-end.
 - [ ] **Implémenter la User Story 6 : Suppression d'une annonce.**
     - [ ] Implémenter la logique de suppression avec confirmation.
     - [ ] Rédiger les tests back-end et front-end.
