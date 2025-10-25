@@ -8,24 +8,24 @@
 
 ---
 
-## Sprint 1 : Le Vendeur au Cœur du Système (À faire)
+## Sprint 1 : Le Vendeur au Cœur du Système (Terminé)
 
 - [x] **Implémenter la User Story 3 : Création d'une annonce (manuelle).**
     - [x] Créer la migration de la base de données pour les articles (`items`).
     - [x] Créer le formulaire de création d'annonce.
     - [x] Implémenter la logique pour sauvegarder une nouvelle annonce.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
-    - [ ] Créer la page "Tableau de bord Vendeur".
-    - [ ] Afficher la liste des annonces de l'utilisateur connecté.
-    - [ ] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 5 : Modification d'une annonce.**
-    - [ ] Créer le formulaire de modification d'annonce.
-    - [ ] Implémenter la logique de mise à jour.
-    - [ ] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 6 : Suppression d'une annonce.**
-    - [ ] Implémenter la logique de suppression avec confirmation.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
+    - [x] Créer la page "Tableau de bord Vendeur".
+    - [x] Afficher la liste des annonces de l'utilisateur connecté.
+    - [x] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 5 : Modification d'une annonce.**
+    - [x] Créer le formulaire de modification d'annonce.
+    - [x] Implémenter la logique de mise à jour.
+    - [x] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 6 : Suppression d'une annonce.**
+    - [x] Implémenter la logique de suppression avec confirmation.
+    - [x] Rédiger les tests back-end et front-end.
 
 ---
 
