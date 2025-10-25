@@ -104,4 +104,16 @@ class ItemControllerTest extends TestCase
         Storage::disk('public')->assertExists($item->image_path);
         Storage::disk('public')->assertMissing($oldImagePath);
     }
+
+    public function test_authenticated_user_cannot_delete_other_users_item()
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $itemOfOtherUser = Item::factory()->create(['user_id' => $otherUser->id]);
+
+        $response = $this->actingAs($user)->delete(route('items.destroy', $itemOfOtherUser));
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('items', ['id' => $itemOfOtherUser->id]);
+    }
 }
