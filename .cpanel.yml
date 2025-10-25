@@ -1,9 +1,9 @@
 ---
 deployment:
   tasks:
-    # --- Définition des chemins (moins sécurisé) ---
+    # --- Définition des chemins ---
     - export DEST_DIR="$HOME/deploy/pifpaf"
-    - export SOURCE_DIR="$PWD" # Le dossier actuel où cPanel a cloné le dépôt
+    - export SOURCE_DIR="$PWD" # Le dossier où cPanel clone le code
 
     # --- Étape de sécurité ---
     - |
@@ -20,10 +20,22 @@ deployment:
     - /usr/bin/rsync -a --delete --exclude=".git/" "$SOURCE_DIR/" "$DEST_DIR/"
     - cd $DEST_DIR/pifpaf
 
-    # --- Étape de build Laravel ---
+    # --- Étape de build ---
+    - |
+      echo "Activation de l'environnement Node.js..."
+      # La commande que vous avez fournie pour activer Node.js et npm
+      source /home/sc1wrpg9004/nodevenv/deploy/pifpaf/pifpaf/22/bin/activate
+      
+      echo "Lancement de npm install..."
+      npm install
+      
+      echo "Lancement de npm run build..."
+      npm run build
+
+    - echo "Installation des dépendances Composer..."
     - /usr/local/bin/php composer.phar install --no-dev --optimize-autoloader
-    - npm install
-    - npm run build
+
+    - echo "Configuration de l'application Laravel..."
     - if [ ! -f .env ]; then cp .env.example .env; fi
     - /usr/local/bin/php artisan key:generate
     - /usr/local/bin/php artisan migrate --force
@@ -31,4 +43,4 @@ deployment:
     - /usr/local/bin/php artisan config:cache
     - /usr/local/bin/php artisan route:cache
     - /usr/local/bin/php artisan view:cache
-    - echo "Déploiement terminé."
+    - echo "Déploiement terminé avec succès !"
