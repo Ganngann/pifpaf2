@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller
 {
     /**
+     * Affiche le tableau de bord avec les annonces de l'utilisateur.
+     */
+    public function index()
+    {
+        $items = Auth::user()->items()->latest()->get();
+
+        return view('dashboard', [
+            'items' => $items,
+        ]);
+    }
+
+    /**
      * Affiche le formulaire de création d'annonce.
      */
     public function create()
