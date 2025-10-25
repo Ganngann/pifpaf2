@@ -1,45 +1,55 @@
 ---
 deployment:
   tasks:
-    # --- Définition des chemins ---
+    # --- 1. SETUP ---
+    - echo "=== ETAPE 1: SETUP ==="
     - export DEPLOY_DIR="$HOME/deploy/pifpaf"
     - export SHARED_DIR="$HOME/deploy/shared/pifpaf"
     - export REPO_DIR="$PWD"
+    - export LOG_FILE="$DEPLOY_DIR/deployment.log"
+    - mkdir -p $DEPLOY_DIR
+    - mkdir -p $SHARED_DIR/storage/app/public
+    - mkdir -p $SHARED_DIR/storage/framework/sessions
+    - mkdir -p $SHARED_DIR/storage/framework/views
+    - mkdir -p $SHARED_DIR/storage/framework/cache
+    - mkdir -p $SHARED_DIR/storage/logs
+    - echo -e "\n\n--- DEPLOYMENT STARTED AT $(date) ---" >> $LOG_FILE
 
-    # --- Étape de sécurité ---
-    - |
-      mkdir -p $DEPLOY_DIR
-      mkdir -p $SHARED_DIR/storage/app/public # Assure que les dossiers partagés existent
-
-    # --- Étape de déploiement ---
-    - echo "Déploiement des fichiers de l'application..."
-    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/"
+    # --- 2. SYNC ---
+    - echo "=== ETAPE 2: Synchronisation des fichiers ==="
+    - echo "--- rsync output ---" >> $LOG_FILE
+    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/" >> $LOG_FILE 2>&1
     - cd $DEPLOY_DIR/pifpaf
 
-    # --- Étape de liaison (la magie est ici) ---
+    # --- 3. LINK ---
+    - echo "=== ETAPE 3: Liaison des fichiers partagés (.env, storage) ==="
+    - rm -f .env
+    - ln -s $SHARED_DIR/.env .env
+    - rm -rf storage
+    - ln -s $SHARED_DIR/storage storage
+
+    # --- 4. BUILD FRONTEND ---
+    - echo "=== ETAPE 4: Build des assets frontend (NPM) ==="
+    - echo "--- npm install output ---" >> $LOG_FILE
+    - npm install >> $LOG_FILE 2>&1
+    - echo "--- npm run build output ---" >> $LOG_FILE
+    - npm run build >> $LOG_FILE 2>&1
+
+    # --- 5. BUILD BACKEND ---
+    - echo "=== ETAPE 5: Build de l'application Laravel (Composer & Artisan) ==="
+    - echo "--- composer install output ---" >> $LOG_FILE
+    - composer install --no-dev --optimize-autoloader >> $LOG_FILE 2>&1
     - |
-      echo "Liaison des fichiers de configuration et de stockage..."
-      # On supprime le .env d'exemple s'il existe
-      rm -f .env
-      # On crée le lien symbolique vers le VRAI fichier .env
-      ln -s $SHARED_DIR/.env .env
+      echo "--- artisan commands output ---" >> $LOG_FILE
+      /usr/local/bin/php artisan migrate --force >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan config:cache >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan route:cache >> $LOG_FILE 2>&1
+      /usr/local/bin/php artisan view:cache >> $LOG_FILE 2>&1
 
-      # On supprime le dossier storage du dépôt
-      rm -rf storage
-      # On crée le lien symbolique vers le VRAI dossier storage
-      ln -s $SHARED_DIR/storage storage
-
-    # --- Étape de build ---
-    - |
-      echo "Activation de Node.js et build des assets..."
-      source /home/sc1wrpg9004/nodevenv/deploy/pifpaf/pifpaf/22/bin/activate
-      npm install
-      npm run build
-
-    - echo "Installation des dépendances et configuration de Laravel..."
-    - /usr/local/bin/php composer.phar install --no-dev --optimize-autoloader
-    - /usr/local/bin/php artisan migrate --force
-    - /usr/local/bin/php artisan config:cache
-    - /usr/local/bin/php artisan route:cache
-    - /usr/local/bin/php artisan view:cache
-    - echo "Déploiement terminé. Vos fichiers .env et storage sont protégés."
+    # --- 6. FINALIZE ---
+    - echo "=== ETAPE 6: Finalisation et correction des permissions ==="
+    - echo "--- chmod output ---" >> $LOG_FILE
+    - find $DEPLOY_DIR -type d -exec chmod 755 {} \; >> $LOG_FILE 2>&1
+    - find $DEPLOY_DIR -type f -exec chmod 644 {} \; >> $LOG_FILE 2>&1
+    - echo "--- Déploiement terminé. Vérifiez $LOG_FILE pour les détails. ---"
+    - echo "--- DEPLOYMENT FINISHED AT $(date) ---" >> $LOG_FILE
