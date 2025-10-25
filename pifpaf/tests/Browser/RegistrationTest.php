@@ -22,7 +22,8 @@ class RegistrationTest extends DuskTestCase
                     ->type('password', 'password')
                     ->type('password_confirmation', 'password')
                     ->press('Register')
-                    ->assertPathIs('/dashboard');
+                    ->assertPathIs('/dashboard')
+                    ->assertSee('Tableau de bord Vendeur');
         });
     }
 }
