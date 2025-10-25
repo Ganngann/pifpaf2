@@ -40,10 +40,10 @@
     - [x] Implémenter la logique de recherche par mot-clé.
     - [x] Ajouter les filtres (catégorie, prix).
     - [x] Rédiger les tests.
-- [ ] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
-    - [ ] Créer la page de vue détaillée pour un article.
-    - [ ] Afficher toutes les informations de l'article et du vendeur.
-    - [ ] Rédiger les tests.
+- [x] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
+    - [x] Créer la page de vue détaillée pour un article.
+    - [x] Afficher toutes les informations de l'article et du vendeur.
+    - [x] Rédiger les tests.
 - [ ] **Implémenter la User Story 10 : Faire une offre pour un article.**
     - [ ] Mettre en place le système d'offres.
     - [ ] Gérer les notifications pour le vendeur.
