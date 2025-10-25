@@ -30,7 +30,7 @@
                                         <p class="text-gray-700 mt-2 flex-grow">{{ Str::limit($item->description, 100) }}</p>
                                         <p class="text-lg font-bold text-gray-900 mt-4">{{ number_format($item->price, 2, ',', ' ') }} €</p>
                                         <div class="mt-4 flex justify-end space-x-2">
-                                            <a href="#" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Modifier</a>
+                                            <a href="{{ route('items.edit', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Modifier</a>
                                             <a href="#" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Supprimer</a>
                                         </div>
                                     </div>
