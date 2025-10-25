@@ -50,6 +50,7 @@ class ItemControllerTest extends TestCase
         $updatedData = [
             'title' => 'Titre mis à jour',
             'description' => 'Description mise à jour',
+            'category' => 'Autre',
             'price' => 123.45,
         ];
 
@@ -90,6 +91,7 @@ class ItemControllerTest extends TestCase
         $updatedData = [
             'title' => 'Titre mis à jour',
             'description' => 'Description mise à jour',
+            'category' => 'Autre',
             'price' => 123.45,
             'image' => $newImage,
         ];

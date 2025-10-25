@@ -46,6 +46,8 @@ if [ -d "pifpaf" ]; then
         cp .env.example .env
         echo "Génération de la clé d'application Laravel..."
         php artisan key:generate
+        echo "Création du lien symbolique pour le stockage..."
+        php artisan storage:link
     else
         echo "Le fichier .env existe déjà."
     fi
@@ -55,6 +57,8 @@ if [ -d "pifpaf" ]; then
 
     echo "Lancement des migrations de la base de données..."
     php artisan migrate
+    echo "Peuplement de la base de données avec des données de test..."
+    php artisan db:seed
 
     echo "Installation de Laravel Dusk..."
     ../composer.phar require --dev laravel/dusk

@@ -37,6 +37,20 @@
                             <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description', $item->description) }}</textarea>
                         </div>
 
+                        <!-- Catégorie -->
+                        <div class="mb-4">
+                            <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Catégorie</label>
+                            <select name="category" id="category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                <option value="">-- Choisir une catégorie --</option>
+                                <option value="Vêtements" @if(old('category', $item->category) == 'Vêtements') selected @endif>Vêtements</option>
+                                <option value="Électronique" @if(old('category', $item->category) == 'Électronique') selected @endif>Électronique</option>
+                                <option value="Maison" @if(old('category', $item->category) == 'Maison') selected @endif>Maison</option>
+                                <option value="Sport" @if(old('category', $item->category) == 'Sport') selected @endif>Sport</option>
+                                <option value="Loisirs" @if(old('category', $item->category) == 'Loisirs') selected @endif>Loisirs</option>
+                                <option value="Autre" @if(old('category', $item->category) == 'Autre') selected @endif>Autre</option>
+                            </select>
+                        </div>
+
                         <!-- Prix -->
                         <div class="mb-4">
                             <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Prix</label>
