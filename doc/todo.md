@@ -31,10 +31,10 @@
 
 ## Sprint 2 : L'Expérience de l'Acheteur (À faire)
 
-- [ ] **Implémenter la User Story 7 : Consultation de la page d'accueil.**
-    - [ ] Créer le contrôleur et la vue pour la page d'accueil.
-    - [ ] Afficher les derniers articles publiés.
-    - [ ] Rédiger les tests back-end et front-end.
+- [x] **Implémenter la User Story 7 : Consultation de la page d'accueil.**
+    - [x] Créer le contrôleur et la vue pour la page d'accueil.
+    - [x] Afficher les derniers articles publiés.
+    - [x] Rédiger les tests back-end et front-end.
 - [ ] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
     - [ ] Mettre en place la barre de recherche.
     - [ ] Implémenter la logique de recherche par mot-clé.

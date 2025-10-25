@@ -11,6 +11,19 @@ use Illuminate\Support\Facades\Storage;
 class ItemController extends Controller
 {
     use AuthorizesRequests;
+
+    /**
+     * Affiche la page d'accueil avec les derniers articles.
+     */
+    public function welcome()
+    {
+        $items = Item::latest()->get();
+
+        return view('welcome', [
+            'items' => $items,
+        ]);
+    }
+
     /**
      * Affiche le tableau de bord avec les annonces de l'utilisateur.
      */
@@ -106,5 +119,15 @@ class ItemController extends Controller
         $item->delete();
 
         return redirect()->route('dashboard')->with('success', 'Annonce supprimée avec succès.');
+    }
+
+    /**
+     * Affiche la page de détail d'une annonce.
+     */
+    public function show(Item $item)
+    {
+        return view('items.show', [
+            'item' => $item,
+        ]);
     }
 }
