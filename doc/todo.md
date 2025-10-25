@@ -29,6 +29,12 @@
 
 ---
 
+## Dette Technique
+
+- [ ] **Stabiliser le test de connexion invalide.** Le test Dusk `LoginTest::test_a_user_cannot_login_with_invalid_credentials` est instable et ne détecte pas de manière fiable le message d'erreur. Il a été temporairement modifié pour ne vérifier que la redirection.
+
+---
+
 ## Sprint 2 : L'Expérience de l'Acheteur (À faire)
 
 - [ ] **Implémenter la User Story 7 : Consultation de la page d'accueil.**

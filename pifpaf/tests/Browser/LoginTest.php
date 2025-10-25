@@ -20,7 +20,6 @@ class LoginTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
-                    ->screenshot('login-page')
                     ->type('email', $user->email)
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
@@ -38,6 +37,7 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
                 ->press('Log in')
+                ->screenshot('login-error') // Screenshot for debugging
                 // @TODO: The assertion for the error message is temporarily disabled
                 // due to a persistent, environment-specific issue with Dusk.
                 // ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')

@@ -20,15 +20,13 @@ class UserRegistrationBrowserTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/register')
-                    ->screenshot('registration-page') // Screenshot of the registration page
                     ->type('name', 'Test User')
                     ->type('email', 'test@example.com')
                     ->type('password', 'password')
                     ->type('password_confirmation', 'password')
                     ->press('Register')
                     ->assertPathIs('/dashboard')
-                    ->assertSee('Tableau de bord Vendeur')
-                    ->screenshot('dashboard');
+                    ->assertSee('Tableau de bord Vendeur');
         });
     }
 }

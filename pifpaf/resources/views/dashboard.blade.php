@@ -21,8 +21,7 @@
                     @if($items->isEmpty())
                         <p>Vous n'avez aucune annonce pour le moment.</p>
                     @else
-                        <!-- Mobile View -->
-                        <div class="grid grid-cols-1 gap-4 md:hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             @foreach ($items as $item)
                                 <div class="border rounded-lg p-4 flex flex-col">
                                     <div class="flex-grow">
@@ -39,45 +38,6 @@
                                     </div>
                                 </div>
                             @endforeach
-                        </div>
-
-                        <!-- Desktop View -->
-                        <div class="hidden md:block">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Titre
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Prix
-                                        </th>
-                                        <th scope="col" class="relative px-6 py-3">
-                                            <span class="sr-only">Actions</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach ($items as $item)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ $item->title }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">{{ number_format($item->price, 2, ',', ' ') }} €</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('items.edit', $item) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
-                                                <form class="inline-block" action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-4">Supprimer</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
                         </div>
                     @endif
                 </div>
