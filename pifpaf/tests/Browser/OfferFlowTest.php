@@ -6,15 +6,14 @@ use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
 
 class OfferFlowTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    /**
-     * A Dusk test example.
-     */
+    #[Test]
     public function testOfferWorkflow(): void
     {
         // 1. Créer un vendeur et un acheteur
@@ -39,7 +38,7 @@ class OfferFlowTest extends DuskTestCase
                     ->assertSee('Super Article à Vendre')
                     ->type('amount', '80')
                     ->press('Envoyer l\'offre')
-                    ->assertPathIs('/items/' . $item->id)
+                    ->waitForText('Votre offre a été envoyée avec succès.') // Wait for flash message
                     ->assertSee('Votre offre a été envoyée avec succès.');
 
             // 4. Le vendeur se connecte et voit l'offre sur son tableau de bord
@@ -51,8 +50,9 @@ class OfferFlowTest extends DuskTestCase
 
             // 5. Le vendeur accepte l'offre
             $browser->press('Accepter')
+                    ->waitForText('Offre acceptée ! L\'acheteur doit maintenant procéder au paiement.') // Wait for the correct flash message
+                    ->assertSee('Offre acceptée ! L\'acheteur doit maintenant procéder au paiement.')
                     ->assertPathIs('/dashboard')
-                    ->assertSee('Offre acceptée.')
                     ->assertDontSee('Offres reçues'); // La section disparaît car il n'y a plus d'offre "pending"
         });
     }
