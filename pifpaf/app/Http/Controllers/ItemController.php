@@ -15,9 +15,35 @@ class ItemController extends Controller
     /**
      * Affiche la page d'accueil avec les derniers articles.
      */
-    public function welcome()
+    public function welcome(Request $request)
     {
-        $items = Item::latest()->get();
+        $query = Item::query()->latest();
+
+        // Recherche par mot-clé dans le titre ou la description
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $searchTerm = '%' . $request->input('search') . '%';
+            $q->where(function ($subQuery) use ($searchTerm) {
+                $subQuery->where('title', 'like', $searchTerm)
+                         ->orWhere('description', 'like', $searchTerm);
+            });
+        });
+
+        // Filtre par catégorie
+        $query->when($request->filled('category'), function ($q) use ($request) {
+            $q->where('category', $request->input('category'));
+        });
+
+        // Filtre par prix minimum
+        $query->when($request->filled('min_price'), function ($q) use ($request) {
+            $q->where('price', '>=', $request->input('min_price'));
+        });
+
+        // Filtre par prix maximum
+        $query->when($request->filled('max_price'), function ($q) use ($request) {
+            $q->where('price', '<=', $request->input('max_price'));
+        });
+
+        $items = $query->get();
 
         return view('welcome', [
             'items' => $items,
@@ -25,14 +51,25 @@ class ItemController extends Controller
     }
 
     /**
+     * Affiche le formulaire de création d'annonce via l'IA.
+     */
+    public function createWithAi()
+    {
+        return view('items.create-with-ai');
+    }
+
+    /**
      * Affiche le tableau de bord avec les annonces de l'utilisateur.
      */
     public function index()
     {
-        $items = Auth::user()->items()->latest()->get();
+        $user = Auth::user();
+        $items = $user->items()->with('offers.user')->latest()->get();
+        $offers = $user->offers()->with('item.user')->latest()->get();
 
         return view('dashboard', [
             'items' => $items,
+            'offers' => $offers,
         ]);
     }
 
@@ -45,6 +82,33 @@ class ItemController extends Controller
     }
 
     /**
+     * Analyse une image avec l'IA (simulation) et redirige vers le formulaire de création.
+     */
+    public function analyzeImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Simuler l'analyse de l'IA
+        $aiData = [
+            'title' => 'Objet Détecté par l\'IA',
+            'description' => 'Ceci est une description générée automatiquement par notre IA.',
+            'category' => 'Électronique', // Catégorie suggérée
+            'price' => 99.99, // Prix suggéré
+        ];
+
+        // Stocker l'image temporairement
+        $imagePath = $request->file('image')->store('temp_images', 'public');
+
+        // Rediriger vers le formulaire de création avec les données pré-remplies
+        return redirect()->route('items.create')->with([
+            'ai_data' => $aiData,
+            'image_path' => $imagePath
+        ]);
+    }
+
+    /**
      * Enregistre une nouvelle annonce dans la base de données.
      */
     public function store(Request $request)
@@ -52,11 +116,28 @@ class ItemController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
+            'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required_without:image_path|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_path' => 'sometimes|string',
         ]);
 
-        $imagePath = $request->file('image')->store('images', 'public');
+        $imagePath = $request->input('image_path');
+
+        // Si une nouvelle image est uploadée, elle a la priorité
+        if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image temporaire si elle existe
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $request->file('image')->store('images', 'public');
+        } elseif ($imagePath) {
+            // Si aucune nouvelle image n'est uploadée mais qu'un chemin temporaire existe,
+            // on déplace l'image vers le dossier final.
+            $newPath = 'images/' . basename($imagePath);
+            Storage::disk('public')->move($imagePath, $newPath);
+            $imagePath = $newPath;
+        }
 
         $item = new Item($validatedData);
         $item->image_path = $imagePath;
@@ -88,6 +169,7 @@ class ItemController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
+            'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);

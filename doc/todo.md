@@ -35,32 +35,43 @@
     - [x] Créer le contrôleur et la vue pour la page d'accueil.
     - [x] Afficher les derniers articles publiés.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
-    - [ ] Mettre en place la barre de recherche.
-    - [ ] Implémenter la logique de recherche par mot-clé.
-    - [ ] Ajouter les filtres (catégorie, prix).
-    - [ ] Rédiger les tests.
-- [ ] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
-    - [ ] Créer la page de vue détaillée pour un article.
-    - [ ] Afficher toutes les informations de l'article et du vendeur.
-    - [ ] Rédiger les tests.
-- [ ] **Implémenter la User Story 10 : Faire une offre pour un article.**
-    - [ ] Mettre en place le système d'offres.
-    - [ ] Gérer les notifications pour le vendeur.
-    - [ ] Permettre au vendeur d'accepter/refuser une offre.
-    - [ ] Rédiger les tests.
+- [x] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
+    - [x] Mettre en place la barre de recherche.
+    - [x] Implémenter la logique de recherche par mot-clé.
+    - [x] Ajouter les filtres (catégorie, prix).
+    - [x] Rédiger les tests.
+- [x] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
+    - [x] Créer la page de vue détaillée pour un article.
+    - [x] Afficher toutes les informations de l'article et du vendeur.
+    - [x] Rédiger les tests.
+- [x] **Implémenter la User Story 10 : Faire une offre pour un article.**
+    - [x] Mettre en place le système d'offres.
+    - [x] Permettre au vendeur d'accepter/refuser une offre.
+    - [x] Rédiger les tests.
+- [ ] **Implémenter la User Story 10.1 : Système de Notifications (MVP).**
 
 ---
 
 ## Sprint 3 : L'IA Simplifie la Vente (À faire)
 
-- [ ] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
-    - [ ] Mettre en place l'interface de téléversement de la photo.
-    - [ ] Intégrer l'API de Gemini 2.5 Flash.
-    - [ ] Envoyer l'image à l'IA pour analyse (catégorie, description, prix).
-    - [ ] Pré-remplir le formulaire de création d'annonce avec les données de l'IA.
-    - [ ] Rédiger les tests d'intégration pour l'IA.
+- [x] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
 - [ ] **Implémenter la User Story 12 : Validation des suggestions de l'IA.**
-    - [ ] Permettre au vendeur de modifier les champs pré-remplis par l'IA.
-    - [ ] Valider et publier l'annonce après vérification.
-    - [ ] Rédiger les tests front-end pour le formulaire de validation.
+
+---
+
+## Sprint 4 : Transactions et Logistique (À faire)
+
+- [x] **Implémenter la User Story 13 : Intégration du paiement.**
+- [ ] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
+- [ ] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
+- [ ] **Implémenter la User Story 16 : Confirmation de réception.**
+
+---
+
+## Sprint 5 : Confiance et Communauté (À faire)
+
+- [ ] **Implémenter la User Story 17 : Système de notation et d'avis.**
+- [x] **Implémenter la User Story 18 : Profil public de l'utilisateur.**
+- [ ] **Implémenter la User Story 19 : Gestion des litiges.**
+- [ ] **Implémenter la User Story 20 : Conformité RGPD.**
+- [ ] **Implémenter la User Story 21 : Messagerie Interne.**

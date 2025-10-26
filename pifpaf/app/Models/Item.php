@@ -17,8 +17,10 @@ class Item extends Model
     protected $fillable = [
         'title',
         'description',
+        'category',
         'price',
         'image_path',
+        'status',
     ];
 
     /**
@@ -27,5 +29,13 @@ class Item extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Obtenir les offres pour l'annonce.
+     */
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
     }
 }
