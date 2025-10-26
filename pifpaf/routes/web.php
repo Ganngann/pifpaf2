@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\OfferController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -28,6 +29,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
     Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');
     Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+
+    // Route pour soumettre une offre
+    Route::post('/items/{item}/offers', [OfferController::class, 'store'])->name('offers.store');
+
+    // Routes pour gérer une offre
+    Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
+    Route::patch('/offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

@@ -44,11 +44,11 @@
     - [x] Créer la page de vue détaillée pour un article.
     - [x] Afficher toutes les informations de l'article et du vendeur.
     - [x] Rédiger les tests.
-- [ ] **Implémenter la User Story 10 : Faire une offre pour un article.**
-    - [ ] Mettre en place le système d'offres.
-    - [ ] Gérer les notifications pour le vendeur.
-    - [ ] Permettre au vendeur d'accepter/refuser une offre.
-    - [ ] Rédiger les tests.
+- [x] **Implémenter la User Story 10 : Faire une offre pour un article.**
+    - [x] Mettre en place le système d'offres.
+    - [ ] Gérer les notifications pour le vendeur. (Reporté)
+    - [x] Permettre au vendeur d'accepter/refuser une offre.
+    - [x] Rédiger les tests.
 
 ---
 
