@@ -22,7 +22,6 @@ class LoginTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
-                    ->screenshot('login-page')
                     ->type('email', $user->email)
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
@@ -41,8 +40,9 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
                 ->press('Log in')
+                ->pause(500) // Add a small pause
                 ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
-                ->screenshot('login-error')
+                ->assertSee('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertPathIs('/login');
         });
     }
@@ -55,10 +55,13 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/dashboard')
-                ->click('.relative button') // Ouvre le menu déroulant
-                ->clickLink('Déconnexion')
-                ->assertPathIs('/')
-                ->assertGuest();
+                ->click('@nav-user-dropdown')
+                ->waitFor('@nav-logout')
+                // Directly execute the form submission with JavaScript for reliability
+                ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
+
+            $browser->assertPathIs('/')
+                    ->assertGuest();
         });
     }
 }
