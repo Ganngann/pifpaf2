@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WalletController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -44,6 +45,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour le paiement
     Route::get('/offers/{offer}/payment', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/offers/{offer}/payment', [PaymentController::class, 'store'])->name('payment.store');
+
+    // Route pour le portefeuille
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
