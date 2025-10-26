@@ -7,20 +7,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ItemControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guest_cannot_see_edit_item_page()
+    #[Test]
+    public function guest_cannot_see_edit_item_page()
     {
         $item = Item::factory()->create();
         $response = $this->get(route('items.edit', $item));
         $response->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_user_can_see_his_own_edit_item_page()
+    #[Test]
+    public function authenticated_user_can_see_his_own_edit_item_page()
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
@@ -31,7 +34,8 @@ class ItemControllerTest extends TestCase
         $response->assertViewIs('items.edit');
     }
 
-    public function test_authenticated_user_cannot_see_edit_page_for_other_users_item()
+    #[Test]
+    public function authenticated_user_cannot_see_edit_page_for_other_users_item()
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
@@ -42,7 +46,8 @@ class ItemControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_authenticated_user_can_update_his_own_item()
+    #[Test]
+    public function authenticated_user_can_update_his_own_item()
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
@@ -60,7 +65,8 @@ class ItemControllerTest extends TestCase
         $this->assertDatabaseHas('items', array_merge(['id' => $item->id], $updatedData));
     }
 
-    public function test_authenticated_user_cannot_update_other_users_item()
+    #[Test]
+    public function authenticated_user_cannot_update_other_users_item()
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
@@ -77,7 +83,8 @@ class ItemControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_authenticated_user_can_update_item_with_new_image()
+    #[Test]
+    public function authenticated_user_can_update_item_with_new_image()
     {
         Storage::fake('public');
 
@@ -107,7 +114,8 @@ class ItemControllerTest extends TestCase
         Storage::disk('public')->assertMissing($oldImagePath);
     }
 
-    public function test_authenticated_user_cannot_delete_other_users_item()
+    #[Test]
+    public function authenticated_user_cannot_delete_other_users_item()
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
