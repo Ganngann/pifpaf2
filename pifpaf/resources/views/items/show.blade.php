@@ -9,7 +9,9 @@
                 <h1 class="text-4xl font-bold mb-2">{{ $item->title }}</h1>
                 <div class="mb-6">
                     <span class="text-gray-500">Vendu par :</span>
-                    <span class="font-semibold">{{ $item->user->name }}</span>
+                    <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
+                        {{ $item->user->name }}
+                    </a>
                 </div>
                 <p class="text-gray-600 mb-8">{{ $item->description }}</p>
                 <div class="flex items-center justify-between">

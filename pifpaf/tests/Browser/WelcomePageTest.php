@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
 
 class WelcomePageTest extends DuskTestCase
@@ -17,7 +18,8 @@ class WelcomePageTest extends DuskTestCase
      *
      * @return void
      */
-    public function test_welcome_page_displays_latest_items()
+    #[Test]
+    public function welcome_page_displays_latest_items()
     {
         $user = User::factory()->create();
         $items = Item::factory()->count(5)->create(['user_id' => $user->id]);
@@ -38,7 +40,8 @@ class WelcomePageTest extends DuskTestCase
      *
      * @return void
      */
-    public function test_clicking_item_leads_to_item_details_page()
+    #[Test]
+    public function clicking_item_leads_to_item_details_page()
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);

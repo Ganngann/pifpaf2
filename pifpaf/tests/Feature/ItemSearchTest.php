@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Item;
 use App\Models\User;
@@ -52,7 +53,7 @@ class ItemSearchTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function on_peut_rechercher_des_articles_par_mot_cle_dans_le_titre()
     {
         $response = $this->get('/?search=Smartphone');
@@ -62,7 +63,7 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Super T-Shirt Rouge');
     }
 
-    /** @test */
+    #[Test]
     public function on_peut_filtrer_les_articles_par_categorie()
     {
         $response = $this->get('/?category=Vêtements');
@@ -72,7 +73,7 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Smartphone Android performant');
     }
 
-    /** @test */
+    #[Test]
     public function on_peut_filtrer_les_articles_par_prix_minimum()
     {
         $response = $this->get('/?min_price=500');
@@ -82,7 +83,7 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Smartphone Android performant');
     }
 
-    /** @test */
+    #[Test]
     public function on_peut_filtrer_les_articles_par_prix_maximum()
     {
         $response = $this->get('/?max_price=100');
@@ -92,7 +93,7 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Smartphone Android performant');
     }
 
-    /** @test */
+    #[Test]
     public function on_peut_combiner_la_recherche_et_les_filtres()
     {
         $response = $this->get('/?search=Rouge&category=Sport&min_price=300&max_price=400');
@@ -103,7 +104,7 @@ class ItemSearchTest extends TestCase
         $response->assertDontSee('Smartphone Android performant');
     }
 
-    /** @test */
+    #[Test]
     public function un_message_saffiche_si_aucun_article_ne_correspond_a_la_recherche()
     {
         $response = $this->get('/?search=Inexistant');
