@@ -31,13 +31,13 @@
                         <!-- Titre -->
                         <div class="mb-4">
                             <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Titre</label>
-                            <input type="text" name="title" id="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('title', session('ai_data.title') ?? '') }}" required>
+                            <input type="text" name="title" id="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('title', session('ai_data')['title'] ?? '') }}" required>
                         </div>
 
                         <!-- Description -->
                         <div class="mb-4">
                             <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                            <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description', session('ai_data.description') ?? '') }}</textarea>
+                            <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description', session('ai_data')['description'] ?? '') }}</textarea>
                         </div>
 
                         <!-- Catégorie -->
@@ -46,7 +46,7 @@
                             <select name="category" id="category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 <option value="">-- Choisir une catégorie --</option>
                                 @php
-                                    $selectedCategory = old('category', session('ai_data.category') ?? '');
+                                    $selectedCategory = old('category', session('ai_data')['category'] ?? '');
                                 @endphp
                                 <option value="Vêtements" @if($selectedCategory == 'Vêtements') selected @endif>Vêtements</option>
                                 <option value="Électronique" @if($selectedCategory == 'Électronique') selected @endif>Électronique</option>
@@ -60,7 +60,7 @@
                         <!-- Prix -->
                         <div class="mb-4">
                             <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Prix</label>
-                            <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', session('ai_data.price') ?? '') }}" required>
+                            <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', session('ai_data')['price'] ?? '') }}" required>
                         </div>
 
                         <!-- Image -->
