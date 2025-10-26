@@ -35,20 +35,20 @@
     - [x] Créer le contrôleur et la vue pour la page d'accueil.
     - [x] Afficher les derniers articles publiés.
     - [x] Rédiger les tests back-end et front-end.
-- [ ] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
-    - [ ] Mettre en place la barre de recherche.
-    - [ ] Implémenter la logique de recherche par mot-clé.
-    - [ ] Ajouter les filtres (catégorie, prix).
-    - [ ] Rédiger les tests.
-- [ ] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
-    - [ ] Créer la page de vue détaillée pour un article.
-    - [ ] Afficher toutes les informations de l'article et du vendeur.
-    - [ ] Rédiger les tests.
-- [ ] **Implémenter la User Story 10 : Faire une offre pour un article.**
-    - [ ] Mettre en place le système d'offres.
-    - [ ] Gérer les notifications pour le vendeur.
-    - [ ] Permettre au vendeur d'accepter/refuser une offre.
-    - [ ] Rédiger les tests.
+- [x] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
+    - [x] Mettre en place la barre de recherche.
+    - [x] Implémenter la logique de recherche par mot-clé.
+    - [x] Ajouter les filtres (catégorie, prix).
+    - [x] Rédiger les tests.
+- [x] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
+    - [x] Créer la page de vue détaillée pour un article.
+    - [x] Afficher toutes les informations de l'article et du vendeur.
+    - [x] Rédiger les tests.
+- [x] **Implémenter la User Story 10 : Faire une offre pour un article.**
+    - [x] Mettre en place le système d'offres.
+    - [ ] Gérer les notifications pour le vendeur. (Reporté)
+    - [x] Permettre au vendeur d'accepter/refuser une offre.
+    - [x] Rédiger les tests.
 
 ---
 

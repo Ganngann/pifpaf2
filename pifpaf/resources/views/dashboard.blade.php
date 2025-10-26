@@ -38,6 +38,31 @@
                                             </form>
                                         </div>
                                     </div>
+                                    {{-- Section des offres reçues --}}
+                                    @if($item->offers->where('status', 'pending')->isNotEmpty())
+                                        <div class="p-4 border-t bg-gray-50">
+                                            <h5 class="font-semibold text-gray-700">Offres reçues :</h5>
+                                            <ul class="mt-2 space-y-2">
+                                                @foreach ($item->offers->where('status', 'pending') as $offer)
+                                                    <li class="flex items-center justify-between text-sm">
+                                                        <span>{{ $offer->user->name }} - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></span>
+                                                        <div class="flex space-x-1">
+                                                            <form action="{{ route('offers.accept', $offer) }}" method="POST">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600">Accepter</button>
+                                                            </form>
+                                                            <form action="{{ route('offers.reject', $offer) }}" method="POST">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600">Refuser</button>
+                                                            </form>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

@@ -39,6 +39,7 @@ class ItemCreationDuskTest extends DuskTestCase
             // Remplissage du formulaire
             $browser->type('title', 'Superbe Vase Ancien')
                     ->type('description', 'Un vase rare du 18ème siècle, en parfait état.')
+                    ->select('category', 'Maison') // Ajout de la catégorie
                     ->type('price', '150.75')
                     ->attach('image', $fakeImage) // Utiliser le fichier image factice
                     ->press('Mettre en vente');
