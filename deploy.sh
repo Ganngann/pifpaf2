@@ -11,15 +11,21 @@
 # --- CONFIGURATION ---
 set -e
 
-# Définition des chemins
+# Définition des chemins absolus pour être indépendant de l'environnement
+HOME_DIR="/home/sc1wrpg9004"
 NPM_PATH="/opt/alt/alt-nodejs22/root/usr/bin/npm"
 COMPOSER_PATH="/opt/cpanel/composer/bin/composer"
 PHP_PATH="/usr/local/bin/php"
 
-DEPLOY_DIR="$HOME/deploy/pifpaf"
-SHARED_DIR="$HOME/deploy/shared/pifpaf"
-# REPO_DIR est le dossier où cPanel/Git met à jour les fichiers
+DEPLOY_DIR="$HOME_DIR/deploy/pifpaf"
+SHARED_DIR="$HOME_DIR/deploy/shared/pifpaf"
 REPO_DIR="$PWD"
+
+# --- 0. PRÉPARATION ---
+echo "=== ETAPE 0: Préparation du dépôt ==="
+# Annule les modifications locales (ex: permissions) pour éviter les conflits Git
+git reset --hard HEAD
+echo "Dépôt réinitialisé."
 
 # --- 1. SETUP & SYNC ---
 echo "=== ETAPE 1: SETUP & Synchronisation des fichiers ==="
