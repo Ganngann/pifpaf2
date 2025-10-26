@@ -55,7 +55,13 @@ class PaymentController extends Controller
         $offer->update(['status' => 'paid']);
 
         // Mise à jour du statut de l'article
-        $offer->item->update(['status' => 'sold']);
+        $item = $offer->item;
+        $item->update(['status' => 'sold']);
+
+        // Créditer le portefeuille du vendeur
+        $seller = $item->user;
+        $seller->wallet += $offer->amount;
+        $seller->save();
 
         return redirect()->route('dashboard')->with('success', 'Paiement effectué avec succès !');
     }

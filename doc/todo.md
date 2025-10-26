@@ -62,7 +62,7 @@
 ## Sprint 4 : Transactions et Logistique (À faire)
 
 - [x] **Implémenter la User Story 13 : Intégration du paiement.**
-- [ ] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
+- [x] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
 - [ ] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
 - [ ] **Implémenter la User Story 16 : Confirmation de réception.**
 
