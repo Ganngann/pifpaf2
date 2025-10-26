@@ -25,6 +25,8 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [ItemController::class, 'index'])->name('dashboard');
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+    Route::get('/items/create-with-ai', [ItemController::class, 'createWithAi'])->name('items.create-with-ai');
+    Route::post('/items/analyze-image', [ItemController::class, 'analyzeImage'])->name('items.analyze-image');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
     Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');

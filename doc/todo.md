@@ -54,7 +54,7 @@
 
 ## Sprint 3 : L'IA Simplifie la Vente (À faire)
 
-- [ ] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
+- [x] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
 - [ ] **Implémenter la User Story 12 : Validation des suggestions de l'IA.**
 
 ---
