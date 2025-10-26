@@ -35,7 +35,7 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            @forelse ($items as $item)
+            @forelse ($items->where('status', 'available') as $item)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <a href="{{ route('items.show', $item) }}">
                         <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">

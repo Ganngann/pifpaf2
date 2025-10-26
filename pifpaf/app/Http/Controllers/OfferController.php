@@ -52,7 +52,7 @@ class OfferController extends Controller
              ->where('id', '!=', $offer->id)
              ->update(['status' => 'rejected']);
 
-        return redirect()->route('dashboard')->with('success', 'Offre acceptée.');
+        return redirect()->route('dashboard')->with('success', 'Offre acceptée ! L\'acheteur doit maintenant procéder au paiement.');
     }
 
     /**
