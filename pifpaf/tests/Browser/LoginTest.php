@@ -55,9 +55,9 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/dashboard')
+                ->waitFor('@nav-user-dropdown')
                 ->click('@nav-user-dropdown')
                 ->waitFor('@nav-logout')
-                // Directly execute the form submission with JavaScript for reliability
                 ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
 
             $browser->assertPathIs('/')

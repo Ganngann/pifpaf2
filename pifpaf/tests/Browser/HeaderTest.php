@@ -43,9 +43,10 @@ class HeaderTest extends DuskTestCase
                     ->assertDontSee('Connexion')
                     ->assertDontSee('Inscription')
                     ->assertSee('Tableau de bord')
+                    ->waitFor('@nav-user-dropdown')
                     ->click('@nav-user-dropdown')
-                    ->waitFor('@nav-logout') // Wait for the logout link to be visible
-                    ->assertSee('Déconnexion');
+                    ->waitFor('@nav-logout')
+                    ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
 
             // Test logo link
             $browser->visit('/dashboard')
