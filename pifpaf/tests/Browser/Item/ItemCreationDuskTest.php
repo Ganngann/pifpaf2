@@ -21,15 +21,10 @@ class ItemCreationDuskTest extends DuskTestCase
     {
         $user = User::factory()->create();
 
-        // Créer un fichier image réel pour le test
-        $imageName = 'test-image.jpg';
-        $filePath = storage_path('app/public/temp_images/' . $imageName);
-        if (!file_exists(dirname($filePath))) {
-            mkdir(dirname($filePath), 0777, true);
-        }
-        UploadedFile::fake()->image($imageName)->move(dirname($filePath), $imageName);
+        // Créer un faux fichier image pour le test
+        $fakeImage = UploadedFile::fake()->image('test-image.jpg');
 
-        $this->browse(function (Browser $browser) use ($user, $filePath) {
+        $this->browse(function (Browser $browser) use ($user, $fakeImage) {
             $browser->loginAs($user)
                     ->visit(route('items.create'))
                     ->assertSee('Créer une nouvelle annonce');
@@ -44,19 +39,13 @@ class ItemCreationDuskTest extends DuskTestCase
             // Remplissage du formulaire
             $browser->type('title', 'Superbe Vase Ancien')
                     ->type('description', 'Un vase rare du 18ème siècle, en parfait état.')
-                    ->select('category', 'Maison') // Ajout de la catégorie
                     ->type('price', '150.75')
-                    ->attach('image', $filePath) // Utiliser le fichier image factice
-                    ->press('Créer l\'annonce');
+                    ->attach('image', $fakeImage) // Utiliser le fichier image factice
+                    ->press('Mettre en vente');
 
             // Vérification de la redirection et du message
             $browser->assertPathIs('/dashboard')
                     ->assertSee('Annonce créée avec succès.');
         });
-
-        // Nettoyer le fichier image après le test
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
     }
 }

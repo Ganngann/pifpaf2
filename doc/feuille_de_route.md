@@ -34,7 +34,6 @@ Ce sprint se concentre sur les fonctionnalités permettant aux utilisateurs de t
 - **User Story 8 :** Recherche d'articles et filtrage.
 - **User Story 9 :** Consultation de la page de détail d'un article.
 - **User Story 10 :** Faire une offre pour un article.
-- **User Story 10.1 :** Système de Notifications (MVP).
 
 ---
 
@@ -66,4 +65,3 @@ Ce dernier sprint ajoute les fonctionnalités sociales et de gestion des litiges
 - **User Story 18 :** Profil public de l'utilisateur.
 - **User Story 19 :** Gestion des litiges.
 - **User Story 20 :** Conformité RGPD et gestion des données.
-- **User Story 21 :** Messagerie Interne.

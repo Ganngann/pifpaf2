@@ -8,4 +8,3 @@
 # Ignorer le phar de Composer
 composer.phar
 *.log
-venv/

@@ -16,8 +16,6 @@
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="min-h-screen">
-            @include('layouts.navigation')
-
             <!-- Page Content -->
             <main>
                 {{ $slot }}

@@ -5,7 +5,6 @@ namespace Tests\Browser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
 
 class LoginTest extends DuskTestCase
@@ -15,13 +14,13 @@ class LoginTest extends DuskTestCase
     /**
      * A Dusk test for user login.
      */
-    #[Test]
-    public function a_user_can_login_via_the_form(): void
+    public function test_a_user_can_login_via_the_form(): void
     {
         $user = User::factory()->create();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
+                    ->screenshot('login-page')
                     ->type('email', $user->email)
                     ->type('password', 'password') // Default factory password
                     ->press('Log in')
@@ -30,8 +29,7 @@ class LoginTest extends DuskTestCase
         });
     }
 
-    #[Test]
-    public function a_user_cannot_login_with_invalid_credentials(): void
+    public function test_a_user_cannot_login_with_invalid_credentials(): void
     {
         $user = User::factory()->create();
 
@@ -40,28 +38,23 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
                 ->press('Log in')
-                ->pause(500) // Add a small pause
                 ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
-                ->assertSee('Ces identifiants ne correspondent pas à nos enregistrements.')
+                ->screenshot('login-error')
                 ->assertPathIs('/login');
         });
     }
 
-    #[Test]
-    public function a_logged_in_user_can_logout(): void
+    public function test_a_logged_in_user_can_logout(): void
     {
         $user = User::factory()->create();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/dashboard')
-                ->click('@nav-user-dropdown')
-                ->waitFor('@nav-logout')
-                // Directly execute the form submission with JavaScript for reliability
-                ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
-
-            $browser->assertPathIs('/')
-                    ->assertGuest();
+                ->click('.relative button') // Ouvre le menu déroulant
+                ->clickLink('Déconnexion')
+                ->assertPathIs('/')
+                ->assertGuest();
         });
     }
 }
