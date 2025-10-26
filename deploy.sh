@@ -58,6 +58,12 @@ echo "Installation des dépendances Composer..."
 "$COMPOSER_PATH" install --no-dev --optimize-autoloader
 
 echo "Exécution des commandes Artisan..."
+echo "Création manuelle du lien de stockage public..."
+if [ -L "public/storage" ]; then
+    rm "public/storage"
+fi
+ln -s "$SHARED_DIR/storage/app/public" "public/storage"
+
 "$PHP_PATH" artisan storage:link
 "$PHP_PATH" artisan migrate --force
 "$PHP_PATH" artisan config:cache
