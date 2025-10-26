@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -36,6 +37,10 @@ Route::middleware('auth')->group(function () {
     // Routes pour gérer une offre
     Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
     Route::patch('/offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
+
+    // Routes pour le paiement
+    Route::get('/offers/{offer}/payment', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/offers/{offer}/payment', [PaymentController::class, 'store'])->name('payment.store');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

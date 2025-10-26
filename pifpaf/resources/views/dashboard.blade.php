@@ -22,7 +22,7 @@
                     @else
                         <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes annonces</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($items as $item)
+                            @foreach ($items->where('status', 'available') as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
                                     <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
                                     <div class="p-4 flex flex-col flex-grow">
@@ -62,6 +62,49 @@
                                                 @endforeach
                                             </ul>
                                         </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Section Mes Offres --}}
+            <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes offres</h3>
+                    @if ($offers->isEmpty())
+                        <div class="text-center text-gray-500">
+                            <p>Vous n'avez fait aucune offre pour le moment.</p>
+                            <a href="{{ route('welcome') }}" class="mt-2 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                                Voir les articles
+                            </a>
+                        </div>
+                    @else
+                        <div class="space-y-4">
+                            @foreach ($offers as $offer)
+                                <div class="p-4 border rounded-lg flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold">
+                                            Article : <a href="{{ route('items.show', $offer->item) }}" class="text-blue-600 hover:underline">{{ $offer->item->title }}</a>
+                                        </p>
+                                        <p>Votre offre : <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></p>
+                                        <p>Statut :
+                                            <span @class([
+                                                'font-semibold',
+                                                'text-yellow-600' => $offer->status === 'pending',
+                                                'text-green-600' => $offer->status === 'accepted',
+                                                'text-red-600' => $offer->status === 'rejected',
+                                            ])>
+                                                {{ ucfirst($offer->status) }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    @if ($offer->status === 'accepted')
+                                        <a href="{{ route('payment.create', $offer) }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
+                                            Payer
+                                        </a>
                                     @endif
                                 </div>
                             @endforeach
