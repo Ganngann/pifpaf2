@@ -5,15 +5,13 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[Test]
-    public function a_user_can_register(): void
+    public function test_a_user_can_register(): void
     {
         $response = $this->post('/register', [
             'name' => 'John Doe',

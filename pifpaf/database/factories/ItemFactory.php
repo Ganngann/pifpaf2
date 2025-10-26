@@ -25,7 +25,6 @@ class ItemFactory extends Factory
             'user_id' => User::factory(),
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph,
-            'category' => $this->faker->randomElement(['Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs']),
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'image_path' => UploadedFile::fake()->image('item.jpg')->store('images', 'public'),
         ];

@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Models\Item;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\Group;
 use Tests\DuskTestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,9 +14,10 @@ class DashboardTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    #[Test]
-    #[Group('dashboard')]
-    public function seller_can_see_their_own_items_on_dashboard(): void
+    /**
+     * @group dashboard
+     */
+    public function test_seller_can_see_their_own_items_on_dashboard(): void
     {
         $user1 = User::factory()->create();
         $item1 = Item::factory()->for($user1, 'user')->create(['title' => 'Mon premier objet']);
@@ -37,9 +36,10 @@ class DashboardTest extends DuskTestCase
         });
     }
 
-    #[Test]
-    #[Group('dashboard')]
-    public function dashboard_shows_prompt_when_user_has_no_items(): void
+    /**
+     * @group dashboard
+     */
+    public function test_dashboard_shows_prompt_when_user_has_no_items(): void
     {
         $userWithoutItems = User::factory()->create();
 

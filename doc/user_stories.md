@@ -114,25 +114,7 @@
 
 **Critères d'acceptation :**
 - L'acheteur peut soumettre une offre avec un prix inférieur au prix demandé.
-- Le vendeur peut accepter ou refuser une offre.
-
-### User Story 10.1: Système de Notifications (MVP)
-
-**En tant qu'** utilisateur (vendeur ou acheteur),
-**Je veux** recevoir des notifications relatives au cycle de vie d'une offre,
-**Afin d'** être informé en temps réel des actions requises ou des changements de statut.
-
-**Critères d'acceptation (Vendeur) :**
-- Le vendeur reçoit une notification (sur le site et/ou par email) lorsqu'une nouvelle offre est faite sur un de ses articles.
-- La notification contient un lien direct vers l'offre ou l'article.
-
-**Critères d'acceptation (Acheteur) :**
-- L'acheteur reçoit une notification lorsque son offre est acceptée ou refusée.
-- Si l'offre est acceptée, la notification contient un lien pour procéder à la finalisation de l'achat.
-
-**Critères d'acceptation (Général) :**
-- Un indicateur de notifications non lues est visible dans la barre de navigation.
-- Les notifications peuvent être marquées comme "lues".
+- Le vendeur reçoit une notification de l'offre et peut l'accepter ou la refuser.
 
 ---
 
@@ -246,40 +228,3 @@
 **Critères d'acceptation :**
 - L'utilisateur peut télécharger ses données.
 - L'utilisateur peut supprimer son compte, ce qui efface ses données personnelles.
-
----
-# User Story 10.1: Notifications d'Offres
-
-**En tant que** vendeur,
-**Je veux** recevoir une notification (par email et/ou sur le site) lorsqu'un acheteur fait une nouvelle offre sur un de mes articles,
-**Afin d'** être informé rapidement et de pouvoir y répondre sans délai.
-
-**Critères d'acceptation :**
-- Une notification par email est envoyée au vendeur lorsqu'une nouvelle offre est créée.
-- L'email contient un lien direct vers la page de l'article concerné.
-- (Optionnel) Un système de notifications "cloche" est visible dans la barre de navigation du site pour les utilisateurs connectés.
-- Les notifications sont marquées comme "lues" lorsque l'utilisateur les consulte.
-
----
-
-**En tant qu'** acheteur,
-**Je veux** recevoir une notification lorsque mon offre est acceptée ou refusée par le vendeur,
-**Afin de** connaître le statut de ma proposition et de pouvoir procéder à l'achat si elle est acceptée.
-
-**Critères d'acceptation :**
-- Une notification par email est envoyée à l'acheteur lorsque le statut de son offre change (acceptée ou refusée).
-- Si l'offre est acceptée, l'email contient un lien pour finaliser l'achat.
-- Les notifications apparaissent également dans l'interface du site.
-### User Story 21: Messagerie Interne
-
-**En tant qu'** utilisateur (vendeur ou acheteur),
-**Je veux** pouvoir envoyer et recevoir des messages directs à d'autres utilisateurs,
-**Afin de** poser des questions sur un article ou de coordonner une transaction (ex: remise en main propre).
-
-**Critères d'acceptation :**
-- Un utilisateur peut initier une conversation depuis la page d'un article ou le profil d'un autre utilisateur.
-- Une interface de messagerie liste les conversations et affiche les messages.
-- Un indicateur de messages non lus est visible.
-- (Optionnel) Les notifications par email sont envoyées pour les nouveaux messages.
-
----

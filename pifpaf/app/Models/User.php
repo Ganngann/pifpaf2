@@ -21,7 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'wallet',
     ];
 
     /**
@@ -53,13 +52,5 @@ class User extends Authenticatable
     public function items()
     {
         return $this->hasMany(Item::class);
-    }
-
-    /**
-     * Obtenir les offres faites par l'utilisateur.
-     */
-    public function offers()
-    {
-        return $this->hasMany(Offer::class);
     }
 }
