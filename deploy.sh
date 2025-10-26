@@ -66,8 +66,13 @@ echo "Exécution des commandes Artisan..."
 
 # --- 6. FINALIZE ---
 echo "=== ETAPE 6: Finalisation et correction des permissions ==="
+echo "Correction des permissions sur le dossier de l'application..."
 find "$DEPLOY_DIR" -type d -exec chmod 755 {} \;
 find "$DEPLOY_DIR" -type f -exec chmod 644 {} \;
+
+echo "Correction des permissions sur le dossier partagé (pour les médias)..."
+find "$SHARED_DIR" -type d -exec chmod 755 {} \;
+find "$SHARED_DIR" -type f -exec chmod 644 {} \;
 
 echo ""
 echo "--- DÉPLOIEMENT TERMINÉ AVEC SUCCÈS ! ---"
