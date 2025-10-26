@@ -1,45 +1,23 @@
 ---
 deployment:
   tasks:
-    # --- Définition des chemins ---
-    - export DEPLOY_DIR="$HOME/deploy/pifpaf"
-    - export SHARED_DIR="$HOME/deploy/shared/pifpaf"
-    - export REPO_DIR="$PWD"
-
-    # --- Étape de sécurité ---
     - |
-      mkdir -p $DEPLOY_DIR
-      mkdir -p $SHARED_DIR/storage/app/public # Assure que les dossiers partagés existent
+      set -e
+      LOG_FILE="$HOME/cpanel_debug.log"
+      echo "--- DEBUGGING CPANEL DEPLOYMENT ---" > $LOG_FILE
+      echo "Date: $(date)" >> $LOG_FILE
+      echo "" >> $LOG_FILE
 
-    # --- Étape de déploiement ---
-    - echo "Déploiement des fichiers de l'application..."
-    - /usr/bin/rsync -a --delete --exclude=".git/" "$REPO_DIR/" "$DEPLOY_DIR/"
-    - cd $DEPLOY_DIR/pifpaf
+      echo "--- WHO AM I ---" >> $LOG_FILE
+      whoami >> $LOG_FILE
+      echo "" >> $LOG_FILE
 
-    # --- Étape de liaison (la magie est ici) ---
-    - |
-      echo "Liaison des fichiers de configuration et de stockage..."
-      # On supprime le .env d'exemple s'il existe
-      rm -f .env
-      # On crée le lien symbolique vers le VRAI fichier .env
-      ln -s $SHARED_DIR/.env .env
+      echo "--- CURRENT DIRECTORY (PWD) ---" >> $LOG_FILE
+      pwd >> $LOG_FILE
+      echo "" >> $LOG_FILE
 
-      # On supprime le dossier storage du dépôt
-      rm -rf storage
-      # On crée le lien symbolique vers le VRAI dossier storage
-      ln -s $SHARED_DIR/storage storage
+      echo "--- LISTING FILES IN CURRENT DIRECTORY (ls -la) ---" >> $LOG_FILE
+      ls -la >> $LOG_FILE
+      echo "" >> $LOG_FILE
 
-    # --- Étape de build ---
-    - |
-      echo "Activation de Node.js et build des assets..."
-      source /home/sc1wrpg9004/nodevenv/deploy/pifpaf/pifpaf/22/bin/activate
-      npm install
-      npm run build
-
-    - echo "Installation des dépendances et configuration de Laravel..."
-    - /usr/local/bin/php composer.phar install --no-dev --optimize-autoloader
-    - /usr/local/bin/php artisan migrate --force
-    - /usr/local/bin/php artisan config:cache
-    - /usr/local/bin/php artisan route:cache
-    - /usr/local/bin/php artisan view:cache
-    - echo "Déploiement terminé. Vos fichiers .env et storage sont protégés."
+      echo "Debug log created at $LOG_FILE"
