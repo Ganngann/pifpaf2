@@ -55,7 +55,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Auth::user()->items()->latest()->get();
+        $items = Auth::user()->items()->with('offers.user')->latest()->get();
 
         return view('dashboard', [
             'items' => $items,
