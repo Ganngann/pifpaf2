@@ -24,7 +24,7 @@ class WelcomePageTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($items) {
             $browser->visit('/')
-                    ->assertSee('Derniers articles');
+                    ->assertSee('Trouvez la perle rare');
 
             foreach ($items as $item) {
                 $browser->assertSee($item->title)
