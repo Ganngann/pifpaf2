@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -14,7 +15,8 @@ class LoginTest extends TestCase
     /**
      * A basic feature test for user login.
      */
-    public function test_a_user_can_login(): void
+    #[Test]
+    public function a_user_can_login(): void
     {
         // 1. Create a user
         $user = User::factory()->create([
@@ -34,7 +36,8 @@ class LoginTest extends TestCase
         $response->assertRedirect('/dashboard');
     }
 
-    public function test_a_user_cannot_login_with_an_invalid_password(): void
+    #[Test]
+    public function a_user_cannot_login_with_an_invalid_password(): void
     {
         // 1. Create a user
         $user = User::factory()->create([
