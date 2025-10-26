@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Item extends Model
+class Offer extends Model
 {
     use HasFactory;
 
@@ -15,15 +15,14 @@ class Item extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'description',
-        'category',
-        'price',
-        'image_path',
+        'user_id',
+        'item_id',
+        'amount',
+        'status',
     ];
 
     /**
-     * Obtenir l'utilisateur propriétaire de l'annonce.
+     * Obtenir l'utilisateur qui a fait l'offre.
      */
     public function user()
     {
@@ -31,10 +30,10 @@ class Item extends Model
     }
 
     /**
-     * Obtenir les offres pour l'annonce.
+     * Obtenir l'article pour lequel l'offre a été faite.
      */
-    public function offers()
+    public function item()
     {
-        return $this->hasMany(Offer::class);
+        return $this->belongsTo(Item::class);
     }
 }

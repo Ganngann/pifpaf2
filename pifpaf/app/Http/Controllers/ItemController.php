@@ -15,9 +15,35 @@ class ItemController extends Controller
     /**
      * Affiche la page d'accueil avec les derniers articles.
      */
-    public function welcome()
+    public function welcome(Request $request)
     {
-        $items = Item::latest()->get();
+        $query = Item::query()->latest();
+
+        // Recherche par mot-clé dans le titre ou la description
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $searchTerm = '%' . $request->input('search') . '%';
+            $q->where(function ($subQuery) use ($searchTerm) {
+                $subQuery->where('title', 'like', $searchTerm)
+                         ->orWhere('description', 'like', $searchTerm);
+            });
+        });
+
+        // Filtre par catégorie
+        $query->when($request->filled('category'), function ($q) use ($request) {
+            $q->where('category', $request->input('category'));
+        });
+
+        // Filtre par prix minimum
+        $query->when($request->filled('min_price'), function ($q) use ($request) {
+            $q->where('price', '>=', $request->input('min_price'));
+        });
+
+        // Filtre par prix maximum
+        $query->when($request->filled('max_price'), function ($q) use ($request) {
+            $q->where('price', '<=', $request->input('max_price'));
+        });
+
+        $items = $query->get();
 
         return view('welcome', [
             'items' => $items,
@@ -29,7 +55,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Auth::user()->items()->latest()->get();
+        $items = Auth::user()->items()->with('offers.user')->latest()->get();
 
         return view('dashboard', [
             'items' => $items,
@@ -52,6 +78,7 @@ class ItemController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
+            'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -88,6 +115,7 @@ class ItemController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
+            'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
