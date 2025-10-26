@@ -20,6 +20,7 @@ class Item extends Model
         'category',
         'price',
         'image_path',
+        'status',
     ];
 
     /**

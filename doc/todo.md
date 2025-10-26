@@ -54,14 +54,14 @@
 
 ## Sprint 3 : L'IA Simplifie la Vente (À faire)
 
-- [ ] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
+- [x] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
 - [ ] **Implémenter la User Story 12 : Validation des suggestions de l'IA.**
 
 ---
 
 ## Sprint 4 : Transactions et Logistique (À faire)
 
-- [ ] **Implémenter la User Story 13 : Intégration du paiement.**
+- [x] **Implémenter la User Story 13 : Intégration du paiement.**
 - [ ] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
 - [ ] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
 - [ ] **Implémenter la User Story 16 : Confirmation de réception.**
