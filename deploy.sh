@@ -64,7 +64,6 @@ if [ -L "public/storage" ]; then
 fi
 ln -s "$SHARED_DIR/storage/app/public" "public/storage"
 
-"$PHP_PATH" artisan storage:link
 "$PHP_PATH" artisan migrate --force
 "$PHP_PATH" artisan config:cache
 "$PHP_PATH" artisan route:cache
