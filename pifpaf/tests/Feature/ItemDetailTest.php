@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ItemDetailTest extends TestCase
@@ -17,7 +18,8 @@ class ItemDetailTest extends TestCase
      *
      * @return void
      */
-    public function test_item_detail_page_is_displayed_correctly()
+    #[Test]
+    public function item_detail_page_is_displayed_correctly()
     {
         // 1. Créer un utilisateur (vendeur) et un article
         $user = User::factory()->create();
