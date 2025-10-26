@@ -247,6 +247,29 @@
 - L'utilisateur peut télécharger ses données.
 - L'utilisateur peut supprimer son compte, ce qui efface ses données personnelles.
 
+---
+# User Story 10.1: Notifications d'Offres
+
+**En tant que** vendeur,
+**Je veux** recevoir une notification (par email et/ou sur le site) lorsqu'un acheteur fait une nouvelle offre sur un de mes articles,
+**Afin d'** être informé rapidement et de pouvoir y répondre sans délai.
+
+**Critères d'acceptation :**
+- Une notification par email est envoyée au vendeur lorsqu'une nouvelle offre est créée.
+- L'email contient un lien direct vers la page de l'article concerné.
+- (Optionnel) Un système de notifications "cloche" est visible dans la barre de navigation du site pour les utilisateurs connectés.
+- Les notifications sont marquées comme "lues" lorsque l'utilisateur les consulte.
+
+---
+
+**En tant qu'** acheteur,
+**Je veux** recevoir une notification lorsque mon offre est acceptée ou refusée par le vendeur,
+**Afin de** connaître le statut de ma proposition et de pouvoir procéder à l'achat si elle est acceptée.
+
+**Critères d'acceptation :**
+- Une notification par email est envoyée à l'acheteur lorsque le statut de son offre change (acceptée ou refusée).
+- Si l'offre est acceptée, l'email contient un lien pour finaliser l'achat.
+- Les notifications apparaissent également dans l'interface du site.
 ### User Story 21: Messagerie Interne
 
 **En tant qu'** utilisateur (vendeur ou acheteur),
