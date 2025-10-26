@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -39,3 +40,4 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
+Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');

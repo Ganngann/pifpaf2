@@ -71,7 +71,7 @@
 ## Sprint 5 : Confiance et Communauté (À faire)
 
 - [ ] **Implémenter la User Story 17 : Système de notation et d'avis.**
-- [ ] **Implémenter la User Story 18 : Profil public de l'utilisateur.**
+- [x] **Implémenter la User Story 18 : Profil public de l'utilisateur.**
 - [ ] **Implémenter la User Story 19 : Gestion des litiges.**
 - [ ] **Implémenter la User Story 20 : Conformité RGPD.**
 - [ ] **Implémenter la User Story 21 : Messagerie Interne.**
