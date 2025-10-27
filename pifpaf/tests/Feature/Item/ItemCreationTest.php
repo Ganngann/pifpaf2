@@ -6,13 +6,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ItemCreationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function guests_cannot_access_the_create_item_form()
     {
         $response = $this->get(route('items.create'));
@@ -20,7 +21,7 @@ class ItemCreationTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    /** @test */
+    #[Test]
     public function authenticated_users_can_access_the_create_item_form()
     {
         $user = User::factory()->create();
@@ -31,7 +32,7 @@ class ItemCreationTest extends TestCase
         $response->assertViewIs('items.create');
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_an_item_successfully_with_valid_data()
     {
         Storage::fake('public');
@@ -44,6 +45,7 @@ class ItemCreationTest extends TestCase
         $itemData = [
             'title' => 'Mon Super Article',
             'description' => 'Ceci est une description de l\'article.',
+            'category' => 'Électronique',
             'price' => 99.99,
             'image' => $imageData,
         ];
@@ -62,7 +64,7 @@ class ItemCreationTest extends TestCase
         Storage::disk('public')->assertExists($imagePath);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_validation_when_required_fields_are_missing()
     {
         $user = User::factory()->create();
@@ -83,5 +85,9 @@ class ItemCreationTest extends TestCase
         // Test sans l'image
         $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10]);
         $response->assertSessionHasErrors('image');
+
+        // Test sans la catégorie
+        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10, 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response->assertSessionHasErrors('category');
     }
 }

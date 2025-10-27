@@ -74,4 +74,4 @@
 - [x] **Implémenter la User Story 18 : Profil public de l'utilisateur.**
 - [ ] **Implémenter la User Story 19 : Gestion des litiges.**
 - [ ] **Implémenter la User Story 20 : Conformité RGPD.**
-- [ ] **Implémenter la User Story 21 : Messagerie
+- [ ] **Implémenter la User Story 21 : Messagerie Interne.**
