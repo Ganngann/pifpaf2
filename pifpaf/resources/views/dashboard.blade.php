@@ -160,7 +160,7 @@
                                         @endif
                                     </div>
                                     @if ($offer->status === 'accepted')
-                                        <a href="{{ route('payment.create', $offer) }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
+                                        <a href="{{ route('payment.create', $offer) }}" dusk="pay-offer-{{ $offer->id }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
                                             Payer
                                         </a>
                                     @elseif ($offer->status === 'paid' && $offer->transaction && $offer->transaction->status === 'payment_received')

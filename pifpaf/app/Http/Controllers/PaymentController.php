@@ -49,7 +49,7 @@ class PaymentController extends Controller
         $transactionData = [
             'offer_id' => $offer->id,
             'amount' => $offer->amount,
-            'status' => 'completed',
+            'status' => 'payment_received', // Le paiement est séquestré jusqu'à confirmation
         ];
 
         // Si l'article est en retrait sur place, générer un code
@@ -67,11 +67,8 @@ class PaymentController extends Controller
         $item = $offer->item;
         $item->update(['status' => 'sold']);
 
-        // Créditer le portefeuille du vendeur
-        $seller = $item->user;
-        $seller->wallet += $offer->amount;
-        $seller->save();
+        // Le vendeur n'est pas crédité ici. Le paiement est déclenché par la confirmation de l'acheteur.
 
-        return redirect()->route('dashboard')->with('success', 'Paiement effectué avec succès !');
+        return redirect()->route('dashboard')->with('success', 'Paiement effectué avec succès ! Votre commande est en attente de confirmation de réception.');
     }
 }
