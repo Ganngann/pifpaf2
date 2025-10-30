@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="mt-6">
-                            <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                            <button type="submit" dusk="submit-payment-button" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
                                 Payer {{ number_format($offer->amount, 2, ',', ' ') }} €
                             </button>
                         </div>

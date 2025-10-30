@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('offer_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 8, 2);
-            $table->string('status')->default('completed'); // 'completed', 'failed', etc.
+            $table->string('status')->default('initiated'); // 'initiated', 'payment_received', 'pickup_completed', 'completed', 'failed'
             $table->timestamps();
         });
     }
