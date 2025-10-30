@@ -35,15 +35,8 @@ echo "Dépôt réinitialisé."
 
 # --- 1. SETUP & SYNC ---
 echo "=== ETAPE 1: SETUP & Synchronisation des fichiers ==="
-=======
-# --- 1. SETUP ---
-echo "=== ETAPE 1: SETUP ==="
-DEPLOY_DIR="$HOME/deploy/pifpaf"
-SHARED_DIR="$HOME/deploy/shared/pifpaf"
-REPO_DIR="$PWD"
-
 echo "Création des répertoires nécessaires..."
->>>>>>> parent of 1ca94e7 (fix: Simplifie et corrige le script de déploiement final)
+
 mkdir -p "$DEPLOY_DIR"
 mkdir -p "$SHARED_DIR/storage/app/public"
 mkdir -p "$SHARED_DIR/storage/framework/sessions"
