@@ -70,6 +70,55 @@
                 </div>
             </div>
 
+            {{-- Section Ventes à retirer --}}
+            @php
+                $soldItemsForPickup = $items->filter(function ($item) {
+                    if ($item->status !== 'sold' || !$item->pickup_available) {
+                        return false;
+                    }
+                    $paidOffer = $item->offers->firstWhere('status', 'paid');
+                    return $paidOffer && $paidOffer->transaction && $paidOffer->transaction->status !== 'pickup_completed';
+                });
+            @endphp
+            @if ($soldItemsForPickup->isNotEmpty())
+                <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Ventes à retirer</h3>
+                        <div class="space-y-4">
+                            @foreach ($soldItemsForPickup as $item)
+                                @php
+                                    $paidOffer = $item->offers->firstWhere('status', 'paid');
+                                    $transaction = $paidOffer->transaction;
+                                    $buyer = $paidOffer->user;
+                                @endphp
+                                <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        <div>
+                                            <p class="font-semibold">{{ $item->title }}</p>
+                                            <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>
+                                            <p class="text-sm">
+                                                Code de retrait :
+                                                <span class="font-bold text-lg text-red-600 tracking-widest">{{ $transaction->pickup_code }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 sm:mt-0">
+                                        <form action="{{ route('transactions.confirm-pickup', $transaction) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                                                Confirmer le retrait
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- Section Mes Offres --}}
             <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
@@ -94,12 +143,21 @@
                                             <span @class([
                                                 'font-semibold',
                                                 'text-yellow-600' => $offer->status === 'pending',
-                                                'text-green-600' => $offer->status === 'accepted',
+                                                'text-green-600' => $offer->status === 'accepted' || $offer->status === 'paid',
                                                 'text-red-600' => $offer->status === 'rejected',
                                             ])>
-                                                {{ ucfirst($offer->status) }}
+                                                @if($offer->status === 'paid')
+                                                    Payée
+                                                @else
+                                                    {{ ucfirst($offer->status) }}
+                                                @endif
                                             </span>
                                         </p>
+                                        @if($offer->status === 'paid' && $offer->item->pickup_available && $offer->transaction)
+                                            <p class="mt-2 text-sm">
+                                                Code de retrait : <span class="font-bold text-lg text-green-600 tracking-widest">{{ $offer->transaction->pickup_code }}</span>
+                                            </p>
+                                        @endif
                                     </div>
                                     @if ($offer->status === 'accepted')
                                         <a href="{{ route('payment.create', $offer) }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">

@@ -14,6 +14,19 @@
                     </a>
                 </div>
                 <p class="text-gray-600 mb-8">{{ $item->description }}</p>
+
+                @if($item->pickup_available)
+                <div class="mb-6 p-4 bg-gray-100 rounded-lg">
+                    <p class="font-semibold text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                        Retrait sur place disponible
+                    </p>
+                    <p class="text-sm text-gray-500 mt-1">Vous pourrez convenir d'un rendez-vous avec le vendeur après l'achat.</p>
+                </div>
+                @endif
+
                 <div class="flex items-center justify-between">
                     <span class="font-bold text-3xl">{{ $item->price }} €</span>
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">

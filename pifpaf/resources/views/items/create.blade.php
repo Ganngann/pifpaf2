@@ -76,6 +76,14 @@
                         </div>
 
 
+                        <!-- Retrait sur place -->
+                        <div class="mb-4">
+                            <label for="pickup_available" class="inline-flex items-center">
+                                <input type="checkbox" name="pickup_available" id="pickup_available" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" value="1" {{ old('pickup_available') ? 'checked' : '' }}>
+                                <span class="ml-2 text-gray-700">Retrait sur place disponible</span>
+                            </label>
+                        </div>
+
                         <!-- Bouton de soumission -->
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

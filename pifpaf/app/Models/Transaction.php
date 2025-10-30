@@ -13,6 +13,7 @@ class Transaction extends Model
         'offer_id',
         'amount',
         'status',
+        'pickup_code',
     ];
 
     public function offer()
