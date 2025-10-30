@@ -27,4 +27,33 @@ class TransactionController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Retrait confirmé avec succès.');
     }
+
+    /**
+     * Confirme la réception d'un article par l'acheteur.
+     *
+     * @param \App\Models\Transaction $transaction
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function confirmReception(Transaction $transaction)
+    {
+        // On s'assure que l'utilisateur connecté est bien l'acheteur
+        if (Auth::id() !== $transaction->offer->user_id) {
+            abort(403);
+        }
+
+        // On vérifie que la transaction est bien en attente de confirmation
+        if ($transaction->status !== 'payment_received') {
+            return redirect()->route('dashboard')->with('error', 'Cette transaction n\'est pas en attente de confirmation.');
+        }
+
+        // Mettre à jour le statut de la transaction
+        $transaction->update(['status' => 'completed']);
+
+        // Créditer le portefeuille du vendeur
+        $seller = $transaction->offer->item->user;
+        $seller->wallet += $transaction->amount;
+        $seller->save();
+
+        return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');
+    }
 }
