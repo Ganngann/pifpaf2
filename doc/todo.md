@@ -45,7 +45,7 @@
 
 - [x] **Implémenter la User Story 13 : Intégration du paiement.**
 - [x] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
-- [ ] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
+- [x] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
 - [ ] **Implémenter la User Story 16 : Confirmation de réception.**
 
 ---
