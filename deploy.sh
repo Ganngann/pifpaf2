@@ -84,6 +84,8 @@ ln -s "$SHARED_DIR/storage/app/public" "public/storage"
 # --- 6. FINALIZE ---
 echo "=== ETAPE 6: Finalisation et correction des permissions ==="
 echo "Correction des permissions sur le dossier de l'application..."
+
+chmod 755 "$DEPLOY_DIR"
 find "$DEPLOY_DIR" -type d -exec chmod 755 {} \;
 find "$DEPLOY_DIR" -type f -exec chmod 644 {} \;
 
