@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/{offer}', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/payment/{offer}', [PaymentController::class, 'store'])->name('payment.store');
     Route::patch('/transactions/{transaction}/confirm-pickup', [TransactionController::class, 'confirmPickup'])->name('transactions.confirm-pickup');
+    Route::patch('/transactions/{transaction}/confirm-reception', [TransactionController::class, 'confirmReception'])->name('transactions.confirm-reception');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
