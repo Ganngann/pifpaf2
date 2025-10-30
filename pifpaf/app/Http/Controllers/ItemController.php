@@ -64,8 +64,10 @@ class ItemController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $items = $user->items()->with('offers.user')->latest()->get();
-        $offers = $user->offers()->with('item.user')->latest()->get();
+        // Pour le vendeur, on charge les offres avec leurs transactions
+        $items = $user->items()->with('offers.transaction', 'offers.user')->latest()->get();
+        // Pour l'acheteur, on charge les offres avec la transaction
+        $offers = $user->offers()->with('item.user', 'transaction')->latest()->get();
 
         return view('dashboard', [
             'items' => $items,
@@ -120,6 +122,7 @@ class ItemController extends Controller
             'price' => 'required|numeric',
             'image' => 'required_without:image_path|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_path' => 'sometimes|string',
+            'pickup_available' => 'sometimes|boolean',
         ]);
 
         $imagePath = $request->input('image_path');
@@ -140,6 +143,7 @@ class ItemController extends Controller
         }
 
         $item = new Item($validatedData);
+        $item->pickup_available = $request->has('pickup_available');
         $item->image_path = $imagePath;
         $item->user_id = Auth::id();
         $item->save();
@@ -172,6 +176,7 @@ class ItemController extends Controller
             'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'pickup_available' => 'sometimes|boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -182,6 +187,8 @@ class ItemController extends Controller
             $imagePath = $request->file('image')->store('images', 'public');
             $validatedData['image_path'] = $imagePath;
         }
+
+        $validatedData['pickup_available'] = $request->has('pickup_available');
 
         $item->update($validatedData);
 

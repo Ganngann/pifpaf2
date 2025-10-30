@@ -21,6 +21,7 @@ class Item extends Model
         'price',
         'image_path',
         'status',
+        'pickup_available',
     ];
 
     /**

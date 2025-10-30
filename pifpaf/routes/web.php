@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
@@ -25,29 +26,29 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth')
                 ->name('logout');
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [ItemController::class, 'index'])->name('dashboard');
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
-    Route::get('/items/create-with-ai', [ItemController::class, 'createWithAi'])->name('items.create-with-ai');
-    Route::post('/items/analyze-image', [ItemController::class, 'analyzeImage'])->name('items.analyze-image');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
     Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');
     Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
-
-    // Route pour soumettre une offre
     Route::post('/items/{item}/offers', [OfferController::class, 'store'])->name('offers.store');
-
-    // Routes pour gérer une offre
     Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
     Route::patch('/offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
-
-    // Routes pour le paiement
-    Route::get('/offers/{offer}/payment', [PaymentController::class, 'create'])->name('payment.create');
-    Route::post('/offers/{offer}/payment', [PaymentController::class, 'store'])->name('payment.store');
-
-    // Route pour le portefeuille
+    Route::get('/payment/{offer}', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment/{offer}', [PaymentController::class, 'store'])->name('payment.store');
+    Route::patch('/transactions/{transaction}/confirm-pickup', [TransactionController::class, 'confirmPickup'])->name('transactions.confirm-pickup');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
+    Route::post('/wallet/withdraw', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
+
+    // Routes pour l'IA
+    Route::get('/items/create-with-ai', [ItemController::class, 'createWithAi'])->name('items.create-with-ai');
+    Route::post('/items/analyze-image', [ItemController::class, 'analyzeImage'])->name('items.analyze-image');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

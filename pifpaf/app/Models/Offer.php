@@ -36,4 +36,12 @@ class Offer extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    /**
+     * Obtenir la transaction associée à l'offre.
+     */
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
 }
