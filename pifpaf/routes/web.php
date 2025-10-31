@@ -54,3 +54,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+
+Route::get('/test-ai', function (App\Services\GoogleAiService $aiService) {
+    $imagePath = storage_path('app/public/images/placeholder.jpg');
+    return $aiService->analyzeImage($imagePath);
+});

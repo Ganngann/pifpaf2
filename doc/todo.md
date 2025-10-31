@@ -15,8 +15,8 @@
 - [ ] **US-ANN-3:** Réorganiser et supprimer les images.
 
 ### Ligne de Développement: Jules 2 (IA Simplifiée - MVP)
-- [ ] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
-- [ ] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
+- [x] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
+- [x] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
 
 ### Ligne de Développement: Jules 3 (Gestion Catalogue)
 - [ ] **US-ANN-5:** Implémenter la dépublication d'une annonce.
