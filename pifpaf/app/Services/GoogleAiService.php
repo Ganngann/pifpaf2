@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use Gemini;
+use Gemini\Enums\MimeType;
+use Gemini\Data\Content;
+use Gemini\Data\Part;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -43,10 +46,17 @@ class GoogleAiService
 
             Log::info('Sending request to Gemini API.');
             $client = Gemini::client($apiKey);
-            $result = $client->generativeModel(model: 'gemini-2.5-flash')
-                ->withPrompt($prompt)
-                ->withImage(file_get_contents($imagePath))
-                ->generateText();
+
+            $response = $client->geminiProVision()
+                ->generateContent([
+                    Part::text($prompt),
+                    Part::blob(
+                        mimeType: MimeType::IMAGE_JPEG,
+                        data: file_get_contents($imagePath)
+                    )
+                ]);
+
+            $result = $response->text();
             Log::info('Received response from Gemini API: ' . $result);
 
             // Clean the response to get a valid JSON
