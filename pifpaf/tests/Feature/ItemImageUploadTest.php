@@ -87,15 +87,27 @@ class ItemImageUploadTest extends TestCase
      */
     public function test_user_can_delete_an_image(): void
     {
+        Storage::fake('public');
         $user = User::factory()->create();
         $item = \App\Models\Item::factory()->create(['user_id' => $user->id]);
-        $image = $item->images()->first();
+
+        // On crée une image manuellement pour ce test
+        $imageFile = UploadedFile::fake()->image('image_to_delete.jpg');
+        $path = $imageFile->store("item_images/{$item->id}", 'public');
+        $image = $item->images()->create([
+            'path' => $path,
+            'is_primary' => true,
+            'order' => 0
+        ]);
 
         $this->actingAs($user);
 
         $response = $this->delete(route('item-images.destroy', $image));
 
-        $response->assertSuccessful();
+        // On s'attend à une redirection vers la page d'édition avec un message de succès
+        $response->assertRedirect(route('items.edit', $item));
+        $response->assertSessionHas('success', 'Image supprimée avec succès.');
+
         $this->assertDatabaseMissing('item_images', ['id' => $image->id]);
         Storage::disk('public')->assertMissing($image->path);
     }

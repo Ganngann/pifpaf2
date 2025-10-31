@@ -237,6 +237,19 @@ class ItemController extends Controller
     }
 
     /**
+     * Republie une annonce.
+     */
+    public function publish(Item $item)
+    {
+        $this->authorize('update', $item);
+
+        $item->status = ItemStatus::AVAILABLE;
+        $item->save();
+
+        return redirect()->route('dashboard')->with('success', 'Annonce publiée avec succès.');
+    }
+
+    /**
      * Supprime une annonce de la base de données.
      */
     public function destroy(Item $item)

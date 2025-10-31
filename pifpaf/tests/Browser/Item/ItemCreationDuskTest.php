@@ -46,7 +46,7 @@ class ItemCreationDuskTest extends DuskTestCase
                     ->type('description', 'Un vase rare du 18ème siècle, en parfait état.')
                     ->select('category', 'Maison') // Ajout de la catégorie
                     ->type('price', '150.75')
-                    ->attach('image', $filePath) // Utiliser le fichier image factice
+                    ->attach('images[]', $filePath) // Utiliser le fichier image factice
                     ->press('Créer l\'annonce');
 
             // Vérification de la redirection et du message
