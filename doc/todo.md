@@ -1,59 +1,86 @@
-# Pifpaf To-Do List
+# Pifpaf To-Do List (Structure Stratégique)
 
-## ✔️ Sprint 0 : Initialisation et Authentification (Terminé)
-
-- [x] **Mise en place de la structure du projet Laravel.**
-- [x] **Implémenter la User Story 1 : Inscription des utilisateurs.**
-- [x] **Implémenter la User Story 2 : Connexion des utilisateurs.**
+*Ce document est la checklist opérationnelle du projet. Il est synchronisé avec la `feuille_de_route.md`.*
 
 ---
-
-## ✔️ Sprint 1 : Le Vendeur au Cœur du Système (Terminé)
-
-- [x] **Implémenter la User Story 3 : Création d'une annonce (manuelle).**
-- [x] **Implémenter la User Story 4 : Gestion du catalogue d'articles.**
-- [x] **Implémenter la User Story 5 : Modification d'une annonce.**
-- [x] **Implémenter la User Story 6 : Suppression d'une annonce.**
+## ✔️ Sprints 0-2: Fondations (Terminé)
+- [x] **Socle Technique :** Authentification, CRUD Annonces, Achat simple, Paiement & Portefeuille.
 
 ---
+## 🚀 Sprint 3: Vendeur Augmenté
 
-## ✔️ Sprint 2 : L'Expérience de l'Acheteur (Terminé)
+### Ligne de Développement: Jules 1 (Galerie d'Images)
+- [ ] **US-ANN-1:** Uploader plusieurs images pour une annonce.
+- [ ] **US-ANN-2:** Définir une image comme principale.
+- [ ] **US-ANN-3:** Réorganiser et supprimer les images.
 
-- [x] **Implémenter la User Story 7 : Consultation de la page d'accueil.**
-- [x] **Implémenter la User Story 8 : Recherche d'articles et filtrage.**
-- [x] **Implémenter la User Story 9 : Consultation de la page de détail d'un article.**
-- [x] **Implémenter la User Story 10 : Faire une offre pour un article.**
+### Ligne de Développement: Jules 2 (IA Simplifiée - MVP)
+- [ ] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
+- [ ] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
 
----
-
-## Sprint 3 : L'IA Simplifie la Vente (À faire)
-
-- [ ] **Implémenter la User Story 11 : Mise en ligne simplifiée via une seule photo (IA).**
-    - [ ] Mettre en place l'interface de téléversement de la photo.
-    - [ ] Intégrer l'API de Gemini 2.5 Flash.
-    - [ ] Envoyer l'image à l'IA pour analyse (catégorie, description, prix).
-    - [ ] Pré-remplir le formulaire de création d'annonce avec les données de l'IA.
-    - [ ] Rédiger les tests d'intégration pour l'IA.
-- [ ] **Implémenter la User Story 12 : Validation des suggestions de l'IA.**
-    - [ ] Permettre au vendeur de modifier les champs pré-remplis par l'IA.
-    - [ ] Valider et publier l'annonce après vérification.
-    - [ ] Rédiger les tests front-end pour le formulaire de validation.
+### Ligne de Développement: Jules 3 (Gestion Catalogue)
+- [ ] **US-ANN-5:** Implémenter la dépublication d'une annonce.
+- [ ] **US-ANN-6:** Implémenter la republication d'une annonce.
 
 ---
+## 🚀 Sprint 4: Logistique Avancée
 
-## Sprint 4 : Transactions et Logistique (À faire)
+### Ligne de Développement: Jules 1 (Configuration Vendeur)
+- [ ] **US-LOG-1:** Créer l'interface de gestion des adresses de retrait.
+- [ ] **US-LOG-2:** Permettre d'activer les options de livraison sur une annonce.
 
-- [x] **Implémenter la User Story 13 : Intégration du paiement.**
-- [x] **Implémenter la User Story 14 : Gestion du portefeuille virtuel.**
-- [x] **Implémenter la User Story 15 : Gestion de la livraison et du retrait sur place.**
-- [x] **Implémenter la User Story 16 : Confirmation de réception.**
+### Ligne de Développement: Jules 2 (Parcours Acheteur)
+- [ ] **US-LOG-3:** Afficher les modes de livraison sur la page annonce.
+- [ ] **US-LOG-4:** Intégrer le choix du mode de livraison dans le processus d'offre.
+- [ ] **US-LOG-5:** Créer l'interface de gestion des adresses de livraison.
+
+### Ligne de Développement: Jules 3 (Transparence & Recherche)
+- [ ] **US-TRS-2:** Afficher le pseudo de l'acheteur sur la page de l'offre.
+- [ ] **US-LOG-8:** Implémenter le filtre de recherche par distance.
 
 ---
+## 🚀 Sprint 5: Finalisation & Historique
 
-## Sprint 5 : Confiance et Communauté (À faire)
+### Ligne de Développement: Jules 1 (Post-Vente)
+- [ ] **US-LOG-6:** Permettre au vendeur d'ajouter un code de suivi.
+- [ ] **US-LOG-7:** Afficher le code de suivi à l'acheteur.
 
-- [ ] **Implémenter la User Story 17 : Système de notation et d'avis.**
-- [x] **Implémenter la User Story 18 : Profil public de l'utilisateur.**
-- [ ] **Implémenter la User Story 19 : Gestion des litiges.**
-- [ ] **Implémenter la User Story 20 : Conformité RGPD.**
-- [ ] **Implémenter la User Story 21 : Messagerie Interne.**
+### Ligne de Développement: Jules 2 (Historique des Transactions)
+- [ ] **US-HIS-1:** Créer les pages listant les achats et les ventes.
+- [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée.
+
+### Ligne de Développement: Jules 3 (Portefeuille)
+- [ ] **US-TRS-1:** Implémenter le paiement via le solde du portefeuille.
+- [ ] **US-HIS-4:** Créer la page d'historique des mouvements du portefeuille.
+
+---
+## 🚀 Sprint 6: Communauté & IA de Masse
+
+### Ligne de Développement: Jules 1 (Confiance)
+- [ ] **US-COM-1:** Mettre en place le système de notation post-transaction.
+- [ ] **US-COM-2:** Afficher les notes sur les profils publics.
+- [ ] **US-COM-5:** Créer le formulaire d'ouverture de litige.
+
+### Ligne de Développement: Jules 2 (Communication)
+- [ ] **US-COM-3:** Permettre de démarrer une conversation.
+- [ ] **US-COM-4:** Créer l'interface de messagerie (boîte de réception).
+
+### Ligne de Développement: Jules 3 (IA v2)
+- [ ] **US-IA-5:** Développer la capacité de l'IA à traiter plusieurs objets sur une photo.
+
+---
+## 🚀 Sprint 7: Conformité
+
+### Lignes de Développement: Jules 1 & 2 (RGPD)
+- [ ] **US-ADM-1:** Développer la fonctionnalité d'export des données personnelles.
+- [ ] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données.
+
+---
+## 🚀 Sprint 8: Administration & Modération
+
+### Lignes de Développement: Jules 1, 2 & 3 (Conjoint)
+- [ ] **US-ADM-10:** Mettre en place le rôle "Admin" et l'accès sécurisé.
+- [ ] **US-ADM-11:** Créer le dashboard avec les statistiques clés.
+- [ ] **US-ADM-12:** Développer le module de gestion des utilisateurs.
+- [ ] **US-ADM-13:** Développer le module de modération des annonces.
+- [ ] **US-ADM-14:** Développer le module de suivi des litiges.
