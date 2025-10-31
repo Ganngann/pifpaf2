@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\ItemImageController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -51,6 +52,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour l'IA
     Route::get('/items/create-with-ai', [ItemController::class, 'createWithAi'])->name('items.create-with-ai');
     Route::post('/items/analyze-image', [ItemController::class, 'analyzeImage'])->name('items.analyze-image');
+
+    // Route pour la suppression d'image
+    Route::delete('/item-images/{itemImage}', [ItemImageController::class, 'destroy'])->name('item-images.destroy');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

@@ -21,7 +21,6 @@ class Item extends Model
         'description',
         'category',
         'price',
-        'image_path',
         'status',
         'pickup_available',
     ];
@@ -57,5 +56,13 @@ class Item extends Model
     public function offers()
     {
         return $this->hasMany(Offer::class);
+    }
+
+    /**
+     * Obtenir les images de l'annonce.
+     */
+    public function images()
+    {
+        return $this->hasMany(ItemImage::class)->orderBy('order');
     }
 }

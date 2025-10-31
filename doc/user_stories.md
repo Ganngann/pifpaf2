@@ -13,29 +13,27 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 1: Galerie d'Images par Annonce
 *Permettre aux vendeurs d'ajouter plusieurs photos pour rendre leurs annonces plus attractives.*
 
-- **US-ANN-1: Uploader plusieurs images**
-  - **En tant que** vendeur, **Je veux** pouvoir téléverser jusqu'à 10 images lors de la création ou de la modification d'une annonce, **Afin de** montrer mon article sous tous ses angles.
+- **US-ANN-1: Uploader et supprimer des images**
+  - **En tant que** vendeur, **Je veux** pouvoir téléverser jusqu'à 10 images et supprimer des images existantes, **Afin de** gérer la galerie de mon annonce.
   - **Critères d'acceptation :**
     - Le champ de téléversement permet la sélection de multiples fichiers (PNG, JPG) jusqu'à 10.
-    - **Mobile-first :** Le clic sur le champ propose "Prendre une photo" ou "Choisir depuis la galerie".
-    - Sur desktop, le clic ouvre l'explorateur de fichiers.
-    - Un message d'erreur clair s'affiche si la limite de 10 images est dépassée.
     - Des miniatures des images sélectionnées apparaissent en prévisualisation.
-    - L'utilisateur peut supprimer une image de la sélection via une icône sur la miniature.
+    - Sur la page de modification, les images existantes sont affichées.
+    - Un bouton de suppression est présent sur chaque image existante.
+    - Un clic sur le bouton, après confirmation, supprime l'image de la galerie et du serveur.
 
 - **US-ANN-2: Définir l'image principale**
   - **En tant que** vendeur, **Je veux** pouvoir désigner une image comme étant la principale, **Afin de** choisir celle qui apparaîtra dans les résultats de recherche.
   - **Critères d'acceptation :**
-    - Dans la galerie de prévisualisation, la première image téléversée est marquée comme "Principale" par défaut (ex: avec une icône étoile ou un badge).
+    - Dans la galerie, la première image téléversée est marquée comme "Principale" par défaut.
     - L'utilisateur peut cliquer sur une icône sur une autre miniature pour la désigner comme principale.
     - Une seule image peut être principale à la fois.
 
-- **US-ANN-3: Gérer la galerie**
+- **US-ANN-3: Réorganiser la galerie**
   - **En tant que** vendeur, **Je veux** pouvoir réorganiser les images de ma galerie, **Afin de** contrôler leur ordre d'affichage.
   - **Critères d'acceptation :**
     - Sur desktop, l'utilisateur peut glisser-déposer les miniatures pour les réorganiser.
     - Sur mobile, des flèches "monter/descendre" permettent de changer l'ordre.
-    - La suppression d'une image (via US-ANN-1) met à jour la galerie.
 
 ### Epic 2: Création d'Annonce Assistée par IA (MVP)
 *Introduction de l'IA pour simplifier la création d'une annonce unique.*

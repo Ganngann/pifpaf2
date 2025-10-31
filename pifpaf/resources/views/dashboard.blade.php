@@ -24,9 +24,16 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($items as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
+
                                     <div class="relative">
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                                        <span @class([
+                                    @if ($item->images->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                                    @else
+                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                            <span class="text-gray-500">Aucune image</span>
+                                        </div>
+                                    @endif
+                                    <span @class([
                                             'absolute top-2 left-2 text-xs font-bold px-2 py-1 rounded text-white',
                                             'bg-green-500' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
                                             'bg-gray-500' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
@@ -115,7 +122,13 @@
                                 @endphp
                                 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
                                     <div class="flex items-center">
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @if ($item->images->isNotEmpty())
+                                            <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                                <span class="text-gray-500 text-xs text-center">Aucune image</span>
+                                            </div>
+                                        @endif
                                         <div>
                                             <p class="font-semibold">{{ $item->title }}</p>
                                             <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>
