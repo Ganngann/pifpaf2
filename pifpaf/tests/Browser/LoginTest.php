@@ -24,7 +24,7 @@ class LoginTest extends DuskTestCase
             $browser->visit('/login')
                     ->type('email', $user->email)
                     ->type('password', 'password') // Default factory password
-                    ->press('Log in')
+                    ->press('@login-button')
                     ->assertPathIs('/dashboard')
                     ->assertSee("Tableau de bord");
         });
@@ -39,7 +39,7 @@ class LoginTest extends DuskTestCase
             $browser->visit('/login')
                 ->type('email', $user->email)
                 ->type('password', 'wrong-password')
-                ->press('Log in')
+                ->press('@login-button')
                 ->pause(500) // Add a small pause
                 ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertSee('Ces identifiants ne correspondent pas à nos enregistrements.')

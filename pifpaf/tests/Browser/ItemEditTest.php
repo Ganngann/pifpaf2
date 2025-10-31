@@ -17,9 +17,16 @@ class ItemEditTest extends DuskTestCase
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
-        $file = UploadedFile::fake()->image('test.jpg');
 
-        $this->browse(function (Browser $browser) use ($user, $item, $file) {
+        // Créer un fichier image réel pour le test
+        $imageName = 'test-edit-image.jpg';
+        $filePath = storage_path('app/public/temp_images/' . $imageName);
+        if (!file_exists(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);
+        }
+        UploadedFile::fake()->image($imageName)->move(dirname($filePath), $imageName);
+
+        $this->browse(function (Browser $browser) use ($user, $item, $filePath) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
                     ->clickLink('Modifier')
@@ -28,7 +35,7 @@ class ItemEditTest extends DuskTestCase
                     ->type('title', 'Nouveau Titre d\'Annonce')
                     ->type('description', 'Nouvelle description de l\'annonce.')
                     ->type('price', '150.75')
-                    ->attach('image', $file->getRealPath())
+                    ->attach('images[]', $filePath)
                     ->press('Mettre à jour')
                     ->assertPathIs('/dashboard')
                     ->assertSee('Annonce mise à jour avec succès.')
