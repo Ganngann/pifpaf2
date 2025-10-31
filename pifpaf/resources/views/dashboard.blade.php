@@ -24,7 +24,13 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($items->where('status', 'available') as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
-                                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                                    @if ($item->images->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                                    @else
+                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                            <span class="text-gray-500">Aucune image</span>
+                                        </div>
+                                    @endif
                                     <div class="p-4 flex flex-col flex-grow">
                                         <h4 class="text-xl font-semibold">{{ $item->title }}</h4>
                                         <p class="text-gray-700 mt-2 flex-grow">{{ Str::limit($item->description, 100) }}</p>
@@ -93,7 +99,13 @@
                                 @endphp
                                 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
                                     <div class="flex items-center">
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @if ($item->images->isNotEmpty())
+                                            <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                                <span class="text-gray-500 text-xs text-center">Aucune image</span>
+                                            </div>
+                                        @endif
                                         <div>
                                             <p class="font-semibold">{{ $item->title }}</p>
                                             <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>

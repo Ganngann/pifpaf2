@@ -63,16 +63,30 @@
                             <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', session('ai_data')['price'] ?? '') }}" required>
                         </div>
 
-                        <!-- Image -->
+                        <!-- Images -->
                         <div class="mb-4">
-                            <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image</label>
-                            @if(session('image_path'))
-                                <div class="mb-2">
-                                    <img src="{{ asset('storage/' . session('image_path')) }}" alt="Image de l'article" class="w-48 h-auto rounded">
-                                    <p class="text-sm text-gray-600 mt-1">Image actuelle. Vous pouvez en choisir une autre pour la remplacer.</p>
-                                </div>
-                            @endif
-                            <input type="file" name="image" id="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" {{ session('image_path') ? '' : 'required' }}>
+                            <label for="images" class="block text-gray-700 text-sm font-bold mb-2">Images (jusqu'à 10)</label>
+
+                            <div class="p-4 border border-dashed rounded-md">
+                                <input type="file" name="images[]" id="images" class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100"
+                                    multiple
+                                    accept="image/png, image/jpeg"
+                                    {{ session('image_path') ? '' : 'required' }}>
+                            </div>
+
+                            <div id="image-preview-container" class="mt-4 flex flex-wrap gap-4">
+                                @if(session('image_path'))
+                                    <div class="relative w-32 h-32">
+                                        <img src="{{ asset('storage/' . session('image_path')) }}" class="w-full h-full object-cover rounded-md">
+                                        <p class="text-xs text-center mt-1">Image de l'IA</p>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
 
 
@@ -95,4 +109,43 @@
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput = document.getElementById('images');
+        const previewContainer = document.getElementById('image-preview-container');
+        const initialImageBlock = previewContainer.querySelector('.initial-image');
+
+        imageInput.addEventListener('change', function(event) {
+            // Vider le conteneur des anciennes prévisualisations (sauf l'image de l'IA)
+            previewContainer.querySelectorAll('.preview-wrapper').forEach(el => el.remove());
+
+            const files = event.target.files;
+            const currentTotal = (initialImageBlock ? 1 : 0);
+
+            if (files.length + currentTotal > 10) {
+                alert('Vous ne pouvez pas télécharger plus de 10 images au total.');
+                // Réinitialiser l'input
+                imageInput.value = '';
+                return;
+            }
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewWrapper = document.createElement('div');
+                    // On ajoute une classe spécifique pour les différencier de l'image IA
+                    previewWrapper.classList.add('relative', 'w-32', 'h-32', 'preview-wrapper');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-md');
+
+                    previewWrapper.appendChild(img);
+                    previewContainer.appendChild(previewWrapper);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+    </script>
 </x-app-layout>

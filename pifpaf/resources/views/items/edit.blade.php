@@ -57,16 +57,39 @@
                             <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', $item->price) }}" required>
                         </div>
 
-                        <!-- Image actuelle -->
+                        <!-- Images -->
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Image actuelle</label>
-                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-1/4 h-auto rounded">
-                        </div>
+                            <label for="images" class="block text-gray-700 text-sm font-bold mb-2">Images (jusqu'à 10)</label>
 
-                        <!-- Nouvelle image -->
-                        <div class="mb-4">
-                            <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Changer l'image</label>
-                            <input type="file" name="image" id="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <!-- Affichage des images existantes -->
+                            <div id="existing-images-container" class="mt-4 flex flex-wrap gap-4">
+                                @foreach($item->images as $image)
+                                    <div id="image-{{ $image->id }}" class="relative w-32 h-32">
+                                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover rounded-md">
+                                        <button type="button"
+                                                onclick="deleteImage({{ $image->id }})"
+                                                class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold">
+                                            &times;
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <div class="p-4 mt-4 border border-dashed rounded-md">
+                                <label for="images" class="block text-gray-700 text-sm font-bold mb-2">Ajouter de nouvelles images</label>
+                                <input type="file" name="images[]" id="images" class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100"
+                                    multiple
+                                    accept="image/png, image/jpeg">
+                            </div>
+
+                            <div id="image-preview-container" class="mt-4 flex flex-wrap gap-4">
+                                <!-- Les prévisualisations des nouvelles images apparaîtront ici -->
+                            </div>
                         </div>
 
                         <!-- Retrait sur place -->
@@ -88,4 +111,70 @@
             </div>
         </div>
     </div>
+    <script>
+    function deleteImage(imageId) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
+            return;
+        }
+
+        const url = `/item-images/${imageId}`;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById(`image-${imageId}`).remove();
+                // Mettre à jour le compteur d'images existantes pour la validation côté client
+                window.existingImageCount--;
+            } else {
+                alert(data.message || 'Une erreur est survenue.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de la suppression.');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput = document.getElementById('images');
+        const previewContainer = document.getElementById('image-preview-container');
+        // Initialiser un compteur global
+        window.existingImageCount = {{ $item->images->count() }};
+
+        imageInput.addEventListener('change', function(event) {
+            previewContainer.innerHTML = ''; // Vider les anciennes prévisualisations
+            const files = event.target.files;
+
+            if (files.length + window.existingImageCount > 10) {
+                alert('Vous ne pouvez pas avoir plus de 10 images au total.');
+                imageInput.value = ''; // Réinitialiser l'input
+                return;
+            }
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewWrapper = document.createElement('div');
+                    previewWrapper.classList.add('relative', 'w-32', 'h-32');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-md');
+
+                    previewWrapper.appendChild(img);
+                    previewContainer.appendChild(previewWrapper);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+    </script>
 </x-app-layout>

@@ -120,33 +120,47 @@ class ItemController extends Controller
             'description' => 'required',
             'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
-            'image' => 'required_without:image_path|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images' => 'required_without:image_path|array|min:1|max:10',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'image_path' => 'sometimes|string',
             'pickup_available' => 'sometimes|boolean',
         ]);
 
-        $imagePath = $request->input('image_path');
-
-        // Si une nouvelle image est uploadée, elle a la priorité
-        if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image temporaire si elle existe
-            if ($imagePath) {
-                Storage::disk('public')->delete($imagePath);
-            }
-            $imagePath = $request->file('image')->store('images', 'public');
-        } elseif ($imagePath) {
-            // Si aucune nouvelle image n'est uploadée mais qu'un chemin temporaire existe,
-            // on déplace l'image vers le dossier final.
-            $newPath = 'images/' . basename($imagePath);
-            Storage::disk('public')->move($imagePath, $newPath);
-            $imagePath = $newPath;
-        }
-
         $item = new Item($validatedData);
         $item->pickup_available = $request->has('pickup_available');
-        $item->image_path = $imagePath;
         $item->user_id = Auth::id();
         $item->save();
+
+        // Gestion des images
+        $order = 0;
+        // 1. Gérer l'image venant du flux IA
+        if ($request->has('image_path')) {
+            $tempPath = $request->input('image_path');
+            if (Storage::disk('public')->exists($tempPath)) {
+                $newPath = "item_images/{$item->id}/" . basename($tempPath);
+                Storage::disk('public')->move($tempPath, $newPath);
+
+                $item->images()->create([
+                    'path' => $newPath,
+                    'is_primary' => true,
+                    'order' => $order++,
+                ]);
+            }
+        }
+
+        // 2. Gérer les images uploadées depuis le formulaire
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store("item_images/{$item->id}", 'public');
+                $isPrimary = ($order === 0); // La toute première image est la principale
+
+                $item->images()->create([
+                    'path' => $path,
+                    'is_primary' => $isPrimary,
+                    'order' => $order++,
+                ]);
+            }
+        }
 
         return redirect()->route('dashboard')->with('success', 'Annonce créée avec succès.');
     }
@@ -175,22 +189,33 @@ class ItemController extends Controller
             'description' => 'required',
             'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
             'price' => 'required|numeric',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images' => 'sometimes|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'pickup_available' => 'sometimes|boolean',
         ]);
 
-        if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image
-            Storage::disk('public')->delete($item->image_path);
+        $validatedData['pickup_available'] = $request->has('pickup_available');
+        $item->update($validatedData);
 
-            // Enregistrer la nouvelle image
-            $imagePath = $request->file('image')->store('images', 'public');
-            $validatedData['image_path'] = $imagePath;
+        // Ajout de nouvelles images
+        if ($request->hasFile('images')) {
+            // On récupère le dernier ordre pour continuer la séquence
+            $order = $item->images()->max('order') + 1;
+
+            foreach ($request->file('images') as $imageFile) {
+                // On vérifie qu'on ne dépasse pas la limite totale de 10 images
+                if ($item->images()->count() >= 10) {
+                    break;
+                }
+
+                $path = $imageFile->store("item_images/{$item->id}", 'public');
+                $item->images()->create([
+                    'path' => $path,
+                    'order' => $order++,
+                ]);
+            }
         }
 
-        $validatedData['pickup_available'] = $request->has('pickup_available');
-
-        $item->update($validatedData);
 
         return redirect()->route('dashboard')->with('success', 'Annonce mise à jour avec succès.');
     }
@@ -202,8 +227,8 @@ class ItemController extends Controller
     {
         $this->authorize('delete', $item);
 
-        // Supprimer l'image associée
-        Storage::disk('public')->delete($item->image_path);
+        // Supprimer le dossier contenant les images de l'annonce
+        Storage::disk('public')->deleteDirectory("item_images/{$item->id}");
 
         $item->delete();
 
