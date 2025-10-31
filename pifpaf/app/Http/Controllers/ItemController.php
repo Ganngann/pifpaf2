@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -84,29 +85,30 @@ class ItemController extends Controller
     }
 
     /**
-     * Analyse une image avec l'IA (simulation) et redirige vers le formulaire de création.
+     * Analyse une image avec l'IA et redirige vers le formulaire de création.
      */
-    public function analyzeImage(Request $request)
+    public function analyzeImage(Request $request, GoogleAiService $aiService)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Simuler l'analyse de l'IA
-        $aiData = [
-            'title' => 'Objet Détecté par l\'IA',
-            'description' => 'Ceci est une description générée automatiquement par notre IA.',
-            'category' => 'Électronique', // Catégorie suggérée
-            'price' => 99.99, // Prix suggéré
-        ];
+        $imageFile = $request->file('image');
+        $imagePath = $imageFile->getRealPath();
+
+        $aiData = $aiService->analyzeImage($imagePath);
+
+        if (!$aiData) {
+            return back()->with('error', 'L\'analyse de l\'image a échoué. Veuillez réessayer.');
+        }
 
         // Stocker l'image temporairement
-        $imagePath = $request->file('image')->store('temp_images', 'public');
+        $storedImagePath = $imageFile->store('temp_images', 'public');
 
         // Rediriger vers le formulaire de création avec les données pré-remplies
         return redirect()->route('items.create')->with([
             'ai_data' => $aiData,
-            'image_path' => $imagePath
+            'image_path' => $storedImagePath
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Services\GoogleAiService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +29,11 @@ class AiSuggestionFlowTest extends TestCase
             'category' => 'Électronique',
             'price' => 99.99,
         ];
+
+        // Simuler le service d'IA
+        $this->mock(GoogleAiService::class, function ($mock) use ($expectedAiData) {
+            $mock->shouldReceive('analyzeImage')->andReturn($expectedAiData);
+        });
 
         // 2. Action
         $response = $this->post(route('items.analyze-image'), [
