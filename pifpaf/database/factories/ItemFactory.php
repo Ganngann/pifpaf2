@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Item;
+use App\Models\ItemImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -19,15 +21,32 @@ class ItemFactory extends Factory
      */
     public function definition(): array
     {
-        Storage::fake('public');
-
         return [
             'user_id' => User::factory(),
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph,
             'category' => $this->faker->randomElement(['Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs']),
             'price' => $this->faker->randomFloat(2, 10, 1000),
-            'image_path' => UploadedFile::fake()->image('item.jpg')->store('images', 'public'),
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Item $item) {
+            Storage::fake('public');
+            $imagePath = UploadedFile::fake()->image('item.jpg')->store("item_images/{$item->id}", 'public');
+
+            ItemImage::factory()->create([
+                'item_id' => $item->id,
+                'path' => $imagePath,
+                'is_primary' => true,
+                'order' => 0,
+            ]);
+        });
     }
 }
