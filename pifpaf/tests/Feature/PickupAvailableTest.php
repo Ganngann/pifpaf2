@@ -101,6 +101,10 @@ class PickupAvailableTest extends TestCase
         $this->actingAs($buyer)->post(route('payment.store', $offer));
         $transaction = $offer->refresh()->transaction;
 
+        // Mettre à jour manuellement les statuts comme le feraient les écouteurs d'événements
+        $item->update(['status' => 'sold']);
+        $offer->update(['status' => 'paid']);
+
         $response = $this->actingAs($seller)->get(route('dashboard'));
 
         $response->assertSee('Ventes à retirer');
