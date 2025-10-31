@@ -44,11 +44,15 @@ class WalletTest extends TestCase
         // Vérifier la redirection
         $response->assertRedirect(route('dashboard'));
 
-        // L'acheteur doit confirmer la réception pour que le vendeur soit payé
-        $transaction = Transaction::where('offer_id', $offer->id)->first();
-        $this->actingAs($buyer)->patch(route('transactions.confirm-reception', $transaction));
+        // Recharger les données du vendeur depuis la base de données pour vérifier qu'il n'est PAS encore crédité
+        $seller->refresh();
+        $this->assertEquals(100.00, $seller->wallet);
 
-        // Recharger les données du vendeur depuis la base de données
+        // L'acheteur confirme la réception
+        $transaction = Transaction::where('offer_id', $offer->id)->first();
+        $this->patch(route('transactions.confirm-reception', $transaction));
+
+        // Recharger les données du vendeur
         $seller->refresh();
 
         // Vérifier que le portefeuille du vendeur a été crédité

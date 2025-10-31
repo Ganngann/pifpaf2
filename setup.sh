@@ -53,6 +53,7 @@ if [ -d "pifpaf" ]; then
     fi
 
     echo "Configuration de la base de données SQLite pour les tests..."
+    rm -f database/database.sqlite
     touch database/database.sqlite
 
     echo "Lancement des migrations de la base de données..."
