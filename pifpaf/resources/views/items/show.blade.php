@@ -4,7 +4,21 @@
         <x-auth-session-status class="mb-4" :status="session('success')" />
 
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-96 object-cover">
+            <div x-data="{ mainImage: '{{ $item->images->first() ? asset('storage/' . $item->images->first()->path) : asset('images/placeholder.jpg') }}' }">
+                <!-- Image principale -->
+                <img :src="mainImage" alt="{{ $item->title }}" class="w-full h-96 object-cover">
+
+                <!-- Galerie de miniatures -->
+                <div class="flex space-x-2 p-4 bg-gray-100 overflow-x-auto">
+                    @foreach($item->images as $image)
+                        <img src="{{ asset('storage/' . $image->path) }}"
+                             alt="Miniature"
+                             class="w-24 h-24 object-cover rounded-md cursor-pointer border-2"
+                             :class="{ 'border-blue-500': mainImage === '{{ asset('storage/' . $image->path) }}' }"
+                             @click="mainImage = '{{ asset('storage/' . $image->path) }}'">
+                    @endforeach
+                </div>
+            </div>
             <div class="p-8">
                 <h1 class="text-4xl font-bold mb-2">{{ $item->title }}</h1>
                 <div class="mb-6">

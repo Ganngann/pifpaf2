@@ -10,16 +10,16 @@
 ## 🚀 Sprint 3: Vendeur Augmenté
 
 ### Ligne de Développement: Jules 1 (Galerie d'Images)
-- [ ] **US-ANN-1:** Uploader plusieurs images pour une annonce.
+- [x] **US-ANN-1:** Uploader et supprimer des images pour une annonce.
 - [ ] **US-ANN-2:** Définir une image comme principale.
-- [ ] **US-ANN-3:** Réorganiser et supprimer les images.
+- [ ] **US-ANN-3:** Réorganiser la galerie.
 
 ### Ligne de Développement: Jules 2 (IA Simplifiée - MVP)
 - [x] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
 - [x] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
 
 ### Ligne de Développement: Jules 3 (Gestion Catalogue)
-- [ ] **US-ANN-5:** Implémenter la dépublication d'une annonce.
+- [x] **US-ANN-5:** Implémenter la dépublication d'une annonce.
 - [ ] **US-ANN-6:** Implémenter la republication d'une annonce.
 
 ---

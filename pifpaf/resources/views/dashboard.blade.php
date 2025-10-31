@@ -22,14 +22,43 @@
                     @else
                         <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes annonces</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($items->where('status', 'available') as $item)
+                            @foreach ($items as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
-                                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+
+                                    <div class="relative">
+                                    @if ($item->images->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                                    @else
+                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                            <span class="text-gray-500">Aucune image</span>
+                                        </div>
+                                    @endif
+                                    <span @class([
+                                            'absolute top-2 left-2 text-xs font-bold px-2 py-1 rounded text-white',
+                                            'bg-green-500' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
+                                            'bg-gray-500' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
+                                            'bg-blue-500' => $item->status === \App\Enums\ItemStatus::SOLD,
+                                        ])>
+                                            @if($item->status === \App\Enums\ItemStatus::AVAILABLE)
+                                                En ligne
+                                            @elseif($item->status === \App\Enums\ItemStatus::UNPUBLISHED)
+                                                Hors ligne
+                                            @else
+                                                Vendu
+                                            @endif
+                                        </span>
+                                    </div>
                                     <div class="p-4 flex flex-col flex-grow">
                                         <h4 class="text-xl font-semibold">{{ $item->title }}</h4>
                                         <p class="text-gray-700 mt-2 flex-grow">{{ Str::limit($item->description, 100) }}</p>
                                         <p class="text-lg font-bold text-gray-900 mt-4">{{ number_format($item->price, 2, ',', ' ') }} €</p>
-                                        <div class="mt-4 flex justify-end space-x-2">
+                                        <div class="mt-4 flex flex-wrap justify-end gap-2">
+                                            @if ($item->status === \App\Enums\ItemStatus::AVAILABLE)
+                                                <form action="{{ route('items.unpublish', $item) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment dépublier cette annonce ?');">
+                                                    @csrf
+                                                    <button type="submit" class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Dépublier</button>
+                                                </form>
+                                            @endif
                                             <a href="{{ route('items.edit', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Modifier</a>
                                             <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
                                                 @csrf
@@ -39,7 +68,7 @@
                                         </div>
                                     </div>
                                     {{-- Section des offres reçues --}}
-                                    @if($item->offers->where('status', 'pending')->isNotEmpty())
+                                    @if($item->status === \App\Enums\ItemStatus::AVAILABLE && $item->offers->where('status', 'pending')->isNotEmpty())
                                         <div class="p-4 border-t bg-gray-50">
                                             <h5 class="font-semibold text-gray-700">Offres reçues :</h5>
                                             <ul class="mt-2 space-y-2">
@@ -73,7 +102,7 @@
             {{-- Section Ventes à retirer --}}
             @php
                 $soldItemsForPickup = $items->filter(function ($item) {
-                    if ($item->status !== 'sold' || !$item->pickup_available) {
+                    if ($item->status !== \App\Enums\ItemStatus::SOLD || !$item->pickup_available) {
                         return false;
                     }
                     $paidOffer = $item->offers->firstWhere('status', 'paid');
@@ -93,7 +122,13 @@
                                 @endphp
                                 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
                                     <div class="flex items-center">
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @if ($item->images->isNotEmpty())
+                                            <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                                <span class="text-gray-500 text-xs text-center">Aucune image</span>
+                                            </div>
+                                        @endif
                                         <div>
                                             <p class="font-semibold">{{ $item->title }}</p>
                                             <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>
