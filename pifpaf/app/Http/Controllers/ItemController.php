@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ItemStatus;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class ItemController extends Controller
      */
     public function welcome(Request $request)
     {
-        $query = Item::query()->latest();
+        $query = Item::query()->available()->latest();
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -218,6 +219,19 @@ class ItemController extends Controller
 
 
         return redirect()->route('dashboard')->with('success', 'Annonce mise à jour avec succès.');
+    }
+
+    /**
+     * Dépublie une annonce.
+     */
+    public function unpublish(Item $item)
+    {
+        $this->authorize('update', $item);
+
+        $item->status = ItemStatus::UNPUBLISHED;
+        $item->save();
+
+        return redirect()->route('dashboard')->with('success', 'Annonce dépubliée avec succès.');
     }
 
     /**

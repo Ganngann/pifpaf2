@@ -31,12 +31,12 @@ class PaymentTest extends TestCase
 
         // 3. Assert
         $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Paiement effectué avec succès !');
+        $response->assertSessionHas('success', 'Paiement effectué avec succès ! Votre commande est en attente de confirmation de réception.');
 
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id,
             'amount' => $offer->amount,
-            'status' => 'completed',
+            'status' => 'payment_received',
         ]);
 
         $this->assertDatabaseHas('offers', [

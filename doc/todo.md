@@ -19,7 +19,7 @@
 - [ ] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
 
 ### Ligne de Développement: Jules 3 (Gestion Catalogue)
-- [ ] **US-ANN-5:** Implémenter la dépublication d'une annonce.
+- [x] **US-ANN-5:** Implémenter la dépublication d'une annonce.
 - [ ] **US-ANN-6:** Implémenter la republication d'une annonce.
 
 ---

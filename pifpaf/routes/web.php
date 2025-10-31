@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
     Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');
+    Route::post('/items/{item}/unpublish', [ItemController::class, 'unpublish'])->name('items.unpublish');
     Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::post('/items/{item}/offers', [OfferController::class, 'store'])->name('offers.store');
     Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
