@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 class GoogleAiService
 {
     /**
-     * Analyse une image et retourne les données structurées.
+     * Analyse une image pour un ou plusieurs objets et retourne les données structurées.
      *
      * @param string $imagePath
      * @return array|null
@@ -16,11 +16,11 @@ class GoogleAiService
     public function analyzeImage(string $imagePath): ?array
     {
         try {
-            Log::info('Starting image analysis with Google AI (cURL).');
+            Log::info('Starting multi-object image analysis with Google AI.');
             $apiKey = config('services.gemini.api_key');
 
             if (!$apiKey) {
-                Log::critical('GEMINI_API_KEY is not configured in services.php or .env file.');
+                Log::critical('GEMINI_API_KEY is not configured.');
                 return null;
             }
 
@@ -30,26 +30,24 @@ class GoogleAiService
             }
 
             $prompt = <<<'EOT'
-            Analyze the image of a second-hand item and provide a JSON object with the following details:
-            - "title": A compelling and descriptive title for the item.
-            - "description": A detailed description of the item, including its condition, features, and potential use cases.
+            Analyze the image to identify all distinct second-hand items suitable for individual sale. For each item found, provide a JSON object with the following details:
+            - "title": A compelling and descriptive title for the item in French.
+            - "description": A detailed description of the item in French, including its condition, features, and potential use cases.
             - "category": Suggest a category from this list: 'Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs', 'Autre'.
             - "price": A suggested price in EUR (float).
+            - "box": A bounding box object with normalized coordinates (from 0.0 to 1.0) for the item's location in the image, defined by four points: {"x1": top-left-x, "y1": top-left-y, "x2": bottom-right-x, "y2": bottom-right-y}.
 
-            The JSON object should be the only output.
+            The final output must be a single JSON array containing one object for each identified item. If only one item is found, return an array with a single object. If no items are found, return an empty array.
             EOT;
 
-            // Appel à l'API via cURL
             $result = $this->geminiVisionRequest($apiKey, $prompt, $imagePath);
 
             if (!$result) {
-                // geminiVisionRequest logs errors internally
                 return null;
             }
 
-            Log::info('Received response from Gemini API: ' . $result);
+            Log::info('Received response from Gemini API for multi-object analysis.');
 
-            // Clean the response to get a valid JSON
             $jsonResponse = trim(str_replace(['```json', '```'], '', $result));
             $data = json_decode($jsonResponse, true);
 
@@ -61,7 +59,7 @@ class GoogleAiService
                 return null;
             }
 
-            Log::info('Successfully parsed Gemini API response.');
+            Log::info('Successfully parsed Gemini API response for multi-object analysis.');
             return $data;
         } catch (\Exception $e) {
             Log::error('An unexpected error occurred while calling the Gemini API.', [
