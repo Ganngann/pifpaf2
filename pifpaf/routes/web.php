@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
     // Route pour la suppression d'image
     Route::delete('/item-images/{itemImage}', [ItemImageController::class, 'destroy'])->name('item-images.destroy');
+    Route::post('/item-images/{itemImage}/set-primary', [ItemImageController::class, 'setPrimary'])->name('item-images.set-primary');
+    Route::post('/item-images/reorder', [ItemImageController::class, 'reorder'])->name('item-images.reorder');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
