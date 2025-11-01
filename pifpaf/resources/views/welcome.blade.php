@@ -38,10 +38,11 @@
             @forelse ($items->where('status', 'available') as $item)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <a href="{{ route('items.show', $item) }}">
-                        @php
-                            $imageUrl = $item->images->first() ? asset('storage/' . $item->images->first()->path) : asset('images/placeholder.jpg');
-                        @endphp
-                        <img src="{{ $imageUrl }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                        @if($item->primaryImage)
+                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                        @else
+                            <img src="{{ asset('images/placeholder.jpg') }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                        @endif
                     </a>
                     <div class="p-4">
                         <a href="{{ route('items.show', $item) }}">

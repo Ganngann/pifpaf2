@@ -68,22 +68,17 @@
                                         <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover rounded-md @if($image->is_primary) border-4 border-blue-500 @endif">
                                         <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                             @if(!$image->is_primary)
-                                            <form action="{{ route('item-images.set-primary', $image->id) }}" method="POST" class="mb-1">
-                                                @csrf
-                                                <button type="submit"
-                                                        class="text-white text-xs bg-blue-500 hover:bg-blue-700 rounded-full px-2 py-1">
+                                                <button type="button"
+                                                        onclick="setAsPrimary('{{ route('item-images.set-primary', $image->id) }}')"
+                                                        class="text-white text-xs bg-blue-500 hover:bg-blue-700 rounded-full px-2 py-1 mb-1">
                                                     Principale
                                                 </button>
-                                            </form>
                                             @endif
-                                            <form action="{{ route('item-images.destroy', $image->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="text-white text-xs bg-red-500 hover:bg-red-700 rounded-full px-2 py-1">
-                                                    Supprimer
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                    onclick="deleteImage('{{ route('item-images.destroy', $image->id) }}')"
+                                                    class="text-white text-xs bg-red-500 hover:bg-red-700 rounded-full px-2 py-1">
+                                                Supprimer
+                                            </button>
                                         </div>
                                     </div>
                                 @endforeach
@@ -184,5 +179,45 @@
             },
         });
     });
+
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
+
+    function setAsPrimary(url) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Une erreur est survenue.');
+            }
+        });
+    }
+
+    function deleteImage(url) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Une erreur est survenue.');
+                }
+            });
+        }
+    }
     </script>
 </x-app-layout>

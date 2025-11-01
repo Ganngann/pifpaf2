@@ -65,4 +65,20 @@ class Item extends Model
     {
         return $this->hasMany(ItemImage::class)->orderBy('order');
     }
+
+    /**
+     * Obtenir l'image principale de l'annonce.
+     */
+    public function primaryImage()
+    {
+        return $this->hasOne(ItemImage::class)
+            ->where('is_primary', true)
+            ->withDefault(function ($itemImage, $item) {
+                // Si aucune image n'est marquée comme principale,
+                // on retourne la première image de la galerie.
+                if ($item->images()->exists()) {
+                    return $item->images()->first();
+                }
+            });
+    }
 }

@@ -24,16 +24,16 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($items as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
-
-                                    <div class="relative">
-                                    @if ($item->images->isNotEmpty())
-                                        <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                                    @else
-                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                            <span class="text-gray-500">Aucune image</span>
-                                        </div>
-                                    @endif
-                                    <span @class([
+                                    <a href="{{ route('items.show', $item) }}" class="block">
+                                        <div class="relative">
+                                        @if ($item->primaryImage && $item->primaryImage->path)
+                                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
+                                        @else
+                                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                                <span class="text-gray-500">Aucune image</span>
+                                            </div>
+                                        @endif
+                                        <span @class([
                                             'absolute top-2 left-2 text-xs font-bold px-2 py-1 rounded text-white',
                                             'bg-green-500' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
                                             'bg-gray-500' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
@@ -48,8 +48,11 @@
                                             @endif
                                         </span>
                                     </div>
+                                    </a>
                                     <div class="p-4 flex flex-col flex-grow">
-                                        <h4 class="text-xl font-semibold">{{ $item->title }}</h4>
+                                        <h4 class="text-xl font-semibold">
+                                            <a href="{{ route('items.show', $item) }}" class="hover:text-blue-600 transition-colors">{{ $item->title }}</a>
+                                        </h4>
                                         <p class="text-gray-700 mt-2 flex-grow">{{ Str::limit($item->description, 100) }}</p>
                                         <p class="text-lg font-bold text-gray-900 mt-4">{{ number_format($item->price, 2, ',', ' ') }} €</p>
                                         <div class="mt-4 flex flex-wrap justify-end gap-2">
@@ -127,8 +130,8 @@
                                 @endphp
                                 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
                                     <div class="flex items-center">
-                                        @if ($item->images->isNotEmpty())
-                                            <img src="{{ asset('storage/' . $item->images->first()->image_path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @if ($item->primaryImage && $item->primaryImage->path)
+                                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
                                         @else
                                             <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
                                                 <span class="text-gray-500 text-xs text-center">Aucune image</span>

@@ -6,34 +6,36 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\ItemImage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class VerificationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        // Créer un utilisateur spécifique pour le test
         $user = User::factory()->create([
-            'email' => 'seller@example.com',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
         ]);
 
-        // Créer une annonce avec 3 images pour cet utilisateur
-        Item::factory()
-            ->for($user)
-            ->has(
-                ItemImage::factory()
-                    ->count(3)
-                    ->sequence(
-                        ['is_primary' => true, 'order' => 0],
-                        ['is_primary' => false, 'order' => 1],
-                        ['is_primary' => false, 'order' => 2]
-                    ),
-                'images' // Spécifier le nom de la relation ici
-            )
-            ->create();
+        $item = Item::factory()->create(['user_id' => $user->id]);
+
+        // Create dummy images and corresponding records
+        $imagePaths = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
+        foreach ($imagePaths as $index => $path) {
+            // Ensure the directory exists
+            Storage::disk('public')->makeDirectory('item_images');
+
+            // Create a fake file and store it
+            $fakeImage = UploadedFile::fake()->image($path);
+            $storedPath = $fakeImage->store('item_images', 'public');
+
+            ItemImage::factory()->create([
+                'item_id' => $item->id,
+                'path' => $storedPath,
+                'is_primary' => ($index == 2), // Make the last image primary initially
+                'order' => $index,
+            ]);
+        }
     }
 }
