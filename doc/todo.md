@@ -20,7 +20,7 @@
 
 ### Ligne de Développement: Jules 3 (Gestion Catalogue)
 - [x] **US-ANN-5:** Implémenter la dépublication d'une annonce.
-- [ ] **US-ANN-6:** Implémenter la republication d'une annonce.
+- [x] **US-ANN-6:** Implémenter la republication d'une annonce.
 
 ---
 ## 🚀 Sprint 4: Logistique Avancée

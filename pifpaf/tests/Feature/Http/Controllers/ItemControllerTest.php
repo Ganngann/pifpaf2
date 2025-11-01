@@ -84,34 +84,32 @@ class ItemControllerTest extends TestCase
     }
 
     #[Test]
-    public function authenticated_user_can_update_item_with_new_image()
+    public function authenticated_user_can_add_images_when_updating_item()
     {
         Storage::fake('public');
 
         $user = User::factory()->create();
-        $oldImage = UploadedFile::fake()->image('old_image.jpg');
-        $oldImagePath = $oldImage->store('images', 'public');
-        $item = Item::factory()->create(['user_id' => $user->id, 'image_path' => $oldImagePath]);
+        $item = Item::factory()->create(['user_id' => $user->id]);
+        $this->assertCount(0, $item->images);
 
-        $newImage = UploadedFile::fake()->image('new_image.jpg');
+        $newImages = [
+            UploadedFile::fake()->image('new_image1.jpg'),
+        ];
 
         $updatedData = [
-            'title' => 'Titre mis à jour',
-            'description' => 'Description mise à jour',
-            'category' => 'Autre',
-            'price' => 123.45,
-            'image' => $newImage,
+            'title' => $item->title,
+            'description' => $item->description,
+            'category' => $item->category,
+            'price' => $item->price,
+            'images' => $newImages,
         ];
 
         $response = $this->actingAs($user)->put(route('items.update', $item), $updatedData);
 
         $response->assertRedirect(route('dashboard'));
-
         $item->refresh();
-
-        $this->assertNotEquals($oldImagePath, $item->image_path);
-        Storage::disk('public')->assertExists($item->image_path);
-        Storage::disk('public')->assertMissing($oldImagePath);
+        $this->assertCount(1, $item->images);
+        Storage::disk('public')->assertExists($item->images->first()->path);
     }
 
     #[Test]

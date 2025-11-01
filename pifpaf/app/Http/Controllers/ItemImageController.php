@@ -22,12 +22,15 @@ class ItemImageController extends Controller
         // Utiliser la policy de l'item parent pour vérifier l'autorisation
         $this->authorize('update', $itemImage->item);
 
+        // Garder une référence à l'item avant de supprimer l'image
+        $item = $itemImage->item;
+
         // Supprimer le fichier physique
         Storage::disk('public')->delete($itemImage->path);
 
         // Supprimer l'enregistrement de la base de données
         $itemImage->delete();
 
-        return response()->json(['success' => true, 'message' => 'Image supprimée avec succès.']);
+        return redirect()->route('items.edit', $item)->with('success', 'Image supprimée avec succès.');
     }
 }
