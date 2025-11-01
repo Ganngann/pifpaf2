@@ -64,13 +64,27 @@
                             <!-- Affichage des images existantes -->
                             <div id="existing-images-container" class="mt-4 flex flex-wrap gap-4">
                                 @foreach($item->images as $image)
-                                    <div id="image-{{ $image->id }}" class="relative w-32 h-32">
-                                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover rounded-md">
-                                        <button type="button"
-                                                onclick="deleteImage({{ $image->id }})"
-                                                class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold">
-                                            &times;
-                                        </button>
+                                    <div id="image-{{ $image->id }}" data-id="{{ $image->id }}" class="relative w-32 h-32 group cursor-move">
+                                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover rounded-md @if($image->is_primary) border-4 border-blue-500 @endif">
+                                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            @if(!$image->is_primary)
+                                            <form action="{{ route('item-images.set-primary', $image->id) }}" method="POST" class="mb-1">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="text-white text-xs bg-blue-500 hover:bg-blue-700 rounded-full px-2 py-1">
+                                                    Principale
+                                                </button>
+                                            </form>
+                                            @endif
+                                            <form action="{{ route('item-images.destroy', $image->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="text-white text-xs bg-red-500 hover:bg-red-700 rounded-full px-2 py-1">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -111,38 +125,8 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
-    function deleteImage(imageId) {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
-            return;
-        }
-
-        const url = `/item-images/${imageId}`;
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById(`image-${imageId}`).remove();
-                // Mettre à jour le compteur d'images existantes pour la validation côté client
-                window.existingImageCount--;
-            } else {
-                alert(data.message || 'Une erreur est survenue.');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Une erreur est survenue lors de la suppression.');
-        });
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const imageInput = document.getElementById('images');
         const previewContainer = document.getElementById('image-preview-container');
@@ -174,6 +158,30 @@
                 }
                 reader.readAsDataURL(file);
             }
+        });
+
+        const el = document.getElementById('existing-images-container');
+        const sortable = Sortable.create(el, {
+            animation: 150,
+            onEnd: function () {
+                const order = sortable.toArray();
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch('{{ route('item-images.reorder') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ ids: order })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert('La réorganisation a échoué.');
+                    }
+                });
+            },
         });
     });
     </script>
