@@ -4,21 +4,34 @@
         <x-auth-session-status class="mb-4" :status="session('success')" />
 
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div x-data="{ mainImage: '{{ $item->images->first() ? asset('storage/' . $item->images->first()->path) : asset('images/placeholder.jpg') }}' }">
-                <!-- Image principale -->
-                <img :src="mainImage" alt="{{ $item->title }}" class="w-full h-96 object-cover">
+            @if ($item->images->isNotEmpty())
+                <div x-data="{ mainImageUrl: '{{ asset('storage/' . $item->primaryImage->path) }}' }">
+                    <!-- Image principale -->
+                    <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
+                        <img :src="mainImageUrl" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                    </div>
 
-                <!-- Galerie de miniatures -->
-                <div class="flex space-x-2 p-4 bg-gray-100 overflow-x-auto">
-                    @foreach($item->images as $image)
-                        <img src="{{ asset('storage/' . $image->path) }}"
-                             alt="Miniature"
-                             class="w-24 h-24 object-cover rounded-md cursor-pointer border-2"
-                             :class="{ 'border-blue-500': mainImage === '{{ asset('storage/' . $image->path) }}' }"
-                             @click="mainImage = '{{ asset('storage/' . $image->path) }}'">
-                    @endforeach
+                    <!-- Galerie de miniatures -->
+                    @if($item->images->count() > 1)
+                        <div class="flex space-x-2 p-4 bg-gray-100 overflow-x-auto">
+                            @foreach($item->images as $image)
+                                @php
+                                    $imageUrl = asset('storage/' . $image->path);
+                                @endphp
+                                <img src="{{ $imageUrl }}"
+                                     alt="Miniature de {{ $item->title }}"
+                                     class="w-24 h-24 object-cover rounded-md cursor-pointer border-2 hover:border-blue-500"
+                                     :class="{ 'border-blue-500': mainImageUrl === '{{ $imageUrl }}' }"
+                                     @click="mainImageUrl = '{{ $imageUrl }}'">
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
-            </div>
+            @else
+                <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500">Aucune image disponible</span>
+                </div>
+            @endif
             <div class="p-8">
                 <h1 class="text-4xl font-bold mb-2">{{ $item->title }}</h1>
                 <div class="mb-6">

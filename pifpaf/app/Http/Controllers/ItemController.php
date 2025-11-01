@@ -19,7 +19,7 @@ class ItemController extends Controller
      */
     public function welcome(Request $request)
     {
-        $query = Item::query()->available()->latest();
+        $query = Item::query()->with('primaryImage')->available()->latest();
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -66,8 +66,11 @@ class ItemController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Pour le vendeur, on charge les offres avec leurs transactions
-        $items = $user->items()->with('offers.transaction', 'offers.user')->latest()->get();
+        // Pour le vendeur, on charge les articles avec leur image principale et les offres
+        $items = $user->items()
+            ->with('primaryImage', 'offers.transaction', 'offers.user')
+            ->latest()
+            ->get();
         // Pour l'acheteur, on charge les offres avec la transaction
         $offers = $user->offers()->with('item.user', 'transaction')->latest()->get();
 

@@ -11,8 +11,8 @@
 
 ### Ligne de Développement: Jules 1 (Galerie d'Images)
 - [x] **US-ANN-1:** Uploader et supprimer des images pour une annonce.
-- [ ] **US-ANN-2:** Définir une image comme principale.
-- [ ] **US-ANN-3:** Réorganiser la galerie.
+- [x] **US-ANN-2:** Définir une image comme principale.
+- [x] **US-ANN-3:** Réorganiser la galerie.
 
 ### Ligne de Développement: Jules 2 (IA Simplifiée - MVP)
 - [x] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
