@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Gemini;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -17,9 +16,8 @@ class GoogleAiService
     public function analyzeImage(string $imagePath): ?array
     {
         try {
-            Log::info('Starting image analysis with Google AI.');
+            Log::info('Starting image analysis with Google AI (cURL).');
             $apiKey = config('services.gemini.api_key');
-            Log::info('API Key loaded.');
 
             if (!$apiKey) {
                 Log::critical('GEMINI_API_KEY is not configured in services.php or .env file.');
@@ -41,12 +39,14 @@ class GoogleAiService
             The JSON object should be the only output.
             EOT;
 
-            Log::info('Sending request to Gemini API.');
-            $client = Gemini::client($apiKey);
-            $result = $client->generativeModel(model: 'gemini-2.5-flash')
-                ->withPrompt($prompt)
-                ->withImage(file_get_contents($imagePath))
-                ->generateText();
+            // Appel à l'API via cURL
+            $result = $this->geminiVisionRequest($apiKey, $prompt, $imagePath);
+
+            if (!$result) {
+                // geminiVisionRequest logs errors internally
+                return null;
+            }
+
             Log::info('Received response from Gemini API: ' . $result);
 
             // Clean the response to get a valid JSON
@@ -64,10 +64,86 @@ class GoogleAiService
             Log::info('Successfully parsed Gemini API response.');
             return $data;
         } catch (\Exception $e) {
-            Log::error('An error occurred while calling the Gemini API.', [
+            Log::error('An unexpected error occurred while calling the Gemini API.', [
                 'error' => $e->getMessage(),
             ]);
             return null;
         }
+    }
+
+    /**
+     * Exécute un appel à l'API Gemini Vision via cURL.
+     *
+     * @param string $apiKey
+     * @param string $prompt
+     * @param string $imagePath
+     * @return string|null Le texte de la réponse ou null en cas d'erreur.
+     */
+    private function geminiVisionRequest(string $apiKey, string $prompt, string $imagePath): ?string
+    {
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
+
+        $mimeType = mime_content_type($imagePath);
+        $imageData = base64_encode(file_get_contents($imagePath));
+
+        $body = [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $prompt],
+                        [
+                            'inline_data' => [
+                                'mime_type' => $mimeType,
+                                'data' => $imageData,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $jsonBody = json_encode($body);
+
+        $ch = curl_init($apiUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $jsonBody,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT => 30,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            Log::error('cURL error during Gemini API call.', ['error' => $curlError]);
+            return null;
+        }
+
+        if ($httpCode !== 200) {
+            $data = json_decode($response, true);
+            $errorMessage = $data['error']['message'] ?? 'Unknown API error';
+            Log::error('Gemini API returned an error.', [
+                'http_code' => $httpCode,
+                'error_message' => $errorMessage,
+                'response_body' => $response,
+            ]);
+            return null;
+        }
+
+        $data = json_decode($response, true);
+        $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        if (!$text) {
+            Log::error('Malformed response from Gemini API.', ['response' => $response]);
+            return null;
+        }
+
+        return $text;
     }
 }
