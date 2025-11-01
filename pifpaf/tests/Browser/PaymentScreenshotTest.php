@@ -7,8 +7,8 @@ use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PaymentScreenshotTest extends DuskTestCase
 {
@@ -18,34 +18,35 @@ class PaymentScreenshotTest extends DuskTestCase
     public function capture_payment_flow_screenshots()
     {
         $seller = User::factory()->create();
-        $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $buyer = User::factory()->create(['wallet' => 10.00]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 25.00]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
+            'amount' => 20.00,
             'status' => 'accepted'
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $offer) {
             $browser->loginAs($buyer)
-                ->visit('/dashboard');
+                ->visit(route('payment.create', $offer))
+                ->assertSee('Récapitulatif de la commande');
 
-            // Desktop Screenshot
-            $browser->resize(1920, 1080)
-                ->screenshot('us13-desktop-dashboard-payment-link');
+            // Desktop screenshot
+            $browser->resize(1280, 800)
+                ->screenshot('US-TRS-1/payment-desktop-initial');
 
-            $browser->clickLink('Payer')
-                ->waitFor('#card_number')
-                ->screenshot('us13-desktop-payment-form');
+            // Desktop with wallet checked
+            $browser->check('use_wallet')
+                ->screenshot('US-TRS-1/payment-desktop-wallet-checked');
 
-            // Mobile Screenshot
+            // Mobile screenshot
             $browser->resize(375, 812)
-                ->visit('/dashboard')
-                ->screenshot('us13-mobile-dashboard-payment-link');
+                 ->screenshot('US-TRS-1/payment-mobile-initial');
 
-            $browser->clickLink('Payer')
-                ->waitFor('#card_number')
-                ->screenshot('us13-mobile-payment-form');
+            // Mobile with wallet checked
+            $browser->check('use_wallet')
+                ->screenshot('US-TRS-1/payment-mobile-wallet-checked');
         });
     }
 }

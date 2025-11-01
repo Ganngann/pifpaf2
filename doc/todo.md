@@ -50,7 +50,7 @@
 - [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée.
 
 ### Ligne de Développement: Jules 3 (Portefeuille)
-- [ ] **US-TRS-1:** Implémenter le paiement via le solde du portefeuille.
+- [x] **US-TRS-1:** Implémenter le paiement via le solde du portefeuille.
 - [ ] **US-HIS-4:** Créer la page d'historique des mouvements du portefeuille.
 
 ---

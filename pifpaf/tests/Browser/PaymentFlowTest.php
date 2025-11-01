@@ -38,7 +38,7 @@ class PaymentFlowTest extends DuskTestCase
                 ->type('#card_number', '1234567812345678')
                 ->type('#expiry_date', '12/25')
                 ->type('#cvc', '123')
-                ->press('Payer ' . number_format($offer->amount, 2, ',', ' ') . ' €')
+                ->click('@submit-payment-button')
                 ->assertPathIs('/dashboard')
                 ->assertSee('Paiement effectué avec succès !');
         });
