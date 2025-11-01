@@ -12,6 +12,8 @@ class Transaction extends Model
     protected $fillable = [
         'offer_id',
         'amount',
+        'wallet_amount',
+        'card_amount',
         'status',
         'pickup_code',
     ];

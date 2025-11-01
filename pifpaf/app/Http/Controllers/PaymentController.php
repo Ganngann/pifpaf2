@@ -25,8 +25,11 @@ class PaymentController extends Controller
             return redirect()->route('dashboard')->withErrors(['payment' => 'Cette offre n\'est pas prête pour le paiement.']);
         }
 
+        $walletBalance = Auth::user()->wallet;
+
         return view('payment.create', [
             'offer' => $offer,
+            'walletBalance' => $walletBalance,
         ]);
     }
 
@@ -45,10 +48,34 @@ class PaymentController extends Controller
             return redirect()->route('dashboard')->withErrors(['payment' => 'Cette offre n\'est pas prête pour le paiement.']);
         }
 
+        $user = Auth::user();
+        $walletBalance = $user->wallet;
+        $offerAmount = $offer->amount;
+        $useWallet = $request->has('use_wallet');
+
+        $walletAmountToUse = 0;
+        $cardAmount = $offerAmount;
+
+        if ($useWallet && $walletBalance > 0) {
+            $walletAmountToUse = min($walletBalance, $offerAmount);
+            $cardAmount = $offerAmount - $walletAmountToUse;
+        }
+
+        // Simulation du paiement par carte : si un montant par carte est nécessaire,
+        // nous considérons que le paiement réussit, conformément à la logique existante.
+
+        // Mettre à jour le solde du portefeuille si utilisé
+        if ($walletAmountToUse > 0) {
+            $user->wallet -= $walletAmountToUse;
+            $user->save();
+        }
+
         // Préparer les données de la transaction
         $transactionData = [
             'offer_id' => $offer->id,
-            'amount' => $offer->amount,
+            'amount' => $offerAmount,
+            'wallet_amount' => $walletAmountToUse,
+            'card_amount' => $cardAmount,
             'status' => 'payment_received', // Le paiement est séquestré jusqu'à confirmation
         ];
 
