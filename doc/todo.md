@@ -26,7 +26,7 @@
 ## 🚀 Sprint 4: Logistique Avancée
 
 ### Ligne de Développement: Jules 1 (Configuration Vendeur)
-- [ ] **US-LOG-1:** Créer l'interface de gestion des adresses de retrait.
+- [x] **US-LOG-1:** Créer l'interface de gestion des adresses de retrait.
 - [ ] **US-LOG-2:** Permettre d'activer les options de livraison sur une annonce.
 
 ### Ligne de Développement: Jules 2 (Parcours Acheteur)
