@@ -15,6 +15,8 @@ class PickupAddress extends Model
         'street',
         'city',
         'postal_code',
+        'latitude',
+        'longitude',
     ];
 
     public function user()

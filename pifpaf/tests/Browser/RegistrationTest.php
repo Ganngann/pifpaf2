@@ -21,7 +21,7 @@ class RegistrationTest extends DuskTestCase
                     ->type('email', 'john.doe@example.com')
                     ->type('password', 'password')
                     ->type('password_confirmation', 'password')
-                    ->press('Register')
+                    ->press('button[type="submit"]')
                     ->assertPathIs('/dashboard');
         });
     }

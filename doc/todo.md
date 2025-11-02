@@ -36,7 +36,7 @@
 
 ### Ligne de Développement: Jules 3 (Transparence & Recherche)
 - [x] **US-TRS-2:** Afficher le pseudo de l'acheteur sur la page de l'offre.
-- [ ] **US-LOG-8:** Implémenter le filtre de recherche par distance.
+- [x] **US-LOG-8:** Implémenter le filtre de recherche par distance.
 
 ---
 ## 🚀 Sprint 5: Finalisation & Historique
