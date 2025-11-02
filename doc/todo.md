@@ -30,7 +30,7 @@
 - [x] **US-LOG-2:** Permettre d'activer les options de livraison sur une annonce.
 
 ### Ligne de Développement: Jules 2 (Parcours Acheteur)
-- [ ] **US-LOG-3:** Afficher les modes de livraison sur la page annonce.
+- [x] **US-LOG-3:** Afficher les modes de livraison sur la page annonce.
 - [ ] **US-LOG-4:** Intégrer le choix du mode de livraison dans le processus d'offre.
 - [ ] **US-LOG-5:** Créer l'interface de gestion des adresses de livraison.
 
