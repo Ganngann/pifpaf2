@@ -94,6 +94,8 @@ class User extends Authenticatable
     public function reviewsReceived()
     {
         return $this->hasMany(Review::class, 'reviewee_id');
+    }
+
     /**
      * Vérifie si l'utilisateur est banni.
      *
