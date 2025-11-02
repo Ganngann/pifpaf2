@@ -74,4 +74,32 @@ class TransactionController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');
     }
+
+    /**
+     * Affiche l'historique des achats de l'utilisateur.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function purchases()
+    {
+        $purchases = Transaction::whereHas('offer', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->with('offer.item.primaryImage')->latest()->paginate(10);
+
+        return view('transactions.purchases', compact('purchases'));
+    }
+
+    /**
+     * Affiche l'historique des ventes de l'utilisateur.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function sales()
+    {
+        $sales = Transaction::whereHas('offer.item', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->with('offer.item.primaryImage')->latest()->paginate(10);
+
+        return view('transactions.sales', compact('sales'));
+    }
 }
