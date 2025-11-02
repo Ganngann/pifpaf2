@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     @forelse ($sales as $transaction)
                         <div class="flex items-center mb-4">
-                            <img src="{{ $transaction->offer->item->primaryImage ? Storage::url($transaction->offer->item->primaryImage->image_path) : asset('images/placeholder.jpg') }}" alt="{{ $transaction->offer->item->title }}" class="w-16 h-16 object-cover rounded">
+                            <img src="{{ $transaction->offer->item->primaryImage->image_path ? Storage::url($transaction->offer->item->primaryImage->image_path) : asset('images/placeholder.jpg') }}" alt="{{ $transaction->offer->item->title }}" class="w-16 h-16 object-cover rounded">
                             <div class="ml-4">
                                 <div class="font-bold">{{ $transaction->offer->item->title }}</div>
                                 <div>{{ $transaction->amount }} €</div>
