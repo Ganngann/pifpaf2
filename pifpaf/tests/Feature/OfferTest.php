@@ -26,9 +26,16 @@ class OfferTest extends TestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20]);
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'price' => 20,
+            'delivery_available' => true,
+        ]);
 
-        $response = $this->actingAs($buyer)->post(route('offers.store', $item), ['amount' => 15]);
+        $response = $this->actingAs($buyer)->post(route('offers.store', $item), [
+            'amount' => 15,
+            'delivery_method' => 'delivery',
+        ]);
 
         $response->assertRedirect(route('items.show', $item));
         $response->assertSessionHas('success');
@@ -37,15 +44,22 @@ class OfferTest extends TestCase
             'user_id' => $buyer->id,
             'amount' => 15,
             'status' => 'pending',
+            'delivery_method' => 'delivery',
         ]);
     }
 
     public function test_user_cannot_submit_offer_on_own_item()
     {
         $user = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $user->id]);
+        $item = Item::factory()->create([
+            'user_id' => $user->id,
+            'delivery_available' => true,
+        ]);
 
-        $response = $this->actingAs($user)->post(route('offers.store', $item), ['amount' => 10]);
+        $response = $this->actingAs($user)->post(route('offers.store', $item), [
+            'amount' => 10,
+            'delivery_method' => 'delivery',
+        ]);
 
         $response->assertSessionHasErrors('amount');
         $this->assertDatabaseMissing('offers', ['item_id' => $item->id]);
