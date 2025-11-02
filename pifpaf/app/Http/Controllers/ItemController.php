@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ItemController extends Controller
 {
@@ -89,7 +91,7 @@ class ItemController extends Controller
     }
 
     /**
-     * Analyse une image avec l'IA et redirige vers le formulaire de création.
+     * Analyse une image avec l'IA et redirige vers le formulaire de création ou de sélection.
      */
     public function analyzeImage(Request $request, GoogleAiService $aiService)
     {
@@ -102,19 +104,86 @@ class ItemController extends Controller
 
         $aiData = $aiService->analyzeImage($imagePath);
 
-        if (!$aiData) {
-            return back()->with('error', 'L\'analyse de l\'image a échoué. Veuillez réessayer.');
+        if (is_null($aiData) || !is_array($aiData)) {
+            return back()->with('error', 'L\'analyse de l\'image a échoué ou n\'a retourné aucune donnée valide. Veuillez réessayer.');
         }
 
         // Stocker l'image temporairement
         $storedImagePath = $imageFile->store('temp_images', 'public');
 
-        // Rediriger vers le formulaire de création avec les données pré-remplies
+        // Si un seul objet est détecté (ou si la structure est celle d'un seul objet pour la rétrocompatibilité)
+        if (count($aiData) === 1 && isset($aiData[0]['title'])) {
+             // On passe directement à la création
+            return redirect()->route('items.create')->with([
+                'ai_data' => $aiData[0],
+                'image_path' => $storedImagePath
+            ]);
+        }
+
+        // Si plusieurs objets sont détectés
+        if (count($aiData) > 1) {
+            return view('items.select-object', [
+                'image_path' => $storedImagePath,
+                'items_data' => $aiData
+            ]);
+        }
+
+        // Si aucun objet n'est détecté ou en cas de format inattendu
+        return back()->with('error', 'Aucun objet n\'a pu être détecté sur l\'image. Essayez avec une autre photo.');
+    }
+
+    /**
+     * Crée une annonce à partir d'un objet sélectionné sur une image multi-objets.
+     */
+    public function createFromSelection(Request $request)
+    {
+        $validated = $request->validate([
+            'original_image_path' => 'required|string',
+            'item_data' => 'required|string',
+        ]);
+
+        $itemData = json_decode($validated['item_data'], true);
+        $originalPath = $validated['original_image_path'];
+        $box = $itemData['box'];
+
+        // S'assurer que le fichier original existe
+        if (!Storage::disk('public')->exists($originalPath)) {
+            return redirect()->route('items.create-with-ai')->with('error', 'L\'image originale n\'a pas été trouvée.');
+        }
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read(Storage::disk('public')->path($originalPath));
+
+        // Calcul des dimensions de la découpe en normalisant les coordonnées (0-1000 -> 0.0-1.0)
+        $x1 = $box['x1'] / 1000.0;
+        $y1 = $box['y1'] / 1000.0;
+        $x2 = $box['x2'] / 1000.0;
+        $y2 = $box['y2'] / 1000.0;
+
+        $width = ($x2 - $x1) * $image->width();
+        $height = ($y2 - $y1) * $image->height();
+        $x = $x1 * $image->width();
+        $y = $y1 * $image->height();
+
+
+        // Découpe de l'image
+        $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
+
+        // Sauvegarde de l'image découpée
+        $croppedImageName = 'cropped_' . uniqid() . '.jpg';
+        $croppedImagePath = 'temp_images/' . $croppedImageName;
+        Storage::disk('public')->put($croppedImagePath, (string) $croppedImage->encode());
+
+        // Supprimer l'image originale non découpée après utilisation
+        Storage::disk('public')->delete($originalPath);
+
+        // Rediriger vers le formulaire de création avec les données de l'objet sélectionné
         return redirect()->route('items.create')->with([
-            'ai_data' => $aiData,
-            'image_path' => $storedImagePath
+            'ai_data' => $itemData,
+            'image_path' => $croppedImagePath
         ]);
     }
+
 
     /**
      * Enregistre une nouvelle annonce dans la base de données.
