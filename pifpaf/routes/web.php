@@ -70,6 +70,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour la messagerie
     Route::resource('conversations', \App\Http\Controllers\ConversationController::class)->only(['index', 'show', 'store']);
     Route::post('conversations/{conversation}/messages', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+
+    // Route pour les avis
+    Route::post('/transactions/{transaction}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');

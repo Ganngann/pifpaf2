@@ -57,7 +57,7 @@
 ## 🚀 Sprint 6: Communauté & IA de Masse
 
 ### Ligne de Développement: Jules 1 (Confiance)
-- [ ] **US-COM-1:** Mettre en place le système de notation post-transaction.
+- [x] **US-COM-1:** Mettre en place le système de notation post-transaction.
 - [ ] **US-COM-2:** Afficher les notes sur les profils publics.
 - [ ] **US-COM-5:** Créer le formulaire d'ouverture de litige.
 

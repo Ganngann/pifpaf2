@@ -83,4 +83,14 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function reviewsWritten()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
 }
