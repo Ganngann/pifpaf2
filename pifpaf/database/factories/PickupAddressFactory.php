@@ -18,11 +18,13 @@ class PickupAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::factory(),
             'name' => $this->faker->word,
             'street' => $this->faker->streetAddress,
             'city' => $this->faker->city,
             'postal_code' => $this->faker->postcode,
+            'latitude' => $this->faker->latitude,
+            'longitude' => $this->faker->longitude,
         ];
     }
 }

@@ -27,6 +27,9 @@ class ItemFactory extends Factory
             'description' => $this->faker->paragraph,
             'category' => $this->faker->randomElement(['Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs']),
             'price' => $this->faker->randomFloat(2, 10, 1000),
+            'pickup_available' => false,
+            'delivery_available' => true,
+            'pickup_address_id' => null,
         ];
     }
 

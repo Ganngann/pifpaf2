@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\PickupAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PickupAddressController extends Controller
@@ -32,14 +34,26 @@ class PickupAddressController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
         ]);
 
-        Auth::user()->pickupAddresses()->create($request->all());
+        // Geocoding
+        $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
+        $response = Http::get('https://geocode.maps.co/search', [
+            'q' => $addressString,
+        ]);
+
+        if ($response->successful() && count($response->json()) > 0) {
+            $geocodedData = $response->json()[0];
+            $validatedData['latitude'] = $geocodedData['lat'];
+            $validatedData['longitude'] = $geocodedData['lon'];
+        }
+
+        Auth::user()->pickupAddresses()->create($validatedData);
 
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse ajoutée avec succès.');
     }
@@ -68,14 +82,32 @@ class PickupAddressController extends Controller
     {
         $this->authorize('update', $pickupAddress);
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
         ]);
 
-        $pickupAddress->update($request->all());
+        // Geocoding
+        $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
+        $response = Http::get('https://geocode.maps.co/search', [
+            'q' => $addressString,
+        ]);
+
+        if ($response->successful() && count($response->json()) > 0) {
+            $geocodedData = $response->json()[0];
+            $validatedData['latitude'] = $geocodedData['lat'];
+            $validatedData['longitude'] = $geocodedData['lon'];
+        } else {
+            // En cas d'échec du géocodage, on ne met pas à jour les coordonnées
+            // pour ne pas écraser d'anciennes valeurs correctes.
+            $validatedData['latitude'] = $pickupAddress->latitude;
+            $validatedData['longitude'] = $pickupAddress->longitude;
+        }
+
+
+        $pickupAddress->update($validatedData);
 
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse mise à jour avec succès.');
     }
