@@ -34,7 +34,7 @@ class AdminAccessTest extends TestCase
 
         $response = $this->get('/admin/dashboard');
 
-        $response->assertRedirect('/');
+        $response->assertForbidden();
     }
 
     /**
