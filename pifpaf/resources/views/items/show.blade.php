@@ -56,9 +56,22 @@
 
                 <div class="flex items-center justify-between">
                     <span class="font-bold text-3xl">{{ $item->price }} €</span>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
-                        Acheter
-                    </button>
+                    <div class="flex space-x-2">
+                        @auth
+                            @if(Auth::id() !== $item->user_id)
+                                <form action="{{ route('conversations.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                    <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded">
+                                        Contacter le vendeur
+                                    </button>
+                                </form>
+                            @endif
+                        @endauth
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
+                            Acheter
+                        </button>
+                    </div>
                 </div>
 
                 {{-- Section pour faire une offre --}}
