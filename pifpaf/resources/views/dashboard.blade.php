@@ -67,7 +67,7 @@
                                                     <button type="submit" class="text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Publier</button>
                                                 </form>
                                             @endif
-                                            <a href="{{ route('items.edit', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Modifier</a>
+                                            <a href="{{ route('items.edit', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300 edit-item-link">Modifier</a>
                                             <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
                                                 @csrf
                                                 @method('DELETE')

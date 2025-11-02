@@ -23,6 +23,7 @@ class Item extends Model
         'price',
         'status',
         'pickup_available',
+        'user_id',
     ];
 
     /**

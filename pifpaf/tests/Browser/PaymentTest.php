@@ -38,8 +38,8 @@ class PaymentTest extends DuskTestCase
                     ->type('#expiry_date', '12/25')
                     ->type('#cvc', '123')
                     ->click('@submit-payment-button')
-                    ->assertPathIs('/dashboard')
-                    ->assertSee('Paiement effectué avec succès');
+                    ->waitForText('Paiement effectué avec succès')
+                    ->assertPathIs('/dashboard');
 
             $this->assertDatabaseHas('transactions', [
                 'offer_id' => $offer->id,
@@ -72,8 +72,8 @@ class PaymentTest extends DuskTestCase
                     ->assertSee('Total à payer : 0.00 €')
                     ->assertSee('Votre solde de portefeuille couvre la totalité de la commande.')
                     ->click('@submit-payment-button')
-                    ->assertPathIs('/dashboard')
-                    ->assertSee('Paiement effectué avec succès');
+                    ->waitForText('Paiement effectué avec succès')
+                    ->assertPathIs('/dashboard');
 
             $this->assertDatabaseHas('transactions', [
                 'offer_id' => $offer->id,
