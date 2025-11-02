@@ -71,13 +71,13 @@
                 calculateBoxes() {
                     this.boxes = this.items.filter(item => item.box).map(item => {
                         const box = item.box;
-                        // The coordinates from Gemini API are normalized (0.0 to 1.0).
-                        // We multiply by 100 to get percentages for CSS positioning.
+                        // The coordinates from Gemini API are normalized to 0-1000.
+                        // We need to divide by 10 to get percentages for CSS positioning.
                         return {
-                            x: box.x1 * 100,
-                            y: box.y1 * 100,
-                            w: (box.x2 - box.x1) * 100,
-                            h: (box.y2 - box.y1) * 100,
+                            x: box.x1 / 10,
+                            y: box.y1 / 10,
+                            w: (box.x2 - box.x1) / 10,
+                            h: (box.y2 - box.y1) / 10,
                         };
                     });
                 },

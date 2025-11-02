@@ -154,11 +154,17 @@ class ItemController extends Controller
         $manager = new ImageManager(new Driver());
         $image = $manager->read(Storage::disk('public')->path($originalPath));
 
-        // Calcul des dimensions de la découpe
-        $width = ($box['x2'] - $box['x1']) * $image->width();
-        $height = ($box['y2'] - $box['y1']) * $image->height();
-        $x = $box['x1'] * $image->width();
-        $y = $box['y1'] * $image->height();
+        // Calcul des dimensions de la découpe en normalisant les coordonnées (0-1000 -> 0.0-1.0)
+        $x1 = $box['x1'] / 1000.0;
+        $y1 = $box['y1'] / 1000.0;
+        $x2 = $box['x2'] / 1000.0;
+        $y2 = $box['y2'] / 1000.0;
+
+        $width = ($x2 - $x1) * $image->width();
+        $height = ($y2 - $y1) * $image->height();
+        $x = $x1 * $image->width();
+        $y = $y1 * $image->height();
+
 
         // Découpe de l'image
         $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);

@@ -53,7 +53,6 @@ Route::middleware('auth')->group(function () {
     // Routes pour l'IA
     Route::get('/items/create-with-ai', [ItemController::class, 'createWithAi'])->name('items.create-with-ai');
     Route::post('/items/analyze-image', [ItemController::class, 'analyzeImage'])->name('items.analyze-image');
-    Route::post('/items/create-from-selection', [ItemController::class, 'createFromSelection'])->name('items.create-from-selection');
 
     // Route pour la suppression d'image
     Route::delete('/item-images/{itemImage}', [ItemImageController::class, 'destroy'])->name('item-images.destroy');
