@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -13,6 +16,10 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
+        $userCount = User::count();
+        $itemCount = Item::count();
+        $transactionCount = Transaction::count();
+
+        return view('admin.dashboard', compact('userCount', 'itemCount', 'transactionCount'));
     }
 }
