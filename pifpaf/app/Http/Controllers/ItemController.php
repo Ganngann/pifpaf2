@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -47,6 +49,36 @@ class ItemController extends Controller
         $query->when($request->filled('max_price'), function ($q) use ($request) {
             $q->where('price', '<=', $request->input('max_price'));
         });
+
+        // Filtre par distance
+        if ($request->filled('location') && $request->filled('distance')) {
+            $locationString = $request->input('location');
+            $distanceInKm = (int) $request->input('distance');
+
+            // 1. Géocoder l'adresse de recherche
+            $response = Http::get('https://geocode.maps.co/search', ['q' => $locationString]);
+
+            if ($response->successful() && count($response->json()) > 0) {
+                $geocodedLocation = $response->json()[0];
+                $latitude = $geocodedLocation['lat'];
+                $longitude = $geocodedLocation['lon'];
+
+                // 2. Filtrer les items en utilisant la formule Haversine (compatible SQLite)
+                $radiusInKm = $distanceInKm;
+
+                // Formule de Haversine pour calculer la distance
+                // 6371 est le rayon de la Terre en kilomètres.
+                $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+
+                $addressIds = DB::table('pickup_addresses')
+                    ->select('id')
+                    ->whereRaw("{$haversine} < ?", [$latitude, $longitude, $latitude, $radiusInKm])
+                    ->pluck('id');
+
+                $query->whereIn('pickup_address_id', $addressIds)
+                      ->where('pickup_available', true);
+            }
+        }
 
         $items = $query->get();
 

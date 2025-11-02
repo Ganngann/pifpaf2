@@ -4,7 +4,7 @@
 
         <!-- Formulaire de recherche et de filtrage -->
         <div class="mb-8 p-4 bg-gray-100 rounded-lg">
-            <form action="{{ route('welcome') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form action="{{ route('welcome') }}" method="GET" id="search-form" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <!-- Champ de recherche par mot-clé -->
                 <div class="md:col-span-2">
                     <input type="text" name="search" placeholder="Que recherchez-vous ?" class="w-full px-4 py-2 border rounded-lg" value="{{ request('search') }}">
@@ -23,15 +23,30 @@
                     </select>
                 </div>
 
-                <!-- Filtres de prix et bouton -->
-                <div class="grid grid-cols-3 gap-2">
+                <!-- Filtres de prix -->
+                <div class="grid grid-cols-2 gap-2">
                     <input type="number" name="min_price" placeholder="Prix min" class="w-full px-2 py-2 border rounded-lg" value="{{ request('min_price') }}">
                     <input type="number" name="max_price" placeholder="Prix max" class="w-full px-2 py-2 border rounded-lg" value="{{ request('max_price') }}">
-                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                        Filtrer
-                    </button>
+                </div>
+
+                <!-- Nouveaux filtres de distance -->
+                <div class="grid grid-cols-1 gap-2">
+                    <input type="text" name="location" placeholder="Autour de... (ex: Paris)" class="w-full px-4 py-2 border rounded-lg" value="{{ request('location') }}">
+                    <select name="distance" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">Distance</option>
+                        <option value="10" @if(request('distance') == '10') selected @endif>10 km</option>
+                        <option value="25" @if(request('distance') == '25') selected @endif>25 km</option>
+                        <option value="50" @if(request('distance') == '50') selected @endif>50 km</option>
+                        <option value="100" @if(request('distance') == '100') selected @endif>100 km</option>
+                    </select>
                 </div>
             </form>
+            <!-- Bouton de soumission sur une nouvelle ligne pour un meilleur affichage -->
+            <div class="mt-4 text-center">
+                <button type="submit" form="search-form" class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Rechercher
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
