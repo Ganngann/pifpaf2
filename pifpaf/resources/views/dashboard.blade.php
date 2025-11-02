@@ -82,7 +82,7 @@
                                             <ul class="mt-2 space-y-2">
                                                 @foreach ($item->offers->where('status', 'pending') as $offer)
                                                     <li class="flex items-center justify-between text-sm">
-                                                        <span>{{ $offer->user->name }} - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></span>
+                                                        <span><a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></span>
                                                         <div class="flex space-x-1">
                                                             <form action="{{ route('offers.accept', $offer) }}" method="POST">
                                                                 @csrf
