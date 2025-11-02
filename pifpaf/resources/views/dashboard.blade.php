@@ -81,19 +81,38 @@
                                             <h5 class="font-semibold text-gray-700">Offres reçues :</h5>
                                             <ul class="mt-2 space-y-2">
                                                 @foreach ($item->offers->where('status', 'pending') as $offer)
-                                                    <li class="flex items-center justify-between text-sm">
-                                                        <span><a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></span>
-                                                        <div class="flex space-x-1">
-                                                            <form action="{{ route('offers.accept', $offer) }}" method="POST">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <button type="submit" class="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600">Accepter</button>
-                                                            </form>
-                                                            <form action="{{ route('offers.reject', $offer) }}" method="POST">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <button type="submit" class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600">Refuser</button>
-                                                            </form>
+                                                    <li class="p-2 border-b last:border-b-0">
+                                                        <div class="flex items-center justify-between text-sm mb-1">
+                                                            <span>
+                                                                <a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span>
+                                                            </span>
+                                                            <div class="flex space-x-1">
+                                                                <form action="{{ route('offers.accept', $offer) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit" class="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600">Accepter</button>
+                                                                </form>
+                                                                <form action="{{ route('offers.reject', $offer) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit" class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600">Refuser</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-xs text-gray-500 flex items-center">
+                                                            @if ($offer->delivery_method == 'delivery')
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8a1 1 0 001-1zM21 11V5a2 2 0 00-2-2H9.5a2 2 0 00-2 2v2" />
+                                                                </svg>
+                                                                <span>Livraison</span>
+                                                            @elseif ($offer->delivery_method == 'pickup')
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                </svg>
+                                                                <span>Retrait sur place</span>
+                                                            @endif
                                                         </div>
                                                     </li>
                                                 @endforeach

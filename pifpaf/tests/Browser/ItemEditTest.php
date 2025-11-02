@@ -35,6 +35,7 @@ class ItemEditTest extends DuskTestCase
                     ->type('title', 'Nouveau Titre d\'Annonce')
                     ->type('description', 'Nouvelle description de l\'annonce.')
                     ->type('price', '150.75')
+                    ->check('delivery_available')
                     ->attach('images[]', $filePath)
                     ->press('Mettre à jour')
                     ->assertPathIs('/dashboard')

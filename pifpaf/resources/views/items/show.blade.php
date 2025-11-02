@@ -105,6 +105,31 @@
                             <h2 class="text-2xl font-bold mb-4">Faire une offre</h2>
                             <form action="{{ route('offers.store', $item) }}" method="POST">
                                 @csrf
+
+                                {{-- Options de livraison --}}
+                                <div class="mb-4">
+                                    <h3 class="text-lg font-semibold mb-2">Choisissez votre mode de livraison</h3>
+                                    <div class="space-y-2">
+                                        @if ($item->pickup_available)
+                                        <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
+                                            <input type="radio" name="delivery_method" value="pickup" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" required>
+                                            <span class="ml-3 text-sm font-medium text-gray-700">Retrait sur place</span>
+                                        </label>
+                                        @endif
+
+                                        @if ($item->delivery_available)
+                                        <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
+                                            <input type="radio" name="delivery_method" value="delivery" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" required>
+                                            <span class="ml-3 text-sm font-medium text-gray-700">Livraison</span>
+                                        </label>
+                                        @endif
+                                    </div>
+                                    @error('delivery_method')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+
                                 <div class="flex items-center">
                                     <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border rounded-l-md" placeholder="Votre offre" required min="0.01" step="0.01">
                                     <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-r-md">

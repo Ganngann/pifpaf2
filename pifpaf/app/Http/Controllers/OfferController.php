@@ -19,6 +19,7 @@ class OfferController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric|min:0.01',
+            'delivery_method' => 'required|in:pickup,delivery',
         ]);
 
         // Vérifier que l'utilisateur ne fait pas une offre sur son propre article
@@ -31,6 +32,7 @@ class OfferController extends Controller
             'item_id' => $item->id,
             'amount' => $request->amount,
             'status' => 'pending',
+            'delivery_method' => $request->delivery_method,
         ]);
 
         return redirect()->route('items.show', $item)->with('success', 'Votre offre a été envoyée avec succès.');
