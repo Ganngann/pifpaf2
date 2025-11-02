@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\WalletHistory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,23 @@ class TransactionController extends Controller
         $seller = $transaction->offer->item->user;
         $seller->wallet += $transaction->amount;
         $seller->save();
+
+        // Enregistrer l'historique du portefeuille pour le vendeur (crédit)
+        WalletHistory::create([
+            'user_id' => $seller->id,
+            'type' => 'credit',
+            'amount' => $transaction->amount,
+            'description' => 'Vente de l\'article : ' . $transaction->offer->item->title,
+        ]);
+
+        // Enregistrer l'historique du portefeuille pour l'acheteur (débit)
+        $buyer = $transaction->offer->user;
+        WalletHistory::create([
+            'user_id' => $buyer->id,
+            'type' => 'debit',
+            'amount' => $transaction->amount,
+            'description' => 'Achat de l\'article : ' . $transaction->offer->item->title,
+        ]);
 
         return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');
     }

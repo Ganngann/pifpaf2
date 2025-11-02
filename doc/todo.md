@@ -51,7 +51,7 @@
 
 ### Ligne de Développement: Jules 3 (Portefeuille)
 - [x] **US-TRS-1:** Implémenter le paiement via le solde du portefeuille.
-- [ ] **US-HIS-4:** Créer la page d'historique des mouvements du portefeuille.
+- [x] **US-HIS-4:** Créer la page d'historique des mouvements du portefeuille.
 
 ---
 ## 🚀 Sprint 6: Communauté & IA de Masse
