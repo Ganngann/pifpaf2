@@ -15,7 +15,7 @@
                         <div class="bg-blue-100 p-6 rounded-lg">
                             <h4 class="text-lg font-semibold text-blue-800">Utilisateurs</h4>
                             <p class="text-3xl font-bold text-blue-900 mt-2">{{ $userCount }}</p>
-                            <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Gérer les utilisateurs</a>
+                            <a href="{{ route('admin.users.index') }}" class="text-blue-600 hover:underline mt-4 inline-block">Gérer les utilisateurs</a>
                         </div>
 
                         <!-- Statistique Annonces -->

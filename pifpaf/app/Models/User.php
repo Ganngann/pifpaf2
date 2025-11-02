@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'wallet',
         'role',
+        'banned_at',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'banned_at' => 'datetime',
         ];
     }
 
@@ -82,5 +84,15 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est banni.
+     *
+     * @return bool
+     */
+    public function isBanned(): bool
+    {
+        return !is_null($this->banned_at);
     }
 }
