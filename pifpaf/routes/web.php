@@ -67,6 +67,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour la file d'attente IA
     Route::get('/ai-requests', [AiRequestController::class, 'index'])->name('ai-requests.index');
     Route::post('/ai-requests', [AiRequestController::class, 'store'])->name('ai-requests.store');
+    // Routes pour la messagerie
+    Route::resource('conversations', \App\Http\Controllers\ConversationController::class)->only(['index', 'show', 'store']);
+    Route::post('conversations/{conversation}/messages', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
