@@ -18,7 +18,7 @@ class PickupAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::factory()->create()->id,
             'name' => $this->faker->word,
             'street' => $this->faker->streetAddress,
             'city' => $this->faker->city,
