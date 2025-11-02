@@ -66,7 +66,7 @@
 - [ ] **US-COM-4:** Créer l'interface de messagerie (boîte de réception).
 
 ### Ligne de Développement: Jules 3 (IA v2)
-- [ ] **US-IA-5:** Développer la capacité de l'IA à traiter plusieurs objets sur une photo.
+- [x] **US-IA-5:** Développer la capacité de l'IA à traiter plusieurs objets sur une photo.
 
 ---
 ## 🚀 Sprint 7: Conformité
