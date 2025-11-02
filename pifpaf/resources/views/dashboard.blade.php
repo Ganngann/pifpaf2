@@ -214,6 +214,8 @@
                                                 Confirmer la réception
                                             </button>
                                         </form>
+                                    @elseif ($offer->transaction && $offer->transaction->status === 'completed' && !$offer->transaction->reviews()->where('reviewer_id', Auth::id())->exists())
+                                        <x-review-modal :transaction="$offer->transaction" :recipientName="$offer->item->user->name" />
                                     @endif
                                 </div>
                             @endforeach
@@ -221,6 +223,52 @@
                     @endif
                 </div>
             </div>
+
+            {{-- Section Ventes terminées (pour le vendeur) --}}
+            @php
+                $completedSales = $items->filter(function ($item) {
+                    return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
+                        return $offer->transaction && $offer->transaction->status === 'completed';
+                    });
+                });
+            @endphp
+            @if ($completedSales->isNotEmpty())
+                <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes ventes terminées</h3>
+                        <div class="space-y-4">
+                            @foreach ($completedSales as $item)
+                                @php
+                                    $completedTransaction = $item->offers->where('status', 'paid')->first()->transaction;
+                                    $buyer = $completedTransaction->offer->user;
+                                @endphp
+                                <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                    <div class="flex items-center">
+                                         @if ($item->primaryImage && $item->primaryImage->path)
+                                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                                <span class="text-gray-500 text-xs text-center">Aucune image</span>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <p class="font-semibold">{{ $item->title }}</p>
+                                            <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 sm:mt-0">
+                                        @if (!$completedTransaction->reviews()->where('reviewer_id', Auth::id())->exists())
+                                            <x-review-modal :transaction="$completedTransaction" :recipientName="$buyer->name" />
+                                        @else
+                                            <p class="text-sm text-gray-500">Avis déjà laissé.</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>
