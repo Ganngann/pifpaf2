@@ -88,7 +88,8 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('items.create');
+        $pickupAddresses = Auth::user()->pickupAddresses;
+        return view('items.create', compact('pickupAddresses'));
     }
 
 
@@ -169,11 +170,17 @@ class ItemController extends Controller
             'images' => 'required_without:image_path|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'image_path' => 'sometimes|string',
+            'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
+            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
         ]);
 
         $item = new Item($validatedData);
-        $item->pickup_available = $request->has('pickup_available');
+        $item->delivery_available = $request->boolean('delivery_available');
+        $item->pickup_available = $request->boolean('pickup_available');
+        // N'assigner pickup_address_id que si le retrait est activé
+        $item->pickup_address_id = $request->boolean('pickup_available') ? $validatedData['pickup_address_id'] : null;
+
         $item->user_id = Auth::id();
         $item->save();
 
@@ -217,9 +224,11 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $this->authorize('update', $item);
+        $pickupAddresses = Auth::user()->pickupAddresses;
 
         return view('items.edit', [
             'item' => $item,
+            'pickupAddresses' => $pickupAddresses,
         ]);
     }
 
@@ -237,10 +246,16 @@ class ItemController extends Controller
             'price' => 'required|numeric',
             'images' => 'sometimes|array|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
+            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
         ]);
 
-        $validatedData['pickup_available'] = $request->has('pickup_available');
+        $validatedData['delivery_available'] = $request->boolean('delivery_available');
+        $validatedData['pickup_available'] = $request->boolean('pickup_available');
+        // N'assigner pickup_address_id que si le retrait est activé
+        $validatedData['pickup_address_id'] = $request->boolean('pickup_available') ? $validatedData['pickup_address_id'] : null;
+
         $item->update($validatedData);
 
         // Ajout de nouvelles images

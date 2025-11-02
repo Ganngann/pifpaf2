@@ -90,12 +90,36 @@
                         </div>
 
 
-                        <!-- Retrait sur place -->
-                        <div class="mb-4">
-                            <label for="pickup_available" class="inline-flex items-center">
-                                <input type="checkbox" name="pickup_available" id="pickup_available" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" value="1" {{ old('pickup_available') ? 'checked' : '' }}>
-                                <span class="ml-2 text-gray-700">Retrait sur place disponible</span>
-                            </label>
+                        <div x-data="{ pickupAvailable: {{ old('pickup_available', 'false') }} }">
+                            <!-- Livraison à domicile -->
+                            <div class="mb-4">
+                                <label for="delivery_available" class="inline-flex items-center">
+                                    <input type="checkbox" name="delivery_available" id="delivery_available" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" value="1" {{ old('delivery_available') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-gray-700">Livraison à domicile disponible</span>
+                                </label>
+                            </div>
+
+                            <!-- Retrait sur place -->
+                            <div class="mb-4">
+                                <label for="pickup_available" class="inline-flex items-center">
+                                    <input type="checkbox" name="pickup_available" id="pickup_available" x-model="pickupAvailable" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" value="1" {{ old('pickup_available') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-gray-700">Retrait sur place disponible</span>
+                                </label>
+                            </div>
+
+                            <!-- Sélection de l'adresse de retrait (conditionnelle) -->
+                            <div x-show="pickupAvailable" class="mb-4">
+                                <label for="pickup_address_id" class="block text-gray-700 text-sm font-bold mb-2">Adresse de retrait</label>
+                                <select name="pickup_address_id" id="pickup_address_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">-- Choisir une adresse --</option>
+                                    @foreach($pickupAddresses as $address)
+                                        <option value="{{ $address->id }}" {{ old('pickup_address_id') == $address->id ? 'selected' : '' }}>
+                                            {{ $address->name }} - {{ $address->address }}, {{ $address->city }}, {{ $address->zip_code }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <a href="{{ route('profile.addresses.create') }}" class="text-sm text-blue-500 hover:text-blue-700 mt-1 inline-block">Ajouter une nouvelle adresse</a>
+                            </div>
                         </div>
 
                         <!-- Bouton de soumission -->

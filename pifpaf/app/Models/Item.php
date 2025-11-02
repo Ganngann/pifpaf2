@@ -23,6 +23,8 @@ class Item extends Model
         'price',
         'status',
         'pickup_available',
+        'delivery_available',
+        'pickup_address_id',
         'user_id',
     ];
 
@@ -81,5 +83,13 @@ class Item extends Model
                     return $item->images()->first();
                 }
             });
+    }
+
+    /**
+     * Obtenir l'adresse de retrait de l'annonce.
+     */
+    public function pickupAddress()
+    {
+        return $this->belongsTo(PickupAddress::class);
     }
 }
