@@ -73,6 +73,10 @@ Route::middleware('auth')->group(function () {
 
     // Route pour les avis
     Route::post('/transactions/{transaction}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+
+    // Routes pour l'historique des transactions
+    Route::get('/purchases', [TransactionController::class, 'purchases'])->name('transactions.purchases');
+    Route::get('/sales', [TransactionController::class, 'sales'])->name('transactions.sales');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
