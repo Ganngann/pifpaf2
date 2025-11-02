@@ -81,3 +81,8 @@ Route::get('/test-ai', function (App\Services\GoogleAiService $aiService) {
     $imagePath = storage_path('app/public/images/placeholder.jpg');
     return $aiService->analyzeImage($imagePath);
 });
+
+// Routes pour l'administration
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+});
