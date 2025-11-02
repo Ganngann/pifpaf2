@@ -5,9 +5,12 @@ namespace Tests\Feature;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
+use App\Models\PickupAddress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -18,7 +21,9 @@ class PickupAvailableTest extends TestCase
     #[Test]
     public function pickup_available_option_is_saved_when_creating_an_item(): void
     {
+        Storage::fake('public');
         $user = User::factory()->create();
+        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
 
         $itemData = [
@@ -26,8 +31,9 @@ class PickupAvailableTest extends TestCase
             'description' => 'Une super description',
             'category' => 'Vêtements',
             'price' => 10,
-            'image_path' => 'images/test.jpg',
+            'images' => [UploadedFile::fake()->image('photo.jpg')],
             'pickup_available' => true,
+            'pickup_address_id' => $pickupAddress->id,
         ];
 
         $this->post(route('items.store'), $itemData);
@@ -35,6 +41,7 @@ class PickupAvailableTest extends TestCase
         $this->assertDatabaseHas('items', [
             'title' => 'Mon article',
             'pickup_available' => true,
+            'pickup_address_id' => $pickupAddress->id,
         ]);
     }
 
