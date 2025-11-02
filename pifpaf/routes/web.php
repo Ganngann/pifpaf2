@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ItemImageController;
+use App\Http\Controllers\PickupAddressController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -59,6 +60,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/item-images/{itemImage}', [ItemImageController::class, 'destroy'])->name('item-images.destroy');
     Route::post('/item-images/{itemImage}/set-primary', [ItemImageController::class, 'setPrimary'])->name('item-images.set-primary');
     Route::post('/item-images/reorder', [ItemImageController::class, 'reorder'])->name('item-images.reorder');
+
+    // Routes pour la gestion des adresses de retrait
+    Route::resource('profile/addresses', PickupAddressController::class)->names('profile.addresses');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

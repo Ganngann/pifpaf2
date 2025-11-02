@@ -62,4 +62,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function pickupAddresses()
+    {
+        return $this->hasMany(PickupAddress::class);
+    }
 }
