@@ -62,8 +62,8 @@
 - [ ] **US-COM-5:** Créer le formulaire d'ouverture de litige.
 
 ### Ligne de Développement: Jules 2 (Communication)
-- [ ] **US-COM-3:** Permettre de démarrer une conversation.
-- [ ] **US-COM-4:** Créer l'interface de messagerie (boîte de réception).
+- [x] **US-COM-3:** Permettre de démarrer une conversation.
+- [x] **US-COM-4:** Créer l'interface de messagerie (boîte de réception).
 
 ### Ligne de Développement: Jules 3 (IA v2)
 - [x] **US-IA-5:** Développer la capacité de l'IA à traiter plusieurs objets sur une photo.

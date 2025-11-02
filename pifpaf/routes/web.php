@@ -63,6 +63,10 @@ Route::middleware('auth')->group(function () {
 
     // Routes pour la gestion des adresses de retrait
     Route::resource('profile/addresses', PickupAddressController::class)->names('profile.addresses');
+
+    // Routes pour la messagerie
+    Route::resource('conversations', \App\Http\Controllers\ConversationController::class)->only(['index', 'show', 'store']);
+    Route::post('conversations/{conversation}/messages', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');

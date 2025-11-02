@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Item::class => ItemPolicy::class,
         PickupAddress::class => PickupAddressPolicy::class,
+        \App\Models\Conversation::class => \App\Policies\ConversationPolicy::class,
     ];
 
     /**
