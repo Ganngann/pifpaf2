@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'wallet',
+        'role',
     ];
 
     /**
@@ -71,5 +72,15 @@ class User extends Authenticatable
     public function pickupAddresses()
     {
         return $this->hasMany(PickupAddress::class);
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un administrateur.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

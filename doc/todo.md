@@ -79,7 +79,7 @@
 ## 🚀 Sprint 8: Administration & Modération
 
 ### Lignes de Développement: Jules 1, 2 & 3 (Conjoint)
-- [ ] **US-ADM-10:** Mettre en place le rôle "Admin" et l'accès sécurisé.
+- [x] **US-ADM-10:** Mettre en place le rôle "Admin" et l'accès sécurisé.
 - [ ] **US-ADM-11:** Créer le dashboard avec les statistiques clés.
 - [ ] **US-ADM-12:** Développer le module de gestion des utilisateurs.
 - [ ] **US-ADM-13:** Développer le module de modération des annonces.
