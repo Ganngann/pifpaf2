@@ -10,14 +10,14 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <x-input-label for="email" :value="__('Adresse e-mail')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus dusk="email-input" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+            <x-input-label for="password" :value="__('Mot de passe')" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" dusk="password-input" />
         </div>
 
         <!-- Remember Me -->

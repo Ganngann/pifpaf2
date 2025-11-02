@@ -19,7 +19,7 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <form action="{{ route('items.analyze-image') }}" method="POST" enctype="multipart/form-data" @submit="loading = true">
+                    <form action="{{ route('ai-requests.store') }}" method="POST" enctype="multipart/form-data" @submit="loading = true">
                         @csrf
 
                         <div class="mb-4">

@@ -45,8 +45,8 @@ class BuyerConfirmsReceptionTest extends DuskTestCase
                     ->value('#cvc', '123')
                     ->click('@submit-payment-button')
                     // Étape 2: Vérifier l'affichage du bouton de confirmation après paiement
+                    ->waitForText('Paiement effectué avec succès !')
                     ->assertPathIs('/dashboard')
-                    ->assertSee('Paiement effectué avec succès !')
                     ->assertSee('Confirmer la réception') // Le bouton doit être visible !
                     // Étape 3: Confirmer la réception
                     ->click('button[type="submit"]')
