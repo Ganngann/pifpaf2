@@ -35,7 +35,7 @@
 - [ ] **US-LOG-5:** Créer l'interface de gestion des adresses de livraison.
 
 ### Ligne de Développement: Jules 3 (Transparence & Recherche)
-- [ ] **US-TRS-2:** Afficher le pseudo de l'acheteur sur la page de l'offre.
+- [x] **US-TRS-2:** Afficher le pseudo de l'acheteur sur la page de l'offre.
 - [ ] **US-LOG-8:** Implémenter le filtre de recherche par distance.
 
 ---
