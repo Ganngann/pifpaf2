@@ -56,6 +56,8 @@ Ta mission n'existe pas dans le vide. Ton code doit s'intégrer parfaitement. **
 
 Tu peux maintenant commencer à coder.
 
+**Principe de Conception :** Vise à créer les composants les plus petits et les plus réutilisables possible. Chaque composant (Blade, AlpineJS, Livewire) doit avoir une seule responsabilité bien définie.
+
 1.  **Crée ta branche de travail :**
     *   `git checkout -b feature/[ID_US]-description-courte`
 2.  **Écris un test qui échoue :** Conformément à la philosophie TDD, commence par écrire un test (PHPUnit ou Dusk) qui valide un critère d'acceptation et qui échoue.
@@ -69,7 +71,4 @@ Tu peux maintenant commencer à coder.
 Ton travail n'est terminé que lorsque la documentation est à jour.
 
 1.  **Mets à jour la To-Do List :** Coche la case de ta User Story dans `doc/todo.md`.
-2.  **Fournis les Preuves Visuelles :** Si ta mission a un impact sur l'interface, prends des captures d'écran (mobile et desktop).
-    *   Crée le dossier : `mkdir -p doc/screenshots/[ID_US]`
-    *   Sauvegarde les images dedans.
-3.  **Soumets ton travail :** Rédige un message de commit clair et soumets ta Pull Request. Ton rapport doit inclure ton plan d'action final (de la phase 2) et les liens vers les captures d'écran.
+2.  **Soumets ton travail :** Rédige un message de commit clair et soumets ta Pull Request. Ton rapport doit inclure ton plan d'action final (de la phase 2).

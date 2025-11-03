@@ -84,3 +84,8 @@
 - [x] **US-ADM-12:** Développer le module de gestion des utilisateurs.
 - [ ] **US-ADM-13:** Développer le module de modération des annonces.
 - [ ] **US-ADM-14:** Développer le module de suivi des litiges.
+
+---
+##  META: Stratégie de Développement
+- [x] **META-1:** Supprimer l'exigence des captures d'écran dans la documentation et le processus de développement.
+- [x] **META-2:** Ajouter le principe de conception de composants petits et réutilisables dans le guide de développement.
