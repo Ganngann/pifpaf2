@@ -1,23 +1,4 @@
 ---
 deployment:
   tasks:
-    - |
-      set -e
-      LOG_FILE="$HOME/cpanel_debug.log"
-      echo "--- DEBUGGING CPANEL DEPLOYMENT ---" > $LOG_FILE
-      echo "Date: $(date)" >> $LOG_FILE
-      echo "" >> $LOG_FILE
-
-      echo "--- WHO AM I ---" >> $LOG_FILE
-      whoami >> $LOG_FILE
-      echo "" >> $LOG_FILE
-
-      echo "--- CURRENT DIRECTORY (PWD) ---" >> $LOG_FILE
-      pwd >> $LOG_FILE
-      echo "" >> $LOG_FILE
-
-      echo "--- LISTING FILES IN CURRENT DIRECTORY (ls -la) ---" >> $LOG_FILE
-      ls -la >> $LOG_FILE
-      echo "" >> $LOG_FILE
-
-      echo "Debug log created at $LOG_FILE"
+    - /bin/bash deploy.sh
