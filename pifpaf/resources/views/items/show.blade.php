@@ -95,7 +95,9 @@
                                             Acheter
                                         </button>
                                     </form>
-                                    <form action="{{ route('conversations.create', ['item' => $item->id]) }}" method="GET">
+                                    <form action="{{ route('conversations.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="item_id" value="{{ $item->id }}">
                                         <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded">
                                             Contacter le vendeur
                                         </button>
