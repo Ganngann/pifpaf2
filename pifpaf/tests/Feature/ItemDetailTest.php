@@ -34,7 +34,7 @@ class ItemDetailTest extends TestCase
         // 4. Vérifier que les informations de l'article et du vendeur sont présentes
         $response->assertSee($item->title);
         $response->assertSee($item->description);
-        $response->assertSee($item->price);
+        $response->assertSee(number_format($item->price, 2, ',', ' '));
         $response->assertSee($user->name);
     }
 }

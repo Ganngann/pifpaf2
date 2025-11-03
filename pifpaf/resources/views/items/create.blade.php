@@ -10,6 +10,17 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
+                    <!-- Bouton pour la création assistée par IA -->
+                    <div class="mb-6 text-center">
+                        <a href="{{ route('items.create-with-ai') }}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            🚀 Essayer la création d'annonce par IA
+                        </a>
+                        <p class="text-sm text-gray-500 mt-2">Gagnez du temps en laissant notre IA remplir les champs pour vous !</p>
+                    </div>
+
+                    <div class="my-4 border-t border-gray-200"></div>
+
+
                     <!-- Affichage des erreurs de validation -->
                     @if ($errors->any())
                         <div class="alert alert-danger mb-4">

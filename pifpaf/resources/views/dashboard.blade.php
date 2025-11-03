@@ -21,64 +21,176 @@
                         </div>
                     @else
                         <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes annonces</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($items as $item)
-                                <div class="border rounded-lg shadow-lg overflow-hidden flex flex-col">
-                                    <a href="{{ route('items.show', $item) }}" class="block">
-                                        <div class="relative">
-                                        @if ($item->primaryImage && $item->primaryImage->path)
-                                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                                        @else
-                                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                                <span class="text-gray-500">Aucune image</span>
-                                            </div>
+
+                        <!-- Vue Tableau pour Desktop -->
+                        <div class="hidden sm:block overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Annonce
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Statut
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Prix
+                                        </th>
+                                        <th scope="col" class="relative px-6 py-3">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach ($items as $item)
+                                        <tr id="item-row-{{ $item->id }}">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        @if ($item->primaryImage && $item->primaryImage->path)
+                                                            <img class="h-10 w-10 object-cover" src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}">
+                                                        @else
+                                                            <div class="h-10 w-10 bg-gray-200 flex items-center justify-center">
+                                                                <span class="text-xs text-gray-500">?</span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            <a href="{{ route('items.edit', $item) }}" class="hover:text-blue-600 transition-colors">{{ $item->title }}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                 <span id="status-badge-{{ $item->id }}" @class([
+                                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                                    'bg-green-100 text-green-800' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
+                                                    'bg-gray-100 text-gray-800' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
+                                                    'bg-blue-100 text-blue-800' => $item->status === \App\Enums\ItemStatus::SOLD,
+                                                ])>
+                                                    @if($item->status === \App\Enums\ItemStatus::AVAILABLE)
+                                                        En ligne
+                                                    @elseif($item->status === \App\Enums\ItemStatus::UNPUBLISHED)
+                                                        Hors ligne
+                                                    @else
+                                                        Vendu
+                                                    @endif
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ number_format($item->price, 2, ',', ' ') }} €
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div class="flex items-center justify-end space-x-2" id="actions-{{ $item->id }}">
+                                                    @if ($item->status !== \App\Enums\ItemStatus::SOLD)
+                                                        <button
+                                                            data-item-id="{{ $item->id }}"
+                                                            class="toggle-status-btn text-yellow-600 hover:text-yellow-900">
+                                                            {{ $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'Dépublier' : 'Publier' }}
+                                                        </button>
+                                                    @endif
+                                                     <a href="{{ route('items.show', $item) }}" class="text-indigo-600 hover:text-indigo-900">Voir</a>
+                                                    <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                         {{-- Section des offres pour cet item --}}
+                                        @if($item->status === \App\Enums\ItemStatus::AVAILABLE && $item->offers->where('status', 'pending')->isNotEmpty())
+                                            <tr>
+                                                <td colspan="4" class="px-6 py-4 bg-gray-50">
+                                                    <div class="pl-10">
+                                                        <h5 class="text-sm font-semibold text-gray-700">Offres reçues :</h5>
+                                                        <ul class="mt-2 space-y-2">
+                                                            @foreach ($item->offers->where('status', 'pending') as $offer)
+                                                                <li class="p-2 border-b last:border-b-0">
+                                                                    <div class="flex items-center justify-between text-sm mb-1">
+                                                                        <span>
+                                                                            Acheteur : <a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span>
+                                                                        </span>
+                                                                        <div class="flex space-x-1">
+                                                                            <form action="{{ route('offers.accept', $offer) }}" method="POST">
+                                                                                @csrf
+                                                                                @method('PATCH')
+                                                                                <button type="submit" class="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600">Accepter</button>
+                                                                            </form>
+                                                                            <form action="{{ route('offers.reject', $offer) }}" method="POST">
+                                                                                @csrf
+                                                                                @method('PATCH')
+                                                                                <button type="submit" class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600">Refuser</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         @endif
-                                        <span @class([
-                                            'absolute top-2 left-2 text-xs font-bold px-2 py-1 rounded text-white',
-                                            'bg-green-500' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
-                                            'bg-gray-500' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
-                                            'bg-blue-500' => $item->status === \App\Enums\ItemStatus::SOLD,
-                                        ])>
-                                            @if($item->status === \App\Enums\ItemStatus::AVAILABLE)
-                                                En ligne
-                                            @elseif($item->status === \App\Enums\ItemStatus::UNPUBLISHED)
-                                                Hors ligne
-                                            @else
-                                                Vendu
-                                            @endif
-                                        </span>
-                                    </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Vue Cartes pour Mobile -->
+                        <div class="sm:hidden space-y-4">
+                            @foreach ($items as $item)
+                                <div class="border rounded-lg shadow-lg overflow-hidden">
+                                    <a href="{{ route('items.edit', $item) }}" class="block p-4">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-16 w-16">
+                                                @if ($item->primaryImage && $item->primaryImage->path)
+                                                    <img class="h-16 w-16 object-cover" src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}">
+                                                @else
+                                                     <div class="h-16 w-16 bg-gray-200 flex items-center justify-center">
+                                                        <span class="text-xs text-gray-500">?</span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="ml-4 flex-grow">
+                                                <h4 class="text-lg font-semibold text-gray-900">{{ $item->title }}</h4>
+                                                <p class="text-sm font-bold text-gray-700 mt-1">{{ number_format($item->price, 2, ',', ' ') }} €</p>
+                                                <span @class([
+                                                    'mt-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                                    'bg-green-100 text-green-800' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
+                                                    'bg-gray-100 text-gray-800' => $item->status === \App\Enums\ItemStatus::UNPUBLISHED,
+                                                    'bg-blue-100 text-blue-800' => $item->status === \App\Enums\ItemStatus::SOLD,
+                                                ])>
+                                                    @if($item->status === \App\Enums\ItemStatus::AVAILABLE)
+                                                        En ligne
+                                                    @elseif($item->status === \App\Enums\ItemStatus::UNPUBLISHED)
+                                                        Hors ligne
+                                                    @else
+                                                        Vendu
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
                                     </a>
-                                    <div class="p-4 flex flex-col flex-grow">
-                                        <h4 class="text-xl font-semibold">
-                                            <a href="{{ route('items.show', $item) }}" class="hover:text-blue-600 transition-colors">{{ $item->title }}</a>
-                                        </h4>
-                                        <p class="text-gray-700 mt-2 flex-grow">{{ Str::limit($item->description, 100) }}</p>
-                                        <p class="text-lg font-bold text-gray-900 mt-4">{{ number_format($item->price, 2, ',', ' ') }} €</p>
-                                        <div class="mt-4 flex flex-wrap justify-end gap-2">
-                                            @if ($item->status === \App\Enums\ItemStatus::AVAILABLE)
-                                                <form action="{{ route('items.unpublish', $item) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment dépublier cette annonce ?');">
-                                                    @csrf
-                                                    <button type="submit" class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Dépublier</button>
-                                                </form>
-                                            @elseif ($item->status === \App\Enums\ItemStatus::UNPUBLISHED)
-                                                <form action="{{ route('items.publish', $item) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment publier cette annonce ?');">
-                                                    @csrf
-                                                    <button type="submit" class="text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Publier</button>
-                                                </form>
+                                     <div class="p-4 border-t flex flex-wrap justify-end gap-2 bg-gray-50">
+                                            @if ($item->status !== \App\Enums\ItemStatus::SOLD)
+                                                <button
+                                                    data-item-id="{{ $item->id }}"
+                                                    class="toggle-status-btn text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                                                    {{ $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'Dépublier' : 'Publier' }}
+                                                </button>
                                             @endif
-                                            <a href="{{ route('items.edit', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300 edit-item-link">Modifier</a>
+                                            <a href="{{ route('items.show', $item) }}" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Voir</a>
                                             <form action="{{ route('items.destroy', $item) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Supprimer</button>
                                             </form>
                                         </div>
-                                    </div>
-                                    {{-- Section des offres reçues --}}
+                                    {{-- Section des offres pour cet item --}}
                                     @if($item->status === \App\Enums\ItemStatus::AVAILABLE && $item->offers->where('status', 'pending')->isNotEmpty())
                                         <div class="p-4 border-t bg-gray-50">
-                                            <h5 class="font-semibold text-gray-700">Offres reçues :</h5>
+                                            <h5 class="font-semibold text-gray-700 text-sm">Offres reçues :</h5>
                                             <ul class="mt-2 space-y-2">
                                                 @foreach ($item->offers->where('status', 'pending') as $offer)
                                                     <li class="p-2 border-b last:border-b-0">
@@ -98,21 +210,6 @@
                                                                     <button type="submit" class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600">Refuser</button>
                                                                 </form>
                                                             </div>
-                                                        </div>
-                                                        <div class="text-xs text-gray-500 flex items-center">
-                                                            @if ($offer->delivery_method == 'delivery')
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8a1 1 0 001-1zM21 11V5a2 2 0 00-2-2H9.5a2 2 0 00-2 2v2" />
-                                                                </svg>
-                                                                <span>Livraison</span>
-                                                            @elseif ($offer->delivery_method == 'pickup')
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                </svg>
-                                                                <span>Retrait sur place</span>
-                                                            @endif
                                                         </div>
                                                     </li>
                                                 @endforeach
@@ -290,4 +387,42 @@
             @endif
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle-status-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const itemId = this.dataset.itemId;
+                const url = `/api/items/${itemId}/toggle-status`;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Mettre à jour le badge de statut
+                    const statusBadge = document.getElementById(`status-badge-${itemId}`);
+                    statusBadge.textContent = data.newStatusText;
+                    statusBadge.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full'; // Reset classes
+                    if (data.isAvailable) {
+                        statusBadge.classList.add('bg-green-100', 'text-green-800');
+                    } else {
+                        statusBadge.classList.add('bg-gray-100', 'text-gray-800');
+                    }
+
+                    // Mettre à jour le bouton
+                    this.textContent = data.isAvailable ? 'Dépublier' : 'Publier';
+                })
+                .catch(error => console.error('Erreur:', error));
+            });
+        });
+    });
+    </script>
+    @endpush
 </x-app-layout>
