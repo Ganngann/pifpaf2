@@ -23,13 +23,16 @@ class OfferFlowTest extends DuskTestCase
         $buyer = User::factory()->create([
             'email' => 'buyer@example.com',
         ]);
+        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
 
         // 2. Le vendeur a un article en vente
         $item = Item::factory()->create([
             'user_id' => $seller->id,
             'title' => 'Super Article à Vendre',
             'price' => 100,
-            'delivery_available' => true, // Activer la livraison
+            'delivery_available' => true,
+            'pickup_available' => true,
+            'pickup_address_id' => $address->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item, $seller) {

@@ -16,7 +16,8 @@ class ItemEditTest extends DuskTestCase
     public function testUserCanEditTheirOwnItem(): void
     {
         $user = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $user->id]);
+        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $user->id]);
+        $item = Item::factory()->create(['user_id' => $user->id, 'pickup_address_id' => $address->id]);
 
         // Créer un fichier image réel pour le test
         $imageName = 'test-edit-image.jpg';
@@ -26,7 +27,7 @@ class ItemEditTest extends DuskTestCase
         }
         UploadedFile::fake()->image($imageName)->move(dirname($filePath), $imageName);
 
-        $this->browse(function (Browser $browser) use ($user, $item, $filePath) {
+        $this->browse(function (Browser $browser) use ($user, $item, $filePath, $address) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
                     // On cible le lien dans la première rangée du tableau, qui est sur le titre de l'item.
@@ -37,6 +38,8 @@ class ItemEditTest extends DuskTestCase
                     ->type('description', 'Nouvelle description de l\'annonce.')
                     ->type('price', '150.75')
                     ->check('delivery_available')
+                    ->check('pickup_available')
+                    ->select('pickup_address_id', $address->id)
                     ->attach('images[]', $filePath)
                     ->press('Mettre à jour')
                     ->assertPathIs('/dashboard')

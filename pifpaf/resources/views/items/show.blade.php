@@ -95,6 +95,11 @@
                                             Acheter
                                         </button>
                                     </form>
+                                    <form action="{{ route('conversations.create', ['item' => $item->id]) }}" method="GET">
+                                        <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded">
+                                            Contacter le vendeur
+                                        </button>
+                                    </form>
                                 @endif
                             @else
                                 <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
