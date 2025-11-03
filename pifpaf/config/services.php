@@ -37,6 +37,7 @@ return [
 
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
+        'timeout' => env('GEMINI_TIMEOUT', 120),
     ],
 
 ];

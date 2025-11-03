@@ -87,4 +87,29 @@ class AiRequestController extends Controller
 
         return response($encodedImage)->header('Content-Type', $encodedImage->mediaType());
     }
+
+    /**
+     * Retry a failed AI request.
+     */
+    public function retry(AiRequest $aiRequest)
+    {
+        if ($aiRequest->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($aiRequest->status !== 'failed') {
+            return back()->with('error', 'Seules les analyses échouées peuvent être relancées.');
+        }
+
+        if ($aiRequest->retry_count >= 3) {
+            return back()->with('error', 'Vous avez atteint le nombre maximum de tentatives.');
+        }
+
+        $aiRequest->increment('retry_count');
+        $aiRequest->update(['status' => 'pending', 'error_message' => null]);
+
+        ProcessAiImage::dispatch($aiRequest);
+
+        return redirect()->route('ai-requests.index')->with('success', 'L\'analyse a été relancée.');
+    }
 }
