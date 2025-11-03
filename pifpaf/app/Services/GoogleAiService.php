@@ -14,7 +14,7 @@ class GoogleAiService
      * @param string $imagePath
      * @return array|null
      */
-    public function analyzeImage(string $imagePath): ?array
+    public function analyzeImage(string $imagePath): array
     {
         try {
             Log::info('Starting multi-object image analysis with Google AI.');
@@ -22,12 +22,12 @@ class GoogleAiService
 
             if (!$apiKey) {
                 Log::critical('GEMINI_API_KEY is not configured.');
-                return null;
+                return ['success' => false, 'error' => 'GEMINI_API_KEY is not configured.'];
             }
 
             if (!File::exists($imagePath)) {
                 Log::error("Image file not found at path: {$imagePath}");
-                return null;
+                return ['success' => false, 'error' => "Image file not found at path: {$imagePath}"];
             }
 
             $prompt = <<<'EOT'
@@ -41,32 +41,33 @@ class GoogleAiService
             The final output must be a single JSON array containing one object for each identified item. If only one item is found, return an array with a single object. If no items are found, return an empty array.
             EOT;
 
-            $result = $this->geminiVisionRequest($apiKey, $prompt, $imagePath);
+            $response = $this->geminiVisionRequest($apiKey, $prompt, $imagePath);
 
-            if (!$result) {
-                return null;
+            if (!$response['success']) {
+                return $response;
             }
 
             Log::info('Received response from Gemini API for multi-object analysis.');
 
-            $jsonResponse = trim(str_replace(['```json', '```'], '', $result));
+            $jsonResponse = trim(str_replace(['```json', '```'], '', $response['data']));
             $data = json_decode($jsonResponse, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                Log::error('Failed to decode JSON from Gemini API response.', [
-                    'response' => $result,
+                $error = 'Failed to decode JSON from Gemini API response.';
+                Log::error($error, [
+                    'response' => $response['data'],
                     'json_error' => json_last_error_msg(),
                 ]);
-                return null;
+                return ['success' => false, 'error' => $error, 'raw_response' => $response['data']];
             }
 
             Log::info('Successfully parsed Gemini API response for multi-object analysis.');
-            return $data;
+            return ['success' => true, 'data' => $data];
         } catch (\Exception $e) {
             Log::error('An unexpected error occurred while calling the Gemini API.', [
                 'error' => $e->getMessage(),
             ]);
-            return null;
+            return ['success' => false, 'error' => $e->getMessage(), 'raw_response' => $e->getTraceAsString()];
         }
     }
 
@@ -78,7 +79,7 @@ class GoogleAiService
      * @param string $imagePath
      * @return string|null Le texte de la réponse ou null en cas d'erreur.
      */
-    private function geminiVisionRequest(string $apiKey, string $prompt, string $imagePath): ?string
+    private function geminiVisionRequest(string $apiKey, string $prompt, string $imagePath): array
     {
         $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
@@ -101,26 +102,30 @@ class GoogleAiService
             ],
         ];
 
+        $timeout = config('services.gemini.timeout', 120);
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->timeout(30)->post("{$apiUrl}?key={$apiKey}", $body);
+        ])->timeout($timeout)->post("{$apiUrl}?key={$apiKey}", $body);
 
         if ($response->failed()) {
+            $errorBody = $response->body();
             Log::error('Gemini API returned an error.', [
                 'http_code' => $response->status(),
-                'response_body' => $response->body(),
+                'response_body' => $errorBody,
             ]);
-            return null;
+            return ['success' => false, 'error' => 'Gemini API request failed.', 'raw_response' => $errorBody];
         }
 
         $data = $response->json();
         $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
 
         if (!$text) {
+            $errorBody = $response->body();
             Log::error('Malformed response from Gemini API.', ['response' => $data]);
-            return null;
+            return ['success' => false, 'error' => 'Malformed response from Gemini API.', 'raw_response' => $errorBody];
         }
 
-        return $text;
+        return ['success' => true, 'data' => $text];
     }
 }

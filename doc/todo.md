@@ -89,3 +89,6 @@
 ## ✨ Améliorations & Corrections
 - [x] **BUG-101, BUG-106:** Refactoriser l'affichage des listes d'articles (accueil, profil) avec une carte unifiée et corriger l'alignement.
 - [x] **BUG-105:** Corriger l'affichage des images (tronquées) sur la page de détail de l'article.
+##  META: Stratégie de Développement
+- [x] **META-1:** Supprimer l'exigence des captures d'écran dans la documentation et le processus de développement.
+- [x] **META-2:** Ajouter le principe de conception de composants petits et réutilisables dans le guide de développement.

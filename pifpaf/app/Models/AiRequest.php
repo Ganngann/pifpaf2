@@ -16,6 +16,8 @@ class AiRequest extends Model
         'result',
         'error_message',
         'created_item_ids',
+        'retry_count',
+        'raw_error_response',
     ];
 
     protected $casts = [
