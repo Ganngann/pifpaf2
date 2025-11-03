@@ -41,7 +41,7 @@
                     </a>
                 </div>
                 <p class="text-gray-600 mb-8">{{ $item->description }}</p>
-
+                <div x-data="{ deliveryMethod: '' }">
                 <!-- Modes de livraison -->
                 <div class="mb-6">
                     <h2 class="text-xl font-semibold mb-3">Modes de livraison</h2>
@@ -78,24 +78,52 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-3xl">{{ $item->price }} €</span>
-                    <div class="flex space-x-2">
-                        @auth
-                            @if(Auth::id() !== $item->user_id)
-                                <form action="{{ route('conversations.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                    <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded">
-                                        Contacter le vendeur
-                                    </button>
-                                </form>
-                            @endif
-                        @endauth
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
-                            Acheter
-                        </button>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-3xl">{{ number_format($item->price, 2, ',', ' ') }} €</span>
+                        <div class="flex space-x-2">
+                            @auth
+                                @if(Auth::id() !== $item->user_id)
+                                    <form action="{{ route('offers.buyNow', $item) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="amount" value="{{ $item->price }}">
+                                        <input type="hidden" name="delivery_method" x-model="deliveryMethod">
+                                        <button type="submit"
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded"
+                                                :disabled="!deliveryMethod"
+                                                :class="{ 'opacity-50 cursor-not-allowed': !deliveryMethod }">
+                                            Acheter
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
+                                    Acheter
+                                </a>
+                            @endauth
+                        </div>
                     </div>
+                     @auth
+                        @if(Auth::id() !== $item->user_id)
+                            <div class="mt-4 p-4 border rounded-md bg-gray-50" x-show="true">
+                                <h3 class="font-semibold text-gray-800 mb-2">Veuillez sélectionner un mode de livraison pour acheter :</h3>
+                                <div class="space-y-2">
+                                     @if ($item->pickup_available)
+                                    <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
+                                        <input type="radio" name="delivery_method_choice" value="pickup" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="ml-3 text-sm font-medium text-gray-700">Retrait sur place</span>
+                                    </label>
+                                    @endif
+                                    @if ($item->delivery_available)
+                                    <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
+                                        <input type="radio" name="delivery_method_choice" value="delivery" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="ml-3 text-sm font-medium text-gray-700">Livraison</span>
+                                    </label>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+                    @endauth
                 </div>
 
                 {{-- Section pour faire une offre --}}
@@ -105,6 +133,7 @@
                             <h2 class="text-2xl font-bold mb-4">Faire une offre</h2>
                             <form action="{{ route('offers.store', $item) }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="delivery_method" x-model="deliveryMethod">
                                 <div class="flex items-center">
                                     <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border rounded-l-md" placeholder="Votre offre" required min="0.01" step="0.01">
                                     <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-r-md">

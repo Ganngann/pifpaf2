@@ -29,6 +29,7 @@ class OfferFlowTest extends DuskTestCase
             'user_id' => $seller->id,
             'title' => 'Super Article à Vendre',
             'price' => 100,
+            'delivery_available' => true, // Activer la livraison
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item, $seller) {
@@ -36,6 +37,7 @@ class OfferFlowTest extends DuskTestCase
             $browser->loginAs($buyer)
                     ->visit(route('items.show', $item))
                     ->assertSee('Super Article à Vendre')
+                    ->radio('delivery_method', 'delivery') // Sélectionner la livraison
                     ->type('amount', '80')
                     ->press('Envoyer l\'offre')
                     ->waitForText('Votre offre a été envoyée avec succès.') // Wait for flash message
@@ -46,7 +48,8 @@ class OfferFlowTest extends DuskTestCase
                     ->visit('/dashboard')
                     ->assertSee('Offres reçues')
                     ->assertSee($buyer->name)
-                    ->assertSee('80,00 €');
+                    ->assertSee('80,00 €')
+                    ->assertSee('Livraison');
 
             // 5. Le vendeur accepte l'offre
             $browser->press('Accepter')

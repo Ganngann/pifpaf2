@@ -370,4 +370,23 @@ class ItemController extends Controller
             'item' => $item,
         ]);
     }
+
+    public function toggleStatus(Item $item)
+    {
+        $this->authorize('update', $item);
+
+        if ($item->status === \App\Enums\ItemStatus::AVAILABLE) {
+            $item->status = \App\Enums\ItemStatus::UNPUBLISHED;
+        } else {
+            $item->status = \App\Enums\ItemStatus::AVAILABLE;
+        }
+
+        $item->save();
+
+        return response()->json([
+            'newStatus' => $item->status,
+            'newStatusText' => $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'En ligne' : 'Hors ligne',
+            'isAvailable' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
+        ]);
+    }
 }

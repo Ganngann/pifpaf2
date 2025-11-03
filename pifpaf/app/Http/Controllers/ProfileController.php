@@ -12,7 +12,11 @@ class ProfileController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('items');
-        return view('profile.show', compact('user'));
+        $user->load('items', 'reviewsReceived.reviewer');
+
+        $averageRating = $user->reviewsReceived->avg('rating');
+        $reviewCount = $user->reviewsReceived->count();
+
+        return view('profile.show', compact('user', 'averageRating', 'reviewCount'));
     }
 }

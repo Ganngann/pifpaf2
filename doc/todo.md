@@ -31,7 +31,7 @@
 
 ### Ligne de Développement: Jules 2 (Parcours Acheteur)
 - [x] **US-LOG-3:** Afficher les modes de livraison sur la page annonce.
-- [ ] **US-LOG-4:** Intégrer le choix du mode de livraison dans le processus d'offre.
+- [x] **US-LOG-4:** Intégrer le choix du mode de livraison dans le processus d'offre.
 - [ ] **US-LOG-5:** Créer l'interface de gestion des adresses de livraison.
 
 ### Ligne de Développement: Jules 3 (Transparence & Recherche)
