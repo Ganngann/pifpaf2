@@ -35,12 +35,11 @@ class OfferDeliveryMethodTest extends DuskTestCase
             $browser->loginAs($buyer)
                     // 4. Naviguer vers la page de l'article
                     ->visit('/items/' . $item->id)
-                    ->waitFor('input[name="delivery_method_choice"][value="pickup"]')
                     // 5. Vérifier la présence des deux boutons radio
-                    ->assertVisible('input[name="delivery_method_choice"][value="pickup"]')
-                    ->assertVisible('input[name="delivery_method_choice"][value="delivery"]')
+                    ->assertVisible('input[name="delivery_method"][value="pickup"]')
+                    ->assertVisible('input[name="delivery_method"][value="delivery"]')
                     // 6. Sélectionner l'option "delivery"
-                    ->radio('delivery_method_choice', 'delivery')
+                    ->radio('delivery_method', 'delivery')
                     // 7. Remplir un montant et soumettre
                     ->type('amount', '10')
                     ->press('Envoyer l\'offre')

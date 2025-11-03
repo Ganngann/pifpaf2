@@ -21,9 +21,8 @@ class ConversationDuskTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($buyer, $item) {
             $browser->loginAs($buyer)
                     ->visit(route('items.show', $item))
-                    ->waitForText('Contacter le vendeur')
-                    ->clickLink('Contacter le vendeur')
-                    ->assertPathIs('/conversations/create')
+                    ->press('Contacter le vendeur')
+                    ->assertPathIs('/conversations/*')
                     ->assertSee($item->title)
                     ->type('content', 'Bonjour, cet article est-il toujours disponible ?')
                     ->press('Envoyer')

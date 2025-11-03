@@ -29,7 +29,7 @@ class ItemEditTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $item, $filePath) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
-                    ->click("@edit-item-{$item->id}")
+                    ->click('.edit-item-link') // S'assurer que le lien a cette classe
                     ->assertPathIs("/items/{$item->id}/edit")
                     ->assertInputValue('title', $item->title)
                     ->type('title', 'Nouveau Titre d\'Annonce')

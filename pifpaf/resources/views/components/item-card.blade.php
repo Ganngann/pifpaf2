@@ -1,13 +1,6 @@
 @props(['item'])
 
-<div id="item-{{ $item->id }}" class="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out aspect-square">
-
-    @if($item->status === \App\Enums\ItemStatus::SOLD)
-    <!-- Vendu Overlay -->
-    <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20 pointer-events-none">
-        <span class="text-white text-3xl font-bold border-4 border-white rounded-lg px-8 py-3 transform -rotate-12 select-none">VENDU</span>
-    </div>
-    @endif
+<div class="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out aspect-square">
 
     <!-- Image -->
     @if($item->primaryImage)

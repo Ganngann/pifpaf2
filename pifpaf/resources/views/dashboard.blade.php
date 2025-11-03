@@ -57,7 +57,7 @@
                                                     </div>
                                                     <div class="ml-4">
                                                         <div class="text-sm font-medium text-gray-900">
-                                                            <a href="{{ route('items.edit', $item) }}" dusk="edit-item-{{ $item->id }}" class="hover:text-blue-600 transition-colors">{{ $item->title }}</a>
+                                                            <a href="{{ route('items.edit', $item) }}" class="hover:text-blue-600 transition-colors">{{ $item->title }}</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -141,7 +141,7 @@
                         <div class="sm:hidden space-y-4">
                             @foreach ($items as $item)
                                 <div class="border rounded-lg shadow-lg overflow-hidden">
-                                    <a href="{{ route('items.edit', $item) }}" dusk="edit-item-{{ $item->id }}" class="block p-4">
+                                    <a href="{{ route('items.edit', $item) }}" class="block p-4">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-16 w-16">
                                                 @if ($item->primaryImage && $item->primaryImage->path)
