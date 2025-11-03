@@ -18,6 +18,13 @@ class ProcessAiImage implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 150;
+
+    /**
      * Create a new job instance.
      */
     public function __construct(public AiRequest $aiRequest)
@@ -35,25 +42,38 @@ class ProcessAiImage implements ShouldQueue
 
             $imagePath = Storage::disk('public')->path($this->aiRequest->image_path);
 
-            $result = $googleAiService->analyzeImage($imagePath);
+            $response = $googleAiService->analyzeImage($imagePath);
 
-            if ($result) {
+            if ($response['success']) {
                 $this->aiRequest->update([
                     'status' => 'completed',
-                    'result' => $result,
+                    'result' => $response['data'],
+                    'error_message' => null,
+                    'raw_error_response' => null,
                 ]);
             } else {
+                Log::warning('Analyse IA échouée. Enregistrement de l\'erreur.', [
+                    'ai_request_id' => $this->aiRequest->id,
+                    'error' => $response['error'] ?? 'Aucun résultat.',
+                ]);
                 $this->aiRequest->update([
                     'status' => 'failed',
-                    'error_message' => 'L\'analyse de l\'image n\'a retourné aucun résultat.',
+                    'error_message' => $response['error'] ?? 'L\'analyse de l\'image n\'a retourné aucun résultat.',
+                    'raw_error_response' => $response['raw_response'] ?? null,
                 ]);
+                Log::info('Erreur enregistrée pour AiRequest.', ['ai_request_id' => $this->aiRequest->id]);
             }
         } catch (Throwable $e) {
-            Log::error('Job ProcessAiImage a échoué', ['error' => $e->getMessage()]);
+            Log::error('Exception interceptée dans ProcessAiImage.', [
+                'ai_request_id' => $this->aiRequest->id,
+                'error' => $e->getMessage(),
+            ]);
             $this->aiRequest->update([
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
+                'raw_error_response' => $e->getTraceAsString(),
             ]);
+            Log::info('Erreur d\'exception enregistrée pour AiRequest.', ['ai_request_id' => $this->aiRequest->id]);
         }
     }
 }

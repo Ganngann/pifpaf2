@@ -140,11 +140,29 @@ class ItemController extends Controller
         $validated = $request->validate([
             'original_image_path' => 'required|string',
             'item_data' => 'required|string',
+            'item_index' => 'required|integer',
         ]);
 
         $itemData = json_decode($validated['item_data'], true);
         $originalPath = $validated['original_image_path'];
+        $itemIndex = $validated['item_index'];
         $box = $itemData['box'];
+
+        $aiRequest = AiRequest::where('image_path', $originalPath)->first();
+
+        if (!$aiRequest) {
+            return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
+        }
+
+        if ($aiRequest->status !== 'completed') {
+            return response()->json(['success' => false, 'message' => 'L\'analyse IA n\'est pas terminée.']);
+        }
+
+        $createdItemIds = $aiRequest->created_item_ids ?? [];
+        if (isset($createdItemIds[$itemIndex])) {
+            return response()->json(['success' => false, 'message' => 'Cet objet a déjà été créé.']);
+        }
+
 
         if (!Storage::disk('public')->exists($originalPath)) {
             return response()->json(['success' => false, 'message' => 'Image originale non trouvée.']);
@@ -184,15 +202,11 @@ class ItemController extends Controller
             'order' => 0,
         ]);
 
-        // Mettre à jour la requête IA avec l'ID de l'article créé
-        $aiRequest = AiRequest::where('image_path', $originalPath)->first();
-        if ($aiRequest) {
-            $createdItemIds = $aiRequest->created_item_ids ?? [];
-            $createdItemIds[] = $item->id;
-            $aiRequest->update(['created_item_ids' => $createdItemIds]);
-        }
+        $createdItemIds[$itemIndex] = $item->id;
+        $aiRequest->update(['created_item_ids' => $createdItemIds]);
 
-        return response()->json(['success' => true]);
+
+        return response()->json(['success' => true, 'item_url' => route('items.show', $item)]);
     }
 
 
