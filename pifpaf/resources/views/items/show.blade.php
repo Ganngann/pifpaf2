@@ -8,7 +8,7 @@
                 <div x-data="{ mainImageUrl: '{{ asset('storage/' . $item->primaryImage->path) }}' }">
                     <!-- Image principale -->
                     <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
-                        <img :src="mainImageUrl" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                        <img :src="mainImageUrl" alt="{{ $item->title }}" class="w-full h-full object-contain">
                     </div>
 
                     <!-- Galerie de miniatures -->

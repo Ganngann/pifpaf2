@@ -29,8 +29,9 @@ class WelcomePageTest extends DuskTestCase
                     ->assertSee('Trouvez la perle rare');
 
             foreach ($items as $item) {
+                $formattedPrice = number_format($item->price, 2, ',', ' ') . ' €';
                 $browser->assertSee($item->title)
-                        ->assertSee($item->price);
+                        ->assertSee($formattedPrice);
             }
         });
     }
@@ -47,12 +48,13 @@ class WelcomePageTest extends DuskTestCase
         $item = Item::factory()->create(['user_id' => $user->id]);
 
         $this->browse(function (Browser $browser) use ($item) {
+            $formattedPrice = number_format($item->price, 2, ',', ' ');
             $browser->visit('/')
-                    ->clickLink($item->title)
+                    ->click('.group') // Clic sur la carte de l'article
                     ->assertPathIs('/items/' . $item->id)
                     ->assertSee($item->title)
                     ->assertSee($item->description)
-                    ->assertSee($item->price);
+                    ->assertSee($formattedPrice);
         });
     }
 }

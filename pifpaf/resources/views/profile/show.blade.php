@@ -37,15 +37,7 @@
                 @if($user->items->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                         @foreach($user->items as $item)
-                            <div class="p-4 border rounded-lg shadow-sm">
-                                <a href="{{ route('items.show', $item) }}">
-                                    @if($item->image_path)
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover rounded-md">
-                                    @endif
-                                    <h5 class="text-lg font-bold mt-2">{{ $item->title }}</h5>
-                                </a>
-                                <p class="text-gray-600">{{ $item->price }} €</p>
-                            </div>
+                            <x-item-card :item="$item" />
                         @endforeach
                     </div>
                 @else
