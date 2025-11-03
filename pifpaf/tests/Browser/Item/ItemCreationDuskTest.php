@@ -20,6 +20,7 @@ class ItemCreationDuskTest extends DuskTestCase
     public function testItemCreationFlow()
     {
         $user = User::factory()->create();
+        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $user->id]);
 
         // Créer un fichier image réel pour le test
         $imageName = 'test-image.jpg';
@@ -29,7 +30,7 @@ class ItemCreationDuskTest extends DuskTestCase
         }
         UploadedFile::fake()->image($imageName)->move(dirname($filePath), $imageName);
 
-        $this->browse(function (Browser $browser) use ($user, $filePath) {
+        $this->browse(function (Browser $browser) use ($user, $filePath, $address) {
             $browser->loginAs($user)
                     ->visit(route('items.create'))
                     ->assertSee('Créer une nouvelle annonce');
@@ -46,6 +47,8 @@ class ItemCreationDuskTest extends DuskTestCase
                     ->type('description', 'Un vase rare du 18ème siècle, en parfait état.')
                     ->select('category', 'Maison') // Ajout de la catégorie
                     ->type('price', '150.75')
+                    ->check('pickup_available')
+                    ->select('pickup_address_id', $address->id)
                     ->attach('images[]', $filePath) // Utiliser le fichier image factice
                     ->press('Créer l\'annonce');
 

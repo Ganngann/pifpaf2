@@ -16,7 +16,12 @@ class ConversationDuskTest extends DuskTestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'pickup_address_id' => $address->id,
+            'pickup_available' => true,
+        ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item) {
             $browser->loginAs($buyer)

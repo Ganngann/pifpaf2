@@ -22,12 +22,14 @@ class OfferDeliveryMethodTest extends DuskTestCase
         // 1. Créer un vendeur et un acheteur
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
+        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
 
         // 2. Créer un article avec les deux options de livraison
         $item = Item::factory()->create([
             'user_id' => $seller->id,
             'pickup_available' => true,
             'delivery_available' => true,
+            'pickup_address_id' => $address->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item) {

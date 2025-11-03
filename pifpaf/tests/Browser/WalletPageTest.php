@@ -41,6 +41,8 @@ class WalletPageTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
+                    ->click('@nav-user-dropdown')
+                    ->waitForText('Mon Portefeuille')
                     ->clickLink('Mon Portefeuille')
                     ->assertPathIs('/wallet')
                     ->assertSee('Mon Portefeuille');
