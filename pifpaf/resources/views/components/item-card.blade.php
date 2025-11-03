@@ -10,7 +10,7 @@
     @endif
 
     <!-- Overlay with text -->
-    <div class="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black via-black/80 to-transparent text-white">
+    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
         <h3 class="font-bold text-lg truncate" title="{{ $item->title }}">{{ $item->title }}</h3>
         <div class="flex justify-between items-center mt-1">
             <p class="text-xl font-semibold">{{ number_format($item->price, 2, ',', ' ') }} €</p>
