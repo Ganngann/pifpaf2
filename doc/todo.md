@@ -84,3 +84,8 @@
 - [x] **US-ADM-12:** Développer le module de gestion des utilisateurs.
 - [ ] **US-ADM-13:** Développer le module de modération des annonces.
 - [ ] **US-ADM-14:** Développer le module de suivi des litiges.
+
+---
+## ✨ Améliorations & Corrections
+- [x] **BUG-101, BUG-106:** Refactoriser l'affichage des listes d'articles (accueil, profil) avec une carte unifiée et corriger l'alignement.
+- [x] **BUG-105:** Corriger l'affichage des images (tronquées) sur la page de détail de l'article.

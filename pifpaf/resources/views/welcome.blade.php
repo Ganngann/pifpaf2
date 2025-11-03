@@ -50,28 +50,8 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            @forelse ($items->where('status', 'available') as $item)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <a href="{{ route('items.show', $item) }}">
-                        @if($item->primaryImage)
-                            <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                        @else
-                            <img src="{{ asset('images/placeholder.jpg') }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                        @endif
-                    </a>
-                    <div class="p-4">
-                        <a href="{{ route('items.show', $item) }}">
-                            <h2 class="font-bold text-lg mb-2">{{ $item->title }}</h2>
-                        </a>
-                        <p class="text-gray-600 text-sm mb-4">{{ Str::limit($item->description, 100) }}</p>
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-lg">{{ $item->price }} €</span>
-                            <a href="{{ route('items.show', $item) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Voir
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            @forelse ($items as $item)
+                <x-item-card :item="$item" />
             @empty
                 <div class="col-span-full text-center text-gray-500">
                     <p>Aucun article trouvé. Essayez d'ajuster vos filtres de recherche.</p>
