@@ -73,6 +73,13 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Au clic, le statut de l'annonce passe à "En ligne".
     - L'annonce redevient visible publiquement.
 
+- **US-ANN-7: Indiquer qu'un article est vendu sur sa page de détail**
+  - **En tant que** utilisateur, **Je veux** voir une indication claire qu'un article est "Vendu" lorsque je consulte sa page de détail, **Afin de** ne pas tenter d'acheter un article indisponible.
+  - **Critères d'acceptation :**
+    - Sur la page de détail d'un article (`items.show`) dont le statut est "sold", un label "VENDU" est affiché de manière visible (par exemple, en superposition de l'image principale).
+    - Sur cette même page, les boutons d'action d'achat ("Acheter", "Faire une offre") sont masqués ou désactivés.
+    - Les autres informations de l'article (titre, description, vendeur, etc.) restent visibles.
+
 ---
 ## 🚀 Sprint 4: Logistique Avancée
 
