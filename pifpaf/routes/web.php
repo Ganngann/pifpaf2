@@ -12,6 +12,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ItemImageController;
 use App\Http\Controllers\PickupAddressController;
 use App\Http\Controllers\AiRequestController;
+use App\Http\Controllers\StyleguideController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -100,4 +101,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'usersIndex'])->name('users.index');
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unban'])->name('users.unban');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/styleguide', [StyleguideController::class, 'index'])->name('styleguide');
 });
