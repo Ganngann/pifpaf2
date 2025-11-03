@@ -29,7 +29,8 @@ class ItemEditTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $item, $filePath) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
-                    ->click('.edit-item-link') // S'assurer que le lien a cette classe
+                    // On cible le lien dans la première rangée du tableau, qui est sur le titre de l'item.
+                    ->click("#item-row-{$item->id} a")
                     ->assertPathIs("/items/{$item->id}/edit")
                     ->assertInputValue('title', $item->title)
                     ->type('title', 'Nouveau Titre d\'Annonce')
