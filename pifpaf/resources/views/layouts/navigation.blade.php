@@ -19,18 +19,6 @@
                     <a href="{{ route('items.create') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                         Vendre un article
                     </a>
-                    <a href="{{ route('items.create-with-ai') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" dusk="create-with-ai-link">
-                        Vendre avec l'IA
-                    </a>
-                    <a href="{{ route('ai-requests.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                        Mes Analyses IA
-                    </a>
-                    <a href="{{ route('wallet.show') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                        Mon Portefeuille
-                    </a>
-                    <a href="{{ route('profile.addresses.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                        Mes Adresses
-                    </a>
                 </div>
                 @endauth
             </div>
@@ -59,6 +47,15 @@
                              @click.away="open = false"
                              class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
                              x-transition>
+                            <a href="{{ route('ai-requests.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Analyses IA
+                            </a>
+                            <a href="{{ route('wallet.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mon Portefeuille
+                            </a>
+                            <a href="{{ route('profile.addresses.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Adresses
+                            </a>
                             <a href="{{ route('conversations.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Messagerie
                             </a>
@@ -108,27 +105,6 @@
                 <a href="{{ route('items.create') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('items.create') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     Vendre un article
                 </a>
-                <a href="{{ route('items.create-with-ai') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('items.create-with-ai') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" dusk="create-with-ai-link-responsive">
-                    Vendre avec l'IA
-                </a>
-                <a href="{{ route('ai-requests.index') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('ai-requests.index') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mes Analyses IA
-                </a>
-                <a href="{{ route('wallet.show') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('items.create') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mon Portefeuille
-                </a>
-                <a href="{{ route('profile.addresses.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mes Adresses
-                </a>
-                <a href="{{ route('conversations.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Messagerie
-                </a>
-                <a href="{{ route('transactions.purchases') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mes Achats
-                </a>
-                <a href="{{ route('transactions.sales') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mes Ventes
-                </a>
             </div>
 
             <!-- Responsive Settings Options -->
@@ -139,6 +115,25 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
+                    <a href="{{ route('ai-requests.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Analyses IA
+                    </a>
+                    <a href="{{ route('wallet.show') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mon Portefeuille
+                    </a>
+                    <a href="{{ route('profile.addresses.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Adresses
+                    </a>
+                    <a href="{{ route('conversations.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Messagerie
+                    </a>
+                    <a href="{{ route('transactions.purchases') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Achats
+                    </a>
+                    <a href="{{ route('transactions.sales') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Ventes
+                    </a>
+
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

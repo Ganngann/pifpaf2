@@ -38,8 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');
     Route::post('/items/{item}/unpublish', [ItemController::class, 'unpublish'])->name('items.unpublish');
     Route::post('/items/{item}/publish', [ItemController::class, 'publish'])->name('items.publish');
+    Route::post('/api/items/{item}/toggle-status', [ItemController::class, 'toggleStatus'])->name('api.items.toggle-status');
     Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::post('/items/{item}/offers', [OfferController::class, 'store'])->name('offers.store');
+    Route::post('/items/{item}/buy-now', [OfferController::class, 'buyNow'])->name('offers.buyNow');
     Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
     Route::patch('/offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
     Route::get('/payment/{offer}', [PaymentController::class, 'create'])->name('payment.create');
