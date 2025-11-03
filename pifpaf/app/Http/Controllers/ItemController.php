@@ -109,9 +109,16 @@ class ItemController extends Controller
         // Pour l'acheteur, on charge les offres avec la transaction
         $offers = $user->offers()->with('item.user', 'transaction')->latest()->get();
 
+        $completedSales = $items->filter(function ($item) {
+            return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
+                return $offer->transaction && $offer->transaction->status === 'completed';
+            });
+        })->take(5);
+
         return view('dashboard', [
             'items' => $items,
             'offers' => $offers,
+            'completedSales' => $completedSales,
         ]);
     }
 

@@ -341,17 +341,10 @@
             </div>
 
             {{-- Section Ventes terminées (pour le vendeur) --}}
-            @php
-                $completedSales = $items->filter(function ($item) {
-                    return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
-                        return $offer->transaction && $offer->transaction->status === 'completed';
-                    });
-                });
-            @endphp
             @if ($completedSales->isNotEmpty())
                 <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes ventes terminées</h3>
+                        <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes 5 dernières ventes terminées</h3>
                         <div class="space-y-4">
                             @foreach ($completedSales as $item)
                                 @php
@@ -359,7 +352,7 @@
                                     $buyer = $completedTransaction->offer->user;
                                 @endphp
                                 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                                    <div class="flex items-center">
+                                    <a href="{{ route('items.show', $item) }}" class="flex items-center">
                                          @if ($item->primaryImage && $item->primaryImage->path)
                                             <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
                                         @else
@@ -371,7 +364,7 @@
                                             <p class="font-semibold">{{ $item->title }}</p>
                                             <p class="text-sm text-gray-600">Acheteur : {{ $buyer->name }}</p>
                                         </div>
-                                    </div>
+                                    </a>
                                     <div class="mt-4 sm:mt-0">
                                         @if (!$completedTransaction->reviews()->where('reviewer_id', Auth::id())->exists())
                                             <x-review-modal :transaction="$completedTransaction" :recipientName="$buyer->name" />
@@ -381,6 +374,9 @@
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                        <div class="mt-4 text-right">
+                            <a href="{{ route('transactions.sales') }}" class="text-blue-600 hover:underline">Voir toutes mes ventes</a>
                         </div>
                     </div>
                 </div>

@@ -22,14 +22,17 @@ class TransactionHistoryTest extends TestCase
     public function test_user_can_see_their_purchases()
     {
         $user = User::factory()->create();
-        $item = Item::factory()->create();
+        $seller = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['user_id' => $user->id, 'item_id' => $item->id]);
         $transaction = Transaction::factory()->create(['offer_id' => $offer->id]);
 
         $this->actingAs($user)
             ->get(route('transactions.purchases'))
             ->assertSuccessful()
-            ->assertSee($item->title);
+            ->assertSee($item->title)
+            ->assertSee($seller->name)
+            ->assertSee(route('profile.show', $seller));
     }
 
     public function test_user_cannot_see_other_users_purchases()
@@ -49,14 +52,17 @@ class TransactionHistoryTest extends TestCase
     public function test_user_can_see_their_sales()
     {
         $user = User::factory()->create();
+        $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
-        $offer = Offer::factory()->create(['item_id' => $item->id]);
+        $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
         $transaction = Transaction::factory()->create(['offer_id' => $offer->id]);
 
         $this->actingAs($user)
             ->get(route('transactions.sales'))
             ->assertSuccessful()
-            ->assertSee($item->title);
+            ->assertSee($item->title)
+            ->assertSee($buyer->name)
+            ->assertSee(route('profile.show', $buyer));
     }
 
     public function test_user_cannot_see_other_users_sales()
