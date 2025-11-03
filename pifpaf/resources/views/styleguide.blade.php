@@ -43,12 +43,12 @@
                         <h2 class="text-xl font-semibold mb-4 border-b pb-2">Buttons</h2>
                         <div class="flex flex-wrap gap-4 items-center">
                             <x-primary-button>{{ __('Primary Button') }}</x-primary-button>
-                            <button class="bg-gray-500 text-white font-bold py-2 px-4 rounded">{{ __('Secondary Button') }}</button>
-                            <button class="bg-green-500 text-white font-bold py-2 px-4 rounded">{{ __('Success Button') }}</button>
-                            <button class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('Danger Button') }}</button>
-                            <button class="bg-yellow-500 text-white font-bold py-2 px-4 rounded">{{ __('Warning Button') }}</button>
-                            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('Info Button') }}</button>
-                            <x-primary-button disabled>{{ __('Disabled Button') }}</x-primary-button>
+                            <button class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">{{ __('Secondary') }}</button>
+                            <button class="inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-600 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">{{ __('Success') }}</button>
+                            <button class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-600 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">{{ __('Danger') }}</button>
+                            <button class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:border-yellow-700 focus:ring ring-yellow-300 disabled:opacity-25 transition ease-in-out duration-150">{{ __('Warning') }}</button>
+                            <button class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">{{ __('Info') }}</button>
+                            <x-primary-button disabled>{{ __('Disabled') }}</x-primary-button>
                         </div>
                     </section>
 
@@ -135,7 +135,7 @@
                         <h2 class="text-xl font-semibold mb-4 border-b pb-2">Cards</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                                <img class="w-full h-48 object-cover" src="https://via.placeholder.com/400x250" alt="Placeholder">
+                                <img class="w-full h-48 object-cover" src="https://placehold.co/400x250" alt="Placeholder">
                                 <div class="p-6">
                                     <h3 class="text-lg font-semibold mb-2">Card Title</h3>
                                     <p class="text-gray-700">This is a simple card component. It can be used to display information in a structured way.</p>
@@ -158,9 +158,27 @@
                         <h2 class="text-xl font-semibold mb-4 border-b pb-2">Modals</h2>
                         <div x-data="{ open: false }">
                             <x-primary-button @click="open = true">Open Modal</x-primary-button>
-                            <div x-show="open" @click.away="open = false" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
+                            <!-- Modal -->
+                            <div x-show="open"
+                                 class="fixed z-10 inset-0 overflow-y-auto"
+                                 aria-labelledby="modal-title"
+                                 role="dialog"
+                                 aria-modal="true"
+                                 x-cloak>
                                 <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                                    <!-- Background overlay -->
+                                    <div x-show="open"
+                                         @click="open = false"
+                                         x-transition:enter="ease-out duration-300"
+                                         x-transition:enter-start="opacity-0"
+                                         x-transition:enter-end="opacity-100"
+                                         x-transition:leave="ease-in duration-200"
+                                         x-transition:leave-start="opacity-100"
+                                         x-transition:leave-end="opacity-0"
+                                         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                                         aria-hidden="true"></div>
+
+                                    <!-- This element is to trick the browser into centering the modal contents. -->
                                     <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
                                     <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -279,7 +297,8 @@
                     <section class="mb-8">
                         <h2 class="text-xl font-semibold mb-4 border-b pb-2">Tables</h2>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
+                            <!-- Desktop Table -->
+                            <table class="min-w-full bg-white hidden md:table">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
@@ -293,17 +312,9 @@
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">jane.cooper@example.com</div>
-                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Jane Cooper</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Regional Paradigm Technician</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">jane.cooper@example.com</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
@@ -312,6 +323,22 @@
                                     <!-- More people... -->
                                 </tbody>
                             </table>
+
+                            <!-- Mobile Cards -->
+                            <div class="grid grid-cols-1 gap-4 md:hidden">
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
+                                        <a href="#" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">Edit</a>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        <p><span class="font-medium text-gray-700">Title:</span> Regional Paradigm Technician</p>
+                                        <p><span class="font-medium text-gray-700">Email:</span> jane.cooper@example.com</p>
+                                        <p><span class="font-medium text-gray-700">Role:</span> Admin</p>
+                                    </div>
+                                </div>
+                                <!-- More cards... -->
+                            </div>
                         </div>
                     </section>
 
