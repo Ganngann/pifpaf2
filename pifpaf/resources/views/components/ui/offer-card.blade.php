@@ -21,6 +21,14 @@
              <p class="text-sm mt-1">
                 {{ $isSellerView ? 'Montant de l\'offre' : 'Votre offre' }}:
                 <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span>
+                 -
+                <span class="text-xs">
+                    @if ($offer->delivery_method === 'delivery')
+                        Livraison
+                    @elseif ($offer->delivery_method === 'pickup')
+                        Retrait sur place
+                    @endif
+                </span>
             </p>
         </div>
     </div>
