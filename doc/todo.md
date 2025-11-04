@@ -6,7 +6,7 @@
 ## Priorité 1 : Finaliser l'Expérience de Transaction de Base
 *Objectif : Solidifier le parcours principal de vente et d'achat en complétant les fonctionnalités essentielles manquantes.*
 
-- [ ] **US-ANN-7:** Indiquer qu'un article est "Vendu" sur sa page de détail pour éviter toute confusion.
+- [x] **US-ANN-7:** Indiquer qu'un article est "Vendu" sur sa page de détail pour éviter toute confusion.
 - [ ] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
 - [ ] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
 - [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
@@ -15,9 +15,9 @@
 ## Priorité 2 : Construire l'Historique et la Confiance
 *Objectif : Donner aux utilisateurs la visibilité sur leurs actions passées et renforcer la confiance au sein de la communauté.*
 
-- [ ] **US-HIS-1:** Créer les pages "Mes Achats" et "Mes Ventes" pour lister les transactions.
+- [x] **US-HIS-1:** Créer les pages "Mes Achats" et "Mes Ventes" pour lister les transactions.
 - [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée, accessible depuis les listes.
-- [ ] **US-COM-2:** Afficher la note moyenne et les avis sur le profil public d'un utilisateur.
+- [x] **US-COM-2:** Afficher la note moyenne et les avis sur le profil public d'un utilisateur.
 - [ ] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige.
 
 ---
