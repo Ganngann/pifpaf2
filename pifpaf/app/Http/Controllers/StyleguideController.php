@@ -134,6 +134,41 @@ class StyleguideController extends Controller
             ]
         );
 
+        // --- Sales Card Setup ---
+        $itemForSaleCard = clone $itemWithImage; // Use a clean item
+        $itemForSaleCard->delivery_available = true; // Ensure delivery is enabled for the button to show
+        $itemForSaleCard->save();
+
+        $offerForSaleCard = Offer::firstOrCreate(
+            ['item_id' => $itemForSaleCard->id, 'user_id' => $buyer->id, 'status' => 'paid'],
+            ['amount' => 88.00]
+        );
+
+        $saleReadyForShipment = Transaction::firstOrCreate(
+            ['offer_id' => $offerForSaleCard->id, 'status' => 'payment_received'],
+            [
+                'amount' => $offerForSaleCard->amount,
+                'wallet_amount' => 0,
+                'card_amount' => $offerForSaleCard->amount,
+            ]
+        );
+        $saleReadyForShipment->load('offer.item.primaryImage', 'offer.user');
+
+        $offerShipped = Offer::firstOrCreate(
+            ['item_id' => $itemForSaleCard->id, 'user_id' => $buyer->id, 'status' => 'paid', 'amount' => 77.00], // a second offer
+        );
+        $saleShipped = Transaction::firstOrCreate(
+            ['offer_id' => $offerShipped->id, 'status' => 'shipping_initiated'],
+            [
+                'amount' => $offerShipped->amount,
+                'wallet_amount' => $offerShipped->amount,
+                'card_amount' => 0,
+                'label_url' => 'https://example.com/shipping-label.pdf',
+                'tracking_code' => 'TRACK123456789',
+            ]
+        );
+        $saleShipped->load('offer.item.primaryImage', 'offer.user');
+
 
         return view('styleguide', [
             'itemWithImage' => $itemWithImage,
@@ -145,6 +180,8 @@ class StyleguideController extends Controller
             'walletCredit' => $walletCredit,
             'walletDebit' => $walletDebit,
             'walletWithdrawal' => $walletWithdrawal,
+            'saleReadyForShipment' => $saleReadyForShipment,
+            'saleShipped' => $saleShipped,
         ]);
     }
 }
