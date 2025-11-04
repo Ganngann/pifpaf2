@@ -40,4 +40,9 @@ return [
         'timeout' => env('GEMINI_TIMEOUT', 120),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
 ];
