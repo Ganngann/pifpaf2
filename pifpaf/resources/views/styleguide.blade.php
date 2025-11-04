@@ -158,6 +158,25 @@
                         </div>
                     </div>
 
+                    <!-- Sales Card -->
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2">sales.card</h4>
+                         <div class="p-4 bg-gray-100 rounded-lg space-y-4">
+                            @if(isset($saleReadyForShipment))
+                                <div>
+                                    <p class="text-sm mb-1">Prêt pour l'envoi :</p>
+                                    <x-sales.card :transaction="$saleReadyForShipment" />
+                                </div>
+                            @endif
+                             @if(isset($saleShipped))
+                                <div>
+                                    <p class="text-sm mb-1">Expédié :</p>
+                                    <x-sales.card :transaction="$saleShipped" />
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
