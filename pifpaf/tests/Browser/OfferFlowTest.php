@@ -39,10 +39,11 @@ class OfferFlowTest extends DuskTestCase
             // 3. L'acheteur se connecte et fait une offre
             $browser->loginAs($buyer)
                     ->visit(route('items.show', $item))
-                    ->assertSee('Super Article à Vendre')
-                    ->radio('delivery_method', 'delivery') // Sélectionner la livraison
-                    ->type('amount', '80')
-                    ->press('Envoyer l\'offre')
+                    ->assertSeeIn('@item-title', 'Super Article à Vendre')
+                    ->radio('delivery_method_choice', 'delivery') // Sélectionner la livraison
+                    ->pause(500) // Laisse le temps à AlpineJS de réagir
+                    ->type('#amount', '80')
+                    ->press('@submit-offer-button')
                     ->waitForText('Votre offre a été envoyée avec succès.') // Wait for flash message
                     ->assertSee('Votre offre a été envoyée avec succès.');
 

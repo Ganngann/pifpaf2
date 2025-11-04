@@ -38,14 +38,14 @@ class OfferDeliveryMethodTest extends DuskTestCase
                     // 4. Naviguer vers la page de l'article
                     ->visit('/items/' . $item->id)
                     // 5. Vérifier la présence des deux boutons radio
-                    ->assertVisible('input[name="delivery_method"][value="pickup"]')
-                    ->assertVisible('input[name="delivery_method"][value="delivery"]')
+                    ->assertVisible('@delivery-method-pickup')
+                    ->assertVisible('@delivery-method-delivery')
                     // 6. Sélectionner l'option "delivery"
-                    ->radio('delivery_method', 'delivery')
+                    ->radio('delivery_method_choice', 'delivery')
+                    ->pause(500) // Laisse le temps à AlpineJS de réagir
                     // 7. Remplir un montant et soumettre
-                    ->type('amount', '10')
-                    ->press('Envoyer l\'offre')
-                    // Attendre la redirection et le message de succès
+                    ->type('#amount', '10')
+                    ->press('@submit-offer-button')
                     ->waitForText('Votre offre a été envoyée avec succès.');
         });
 

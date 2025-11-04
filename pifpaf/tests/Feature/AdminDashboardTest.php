@@ -39,27 +39,31 @@ class AdminDashboardTest extends TestCase
         $users = User::factory()->count(5)->create();
         $this->assertEquals(6, User::count());
 
-        // Crée 10 annonces, en les attribuant au premier utilisateur standard.
-        Item::factory()->count(10)->create(['user_id' => $users->first()->id]);
+        // Crée une adresse de ramassage pour le premier utilisateur (le vendeur).
+        $pickupAddress = \App\Models\PickupAddress::factory()->create(['user_id' => $users->first()->id]);
+
+        // Crée 10 annonces "simples" pour le premier utilisateur.
+        Item::factory()->count(10)->create([
+            'user_id' => $users->first()->id,
+            'pickup_address_id' => $pickupAddress->id,
+        ]);
         $this->assertEquals(10, Item::count());
+        $this->assertEquals(6, User::count(), "Le nombre d'utilisateurs ne devrait pas changer après la création d'items simples.");
 
-        // Crée 3 transactions.
-        // Chaque transaction a besoin d'une offre, qui a besoin d'un item et d'un acheteur.
-        // On s'assure de ne pas créer de nouveaux utilisateurs/items en cascade.
-        $seller = $users->get(0);
-        $buyer = $users->get(1);
-        $items = Item::factory()->count(3)->create(['user_id' => $seller->id]);
+        // Crée 3 annonces plus complexes avec des offres et transactions.
+        Item::factory()->count(3)
+            ->for($users->get(0), 'user') // Le vendeur
+            ->state(['pickup_address_id' => $pickupAddress->id]) // Réutilise l'adresse
+            ->has(
+                Offer::factory()
+                    ->for($users->get(1), 'user') // L'acheteur
+                    ->has(Transaction::factory(), 'transaction')
+            , 'offers')
+            ->create();
 
-        foreach ($items as $item) {
-            $offer = Offer::factory()->create([
-                'user_id' => $buyer->id,
-                'item_id' => $item->id,
-            ]);
-            Transaction::factory()->create(['offer_id' => $offer->id]);
-        }
+        $this->assertEquals(13, Item::count());
         $this->assertEquals(3, Transaction::count());
-        $this->assertEquals(13, Item::count()); // 10 + 3
-        $this->assertEquals(6, User::count()); // Le nombre d'utilisateurs ne doit pas changer
+        $this->assertEquals(6, User::count()); // Vérification cruciale
 
         // Act
         $response = $this->actingAs($admin)->get(route('admin.dashboard'));

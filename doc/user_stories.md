@@ -55,6 +55,15 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - L'utilisateur peut modifier n'importe quel champ avant de soumettre le formulaire.
     - La soumission suit le processus de création d'annonce standard.
 
+- **US-TEST-1: Couverture de test du flux IA asynchrone**
+  - **En tant que** développeur, **Je veux** écrire un test de fonctionnalité de bout en bout pour le nouveau flux de création d'annonce assistée par IA, **Afin de** garantir sa fiabilité et prévenir les régressions.
+  - **Critères d'acceptation :**
+    - Le test doit simuler le téléversement d'une image sur la route `items.create-with-ai`.
+    - Le test doit vérifier qu'une nouvelle entrée est bien créée dans la table `ai_requests` avec le statut "pending".
+    - Le test doit simuler l'exécution du job en file d'attente (`ProcessAiImage`) et s'assurer que le statut de la requête passe à "completed".
+    - Le test doit vérifier que l'utilisateur est redirigé vers la page de résultats (`ai-requests.index`) où il peut voir ses suggestions.
+    - Le test doit simuler le clic sur une suggestion et vérifier que l'utilisateur est redirigé vers le formulaire de création (`items.create`) pré-rempli avec les données de l'IA.
+
 ### Epic 3: Gestion du Catalogue
 *Offrir plus de flexibilité aux vendeurs dans la gestion de leurs annonces.*
 
