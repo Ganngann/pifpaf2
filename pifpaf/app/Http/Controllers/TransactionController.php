@@ -115,6 +115,10 @@ class TransactionController extends Controller
     {
         $this->authorize('update', $transaction->offer->item);
 
+        if (!$transaction->shippingAddress) {
+            return redirect()->back()->with('error', 'Cette transaction ne nécessite pas d\'expédition car elle n\'a pas d\'adresse de livraison.');
+        }
+
         // For now, we'll use a hardcoded shipping method ID.
         // In a real application, this would come from the user's choice.
         $shippingMethodId = 8; // Unstamped letter (for testing)
