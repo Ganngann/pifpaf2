@@ -61,7 +61,7 @@ class PickupAddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PickupAddress $pickupAddress)
+    public function show(PickupAddress $address)
     {
         //
     }
@@ -69,18 +69,18 @@ class PickupAddressController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PickupAddress $pickupAddress)
+    public function edit(PickupAddress $address)
     {
-        $this->authorize('update', $pickupAddress);
-        return view('profile.addresses.edit', ['address' => $pickupAddress]);
+        $this->authorize('update', $address);
+        return view('profile.addresses.edit', ['address' => $address]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PickupAddress $pickupAddress)
+    public function update(Request $request, PickupAddress $address)
     {
-        $this->authorize('update', $pickupAddress);
+        $this->authorize('update', $address);
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -102,12 +102,12 @@ class PickupAddressController extends Controller
         } else {
             // En cas d'échec du géocodage, on ne met pas à jour les coordonnées
             // pour ne pas écraser d'anciennes valeurs correctes.
-            $validatedData['latitude'] = $pickupAddress->latitude;
-            $validatedData['longitude'] = $pickupAddress->longitude;
+            $validatedData['latitude'] = $address->latitude;
+            $validatedData['longitude'] = $address->longitude;
         }
 
 
-        $pickupAddress->update($validatedData);
+        $address->update($validatedData);
 
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse mise à jour avec succès.');
     }
