@@ -48,6 +48,26 @@
         <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', $item->price ?? session('ai_data')['price'] ?? '') }}" required>
     </div>
 
+    <!-- Poids et Dimensions -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div>
+            <label for="weight" class="block text-gray-700 text-sm font-bold mb-2">Poids (g)</label>
+            <input type="number" name="weight" id="weight" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('weight', $item->weight ?? '') }}">
+        </div>
+        <div>
+            <label for="width" class="block text-gray-700 text-sm font-bold mb-2">Largeur (cm)</label>
+            <input type="number" name="width" id="width" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('width', $item->width ?? '') }}">
+        </div>
+        <div>
+            <label for="height" class="block text-gray-700 text-sm font-bold mb-2">Hauteur (cm)</label>
+            <input type="number" name="height" id="height" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('height', $item->height ?? '') }}">
+        </div>
+        <div>
+            <label for="length" class="block text-gray-700 text-sm font-bold mb-2">Longeur (cm)</label>
+            <input type="number" name="length" id="length" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('length', $item->length ?? '') }}">
+        </div>
+    </div>
+
     <!-- Slot pour les images -->
     {{ $images }}
 

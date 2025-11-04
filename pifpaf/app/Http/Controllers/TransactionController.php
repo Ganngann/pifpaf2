@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\WalletHistory;
+use App\Services\SendcloudService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,5 +102,41 @@ class TransactionController extends Controller
         })->with('offer.item.primaryImage', 'offer.user')->latest()->paginate(10);
 
         return view('transactions.sales', compact('sales'));
+    }
+
+    /**
+     * Create a shipment for a transaction.
+     *
+     * @param \App\Models\Transaction $transaction
+     * @param \App\Services\SendcloudService $sendcloudService
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createShipment(Transaction $transaction, SendcloudService $sendcloudService)
+    {
+        $this->authorize('update', $transaction->offer->item);
+
+        // For now, we'll use a hardcoded shipping method ID.
+        // In a real application, this would come from the user's choice.
+        $shippingMethodId = 8; // Unstamped letter (for testing)
+
+        $response = $sendcloudService->createParcel(
+            $transaction->offer->item,
+            $transaction->shippingAddress,
+            $shippingMethodId
+        );
+
+        if ($response->successful()) {
+            $parcelData = $response->json('parcel');
+            $transaction->update([
+                'sendcloud_parcel_id' => data_get($parcelData, 'id'),
+                'tracking_code' => data_get($parcelData, 'tracking_number'),
+                'label_url' => data_get($parcelData, 'label.label_printer'),
+                'status' => 'shipping_initiated',
+            ]);
+
+            return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
+        }
+
+        return redirect()->route('dashboard')->with('error', 'Erreur lors de la création de l\'envoi.');
     }
 }

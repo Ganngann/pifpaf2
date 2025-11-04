@@ -20,6 +20,10 @@ class TransactionFactory extends Factory
             'offer_id' => \App\Models\Offer::factory(),
             'amount' => $this->faker->randomFloat(2, 1, 1000),
             'status' => 'completed',
+            'shipping_address_id' => null,
+            'sendcloud_parcel_id' => null,
+            'tracking_code' => null,
+            'label_url' => null,
         ];
     }
 }
