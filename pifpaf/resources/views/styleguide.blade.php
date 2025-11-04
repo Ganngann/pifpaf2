@@ -180,6 +180,29 @@
                 </div>
             </div>
 
+            <!-- Purchase Card -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h3 class="font-semibold text-xl text-gray-800 leading-tight mb-4">Purchase Card Component</h3>
+                    <p class="mb-4 text-gray-600">Displays a user's purchased item, including status and relevant actions.</p>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-700 mb-2">State: Waiting for Reception Confirmation</h4>
+                            <x-purchase-card :transaction="$purchaseWaitingForReception" />
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-700 mb-2">State: Completed, Awaiting Review</h4>
+                            <x-purchase-card :transaction="$purchaseCompleted" />
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-700 mb-2">State: Shipped (with label)</h4>
+                            <x-purchase-card :transaction="$purchaseWithLabel" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </x-app-layout>

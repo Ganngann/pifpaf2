@@ -169,6 +169,25 @@ class StyleguideController extends Controller
         );
         $saleShipped->load('offer.item.primaryImage', 'offer.user');
 
+        // --- Purchase Card Setup ---
+        // 1. Purchase waiting for reception confirmation
+        $purchaseWaitingForReception = clone $saleReadyForShipment;
+        $purchaseWaitingForReception->status = 'payment_received';
+        $purchaseWaitingForReception->load('offer.item.primaryImage', 'offer.item.user');
+
+
+        // 2. Purchase completed, no review left
+        $purchaseCompleted = clone $saleShipped;
+        $purchaseCompleted->status = 'completed';
+        $purchaseCompleted->setRelation('review', null); // Ensure no review is associated for the button to show
+        $purchaseCompleted->load('offer.item.primaryImage', 'offer.item.user');
+
+
+        // 3. Purchase with a shipping label
+        $purchaseWithLabel = clone $saleShipped;
+        $purchaseWithLabel->status = 'shipping_initiated';
+        $purchaseWithLabel->load('offer.item.primaryImage', 'offer.item.user');
+
 
         return view('styleguide', [
             'itemWithImage' => $itemWithImage,
@@ -182,6 +201,9 @@ class StyleguideController extends Controller
             'walletWithdrawal' => $walletWithdrawal,
             'saleReadyForShipment' => $saleReadyForShipment,
             'saleShipped' => $saleShipped,
+            'purchaseWaitingForReception' => $purchaseWaitingForReception,
+            'purchaseCompleted' => $purchaseCompleted,
+            'purchaseWithLabel' => $purchaseWithLabel,
         ]);
     }
 }
