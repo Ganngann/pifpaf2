@@ -33,7 +33,7 @@
                 </div>
             @endif
             <div class="p-8">
-                <h1 class="text-4xl font-bold mb-2">{{ $item->title }}</h1>
+                <h1 class="text-4xl font-bold mb-2" dusk="item-title">{{ $item->title }}</h1>
                 <div class="mb-6">
                     <span class="text-gray-500">Vendu par :</span>
                     <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
@@ -98,7 +98,7 @@
                                     <form action="{{ route('conversations.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                        <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded">
+                                        <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded" dusk="contact-seller-button">
                                             Contacter le vendeur
                                         </button>
                                     </form>
@@ -117,13 +117,13 @@
                                 <div class="space-y-2">
                                      @if ($item->pickup_available)
                                     <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
-                                        <input type="radio" name="delivery_method_choice" value="pickup" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="delivery_method_choice" value="pickup" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" dusk="delivery-method-pickup">
                                         <span class="ml-3 text-sm font-medium text-gray-700">Retrait sur place</span>
                                     </label>
                                     @endif
                                     @if ($item->delivery_available)
                                     <label class="flex items-center p-3 border rounded-md has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 cursor-pointer">
-                                        <input type="radio" name="delivery_method_choice" value="delivery" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="delivery_method_choice" value="delivery" x-model="deliveryMethod" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" dusk="delivery-method-delivery">
                                         <span class="ml-3 text-sm font-medium text-gray-700">Livraison</span>
                                     </label>
                                     @endif
@@ -143,7 +143,7 @@
                                 <input type="hidden" name="delivery_method" x-model="deliveryMethod">
                                 <div class="flex items-center">
                                     <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border rounded-l-md" placeholder="Votre offre" required min="0.01" step="0.01">
-                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-r-md">
+                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-r-md" dusk="submit-offer-button">
                                         Envoyer l'offre
                                     </button>
                                 </div>

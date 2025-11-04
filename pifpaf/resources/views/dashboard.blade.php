@@ -111,6 +111,12 @@
                                                                     <div class="flex items-center justify-between text-sm mb-1">
                                                                         <span>
                                                                             Acheteur : <a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span>
+                                                                             -
+                                                                            @if ($offer->delivery_method === 'delivery')
+                                                                                <span>Livraison</span>
+                                                                            @elseif ($offer->delivery_method === 'pickup')
+                                                                                <span>Retrait sur place</span>
+                                                                            @endif
                                                                         </span>
                                                                         <div class="flex space-x-1">
                                                                             <form action="{{ route('offers.accept', $offer) }}" method="POST">
@@ -197,6 +203,12 @@
                                                         <div class="flex items-center justify-between text-sm mb-1">
                                                             <span>
                                                                 <a href="{{ route('profile.show', $offer->user) }}" class="text-blue-600 hover:underline">{{ $offer->user->name }}</a> - <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span>
+                                                                 -
+                                                                @if ($offer->delivery_method === 'delivery')
+                                                                    <span>Livraison</span>
+                                                                @elseif ($offer->delivery_method === 'pickup')
+                                                                    <span>Retrait sur place</span>
+                                                                @endif
                                                             </span>
                                                             <div class="flex space-x-1">
                                                                 <form action="{{ route('offers.accept', $offer) }}" method="POST">
