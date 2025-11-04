@@ -89,16 +89,13 @@ echo "=== ETAPE 4: Build des assets frontend (NPM) ==="
 if [ "$RUN_NPM_INSTALL" = true ] ; then
     echo "Installation des dépendances NPM..."
     "$NPM_PATH" install
+    echo "Assurance des permissions d'exécution pour les binaires NPM..."
+    if [ -d "node_modules/.bin" ]; then chmod +x node_modules/.bin/*; fi
+    echo "Compilation des assets..."
+    "$NPM_PATH" run build
 else
-    echo "Dépendances NPM inchangées, pas d'installation."
+    echo "Dépendances NPM inchangées, pas d'installation ni de compilation."
 fi
-
-echo "Assurance des permissions d'exécution pour les binaires..."
-if [ -d "vendor/bin" ]; then chmod +x vendor/bin/*; fi
-if [ -d "node_modules/.bin" ]; then chmod +x node_modules/.bin/*; fi
-
-echo "Compilation des assets..."
-"$NPM_PATH" run build
 
 # --- 5. BUILD BACKEND ---
 echo "=== ETAPE 5: Build de l'application Laravel (Composer & Artisan) ==="
@@ -106,6 +103,8 @@ if [ "$RUN_COMPOSER_INSTALL" = true ] ; then
     echo "Installation des dépendances Composer..."
     rm -rf vendor
     "$COMPOSER_PATH" install --no-dev --optimize-autoloader
+    echo "Assurance des permissions d'exécution pour les binaires Composer..."
+    if [ -d "vendor/bin" ]; then chmod +x vendor/bin/*; fi
 else
     echo "Dépendances Composer inchangées. Mise à jour de l'autoloader..."
     rm -f bootstrap/cache/*.php
@@ -129,12 +128,12 @@ echo "=== ETAPE 6: Finalisation et correction des permissions ==="
 echo "Correction des permissions sur le dossier de l'application..."
 
 chmod 755 "$DEPLOY_DIR"
-find "$DEPLOY_DIR" -type d -exec chmod 755 {} \;
-find "$DEPLOY_DIR" -type f -exec chmod 644 {} \;
+find "$DEPLOY_DIR" -type d -print0 | xargs -0 chmod 755
+find "$DEPLOY_DIR" -type f -print0 | xargs -0 chmod 644
 
 echo "Correction des permissions sur le dossier partagé (pour les médias)..."
-find "$SHARED_DIR" -type d -exec chmod 755 {} \;
-find "$SHARED_DIR" -type f -exec chmod 644 {} \;
+find "$SHARED_DIR" -type d -print0 | xargs -0 chmod 755
+find "$SHARED_DIR" -type f -print0 | xargs -0 chmod 644
 
 echo ""
 echo "--- DÉPLOIEMENT TERMINÉ AVEC SUCCÈS ! ---"
