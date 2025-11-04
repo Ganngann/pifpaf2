@@ -1,12 +1,14 @@
 # Feuille de Route Stratégique du Projet Pifpaf
 
 ## 1. Introduction
-Ce document présente la stratégie de développement du projet Pifpaf. L'objectif est de construire une marketplace de haute qualité de manière itérative, en organisant le travail autour de **Sprints thématiques** conçus pour un développement parallèle par **trois agents IA (Jules 1, Jules 2, Jules 3)**.
+Ce document présente la stratégie de développement du projet Pifpaf. L'objectif est de construire une marketplace de haute qualité de manière itérative.
 
-La priorisation et l'organisation des tâches sont basées sur un **arbre de dépendances technologiques** qui garantit que les fonctionnalités sont développées dans un ordre logique, tout en maximisant le travail simultané.
+Initialement organisé en **Sprints thématiques** séquentiels, le développement a évolué vers une approche plus organique, où les fonctionnalités ont été implémentées en fonction des opportunités et des dépendances techniques plutôt qu'un calendrier strict. **Ce document a été mis à jour pour refléter l'état actuel du projet.** Il sert désormais de carte globale des fonctionnalités (achevées et restantes) plutôt que d'un plan chronologique.
+
+La priorisation et l'organisation des tâches sont basées sur un **arbre de dépendances technologiques** qui garantit que les fonctionnalités sont développées dans un ordre logique.
 
 ## 2. L'Arbre Technologique & Les Lignes de Développement
-Notre stratégie est visualisée par l'arbre ci-dessous. Il montre les dépendances entre les fonctionnalités et comment elles sont réparties entre les trois agents à travers les Sprints.
+Notre stratégie est visualisée par l'arbre ci-dessous. Il montre les dépendances entre les fonctionnalités et leur état d'avancement. **Les fonctionnalités terminées sont sur fond vert.**
 
 ```mermaid
 graph LR
@@ -23,77 +25,61 @@ graph LR
         end
     end
 
-    %% === Sprint 3 ===
-    subgraph Sprint 3: Vendeur Augmenté
+    %% === Thème: Vendeur Augmenté ===
+    subgraph "Thème: Vendeur Augmenté"
         direction TB
-        subgraph Jules 1: Galerie
+        subgraph " "
             S3_ANN1["US-ANN-1: Uploader images"] --> S3_ANN2["US-ANN-2: Définir principale"] --> S3_ANN3["US-ANN-3: Gérer galerie"]
-        end
-        subgraph Jules 2: IA MVP
             S3_IA1["US-IA-1: Analyse IA"] --> S3_IA2["US-IA-2: Valider suggestions"]
-        end
-        subgraph Jules 3: Catalogue
             S3_ANN5["US-ANN-5: Dépublier"] --> S3_ANN6["US-ANN-6: Republier"]
+            S3_ANN7["US-ANN-7: Indiquer 'Vendu'"]
         end
     end
 
-    %% === Sprint 4 ===
-    subgraph Sprint 4: Logistique Avancée
+    %% === Thème: Logistique Avancée ===
+    subgraph "Thème: Logistique Avancée"
         direction TB
-        subgraph Jules 1: Config Vendeur
+        subgraph " "
             S4_LOG1["US-LOG-1: Gérer adresses retrait"] --> S4_LOG2["US-LOG-2: Activer options / annonce"]
-        end
-        subgraph Jules 2: Parcours Acheteur
             S4_LOG3["US-LOG-3: Voir modes livraison"] --> S4_LOG4["US-LOG-4: Choisir mode à l'offre"] --> S4_LOG5["US-LOG-5: Gérer adresses livraison"]
-        end
-        subgraph Jules 3: Recherche
             S4_TRS2["US-TRS-2: Voir identité acheteur"]
             S4_LOG8["US-LOG-8: Filtrer par distance"]
         end
     end
 
-    %% === Sprint 5 ===
-    subgraph Sprint 5: Finalisation & Historique
+    %% === Thème: Finalisation & Historique ===
+    subgraph "Thème: Finalisation & Historique"
         direction TB
-        subgraph Jules 1: Post-Vente
+        subgraph " "
             S5_LOG6["US-LOG-6: Ajouter code suivi"] --> S5_LOG7["US-LOG-7: Voir code suivi"]
-        end
-        subgraph Jules 2: Historique
             S5_HIS1["US-HIS-1: Page Mes Achats/Ventes"] --> S5_HIS3["US-HIS-3: Détail transaction"]
-        end
-        subgraph Jules 3: Portefeuille
-             S5_TRS1["US-TRS-1: Payer avec solde"]
-             S5_HIS4["US-HIS-4: Historique portefeuille"]
+            S5_TRS1["US-TRS-1: Payer avec solde"]
+            S5_HIS4["US-HIS-4: Historique portefeuille"]
         end
     end
 
-    %% === Sprint 6 ===
-    subgraph Sprint 6: Communauté & IA v2
+    %% === Thème: Communauté & IA v2 ===
+    subgraph "Thème: Communauté & IA v2"
         direction TB
-        subgraph Jules 1: Confiance
+        subgraph " "
             S6_COM1["US-COM-1: Noter transaction"] --> S6_COM2["US-COM-2: Voir notes profil"]
             S6_COM5["US-COM-5: Ouvrir un litige"]
-        end
-        subgraph Jules 2: Communication
             S6_COM3["US-COM-3: Messagerie Interne"]
-        end
-        subgraph Jules 3: IA de Masse
             S6_IA5["US-IA-5: IA Création en masse"]
         end
     end
 
-    %% === Sprint 7 & 8 ===
-    subgraph Sprint 7: Conformité
+    %% === Thème: Conformité & Admin ===
+    subgraph "Thème: Conformité & Admin"
+        direction TB
         S7_RGPD1["US-ADM-1: Télécharger données"] --> S7_RGPD2["US-ADM-2: Supprimer compte"]
-    end
-    subgraph Sprint 8: Administration
         S8_ADM10["US-ADM-10: Accès Sécurisé"] --> S8_ADM11["US-ADM-11: Dashboard"]
         S8_ADM11 --> S8_ADM12["US-ADM-12: Gestion Utilisateurs"]
         S8_ADM11 --> S8_ADM13["US-ADM-13: Gestion Annonces"]
         S8_ADM11 --> S8_ADM14["US-ADM-14: Gestion Litiges"]
     end
 
-    %% === Dépendances Inter-Sprints ===
+    %% === Dépendances Inter-Thèmes ===
     F_Annonces --> S3_ANN1 & S3_IA1 & S3_ANN5
     F_Auth --> S4_LOG1 & S4_LOG5
     F_Achat --> S4_LOG4 & S5_HIS1
@@ -102,53 +88,57 @@ graph LR
     S4_LOG1 --> S4_LOG8
     S5_HIS3 --> S6_COM1
     S6_COM5 --> S8_ADM14
+
+    %% === Styles des noeuds terminés ===
+    style S3_ANN1 fill:#d4edda,stroke:#c3e6cb
+    style S3_ANN2 fill:#d4edda,stroke:#c3e6cb
+    style S3_ANN3 fill:#d4edda,stroke:#c3e6cb
+    style S3_IA1 fill:#d4edda,stroke:#c3e6cb
+    style S3_IA2 fill:#d4edda,stroke:#c3e6cb
+    style S3_ANN5 fill:#d4edda,stroke:#c3e6cb
+    style S3_ANN6 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG1 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG2 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG3 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG4 fill:#d4edda,stroke:#c3e6cb
+    style S4_TRS2 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG8 fill:#d4edda,stroke:#c3e6cb
+    style S5_TRS1 fill:#d4edda,stroke:#c3e6cb
+    style S5_HIS4 fill:#d4edda,stroke:#c3e6cb
+    style S6_COM1 fill:#d4edda,stroke:#c3e6cb
+    style S6_COM3 fill:#d4edda,stroke:#c3e6cb
+    style S6_COM4 fill:#d4edda,stroke:#c3e6cb
+    style S6_IA5 fill:#d4edda,stroke:#c3e6cb
+    style S8_ADM10 fill:#d4edda,stroke:#c3e6cb
+    style S8_ADM11 fill:#d4edda,stroke:#c3e6cb
+    style S8_ADM12 fill:#d4edda,stroke:#c3e6cb
 ```
 
-## 3. Déroulement des Sprints
+## 3. État d'Avancement par Thème
 
-### ✔️ Sprints 0-2 : Fondations (Terminé)
-- **Objectif Atteint :** Un socle fonctionnel permettant de s'inscrire, de créer une annonce simple, de l'acheter avec un système de paiement et de portefeuille simulé.
+### ✔️ Thème 0-2 : Fondations (Terminé)
+- **Statut :** Un socle fonctionnel permettant de s'inscrire, de créer une annonce simple, de l'acheter avec un système de paiement et de portefeuille simulé.
 
-### 🚀 Sprint 3 : Vendeur Augmenté
-- **Objectif :** Enrichir l'expérience du vendeur avec des outils plus puissants.
-- **Lignes de Développement :**
-  - **Jules 1 :** Implémentation de la galerie d'images multi-upload.
-  - **Jules 2 :** Mise en place du MVP de l'IA pour la création d'annonce.
-  - **Jules 3 :** Ajout des fonctionnalités de dépublication/republication.
-- **Point de Synchronisation :** À la fin du sprint, un vendeur peut créer une annonce enrichie (plusieurs images), assistée par IA, et la gérer plus finement.
+### 🗺️ Thème 3 : Vendeur Augmenté (Partiellement Terminé)
+- **Statut :** La majorité des fonctionnalités sont implémentées (galerie d'images, IA MVP, gestion du catalogue).
+- **Restant :** `US-ANN-7` (Indiquer qu'un article est vendu sur sa page de détail).
 
-### 🚀 Sprint 4 : Logistique Avancée
-- **Objectif :** Mettre en place un système de livraison et de retrait sur place complet.
-- **Lignes de Développement :**
-  - **Jules 1 :** Développement du back-office vendeur pour configurer ses options.
-  - **Jules 2 :** Intégration de ces options dans le parcours d'achat.
-  - **Jules 3 :** Amélioration de la transparence et de la recherche (identité, distance).
-- **Point de Synchronisation :** Une transaction peut désormais inclure une option de logistique claire, choisie par l'acheteur et configurée par le vendeur.
+### 🗺️ Thème 4 : Logistique Avancée (Partiellement Terminé)
+- **Statut :** Le parcours de configuration vendeur et de sélection par l'acheteur est presque complet. La recherche par distance est fonctionnelle.
+- **Restant :** `US-LOG-5` (Créer l'interface de gestion des adresses de livraison pour l'acheteur).
 
-### 🚀 Sprint 5 : Finalisation & Historique
-- **Objectif :** Apporter de la visibilité post-transaction et enrichir le portefeuille.
-- **Lignes de Développement :**
-  - **Jules 1 :** Implémentation du suivi de colis.
-  - **Jules 2 :** Création des pages d'historique des transactions.
-  - **Jules 3 :** Intégration du paiement par portefeuille et de son historique.
-- **Point de Synchronisation :** L'utilisateur a une vue complète de ses transactions passées, présentes et futures.
+### 🗺️ Thème 5 : Finalisation & Historique (Partiellement Terminé)
+- **Statut :** Le paiement par portefeuille et son historique sont fonctionnels.
+- **Restant :** `US-LOG-6` & `US-LOG-7` (Gestion du suivi de colis), `US-HIS-1` & `US-HIS-3` (Historique détaillé des transactions).
 
-### 🚀 Sprint 6 : Communauté & IA de Masse
-- **Objectif :** Construire la confiance et la communication, et préparer l'IA à la montée en charge.
-- **Lignes de Développement :**
-  - **Jules 1 :** Mise en place du système de notation et de litiges.
-  - **Jules 2 :** Création de la messagerie interne.
-  - **Jules 3 :** Développement de la fonctionnalité IA de création en masse.
-- **Point de Synchronisation :** La plateforme devient plus sociale, sécurisée et puissante.
+### 🗺️ Thème 6 : Communauté & IA v2 (Partiellement Terminé)
+- **Statut :** La messagerie interne, le système de notation initial et l'IA multi-objets sont implémentés.
+- **Restant :** `US-COM-2` (Affichage des notes sur le profil), `US-COM-5` (Gestion des litiges).
 
-### 🚀 Sprint 7 : Conformité
-- **Objectif :** Assurer la conformité avec le RGPD.
-- **Lignes de Développement :**
-  - **Jules 1 & 2 :** Travail conjoint sur les fonctionnalités de portabilité et de suppression des données.
-- **Point de Synchronisation :** Le projet atteint sa maturité en termes de respect des données utilisateur.
+### 🗺️ Thème 7 : Conformité (Non commencé)
+- **Statut :** Les fonctionnalités liées au RGPD n'ont pas encore été implémentées.
+- **Restant :** `US-ADM-1` (Export des données), `US-ADM-2` (Suppression de compte).
 
-### 🚀 Sprint 8 : Administration & Modération
-- **Objectif :** Fournir à l'équipe les outils internes pour gérer la plateforme.
-- **Lignes de Développement :**
-  - **Jules 1, 2 & 3 :** Développement conjoint de l'interface d'administration, du dashboard, et des modules de gestion (utilisateurs, annonces, litiges).
-- **Point de Synchronisation :** La plateforme est entièrement administrable, garantissant sa pérennité et sa sécurité.
+### 🗺️ Thème 8 : Administration & Modération (Partiellement Terminé)
+- **Statut :** Le socle de l'interface d'administration est en place (accès, dashboard, gestion utilisateurs).
+- **Restant :** `US-ADM-13` (Gestion des annonces), `US-ADM-14` (Gestion des litiges).

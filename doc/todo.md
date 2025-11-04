@@ -1,95 +1,35 @@
-# Pifpaf To-Do List (Structure Stratégique)
+# Backlog Priorisé du Projet Pifpaf
 
-*Ce document est la checklist opérationnelle du projet. Il est synchronisé avec la `feuille_de_route.md`.*
-
----
-## ✔️ Sprints 0-2: Fondations (Terminé)
-- [x] **Socle Technique :** Authentification, CRUD Annonces, Achat simple, Paiement & Portefeuille.
+*Ce document liste les User Stories restantes à implémenter pour le projet. Il remplace l'ancienne To-Do List et sert de source de vérité unique pour la planification des prochaines étapes de développement.*
 
 ---
-## 🚀 Sprint 3: Vendeur Augmenté
+## Priorité 1 : Finaliser l'Expérience de Transaction de Base
+*Objectif : Solidifier le parcours principal de vente et d'achat en complétant les fonctionnalités essentielles manquantes.*
 
-### Ligne de Développement: Jules 1 (Galerie d'Images)
-- [x] **US-ANN-1:** Uploader et supprimer des images pour une annonce.
-- [x] **US-ANN-2:** Définir une image comme principale.
-- [x] **US-ANN-3:** Réorganiser la galerie.
-
-### Ligne de Développement: Jules 2 (IA Simplifiée - MVP)
-- [x] **US-IA-1:** Mettre en place le parcours d'upload pour analyse IA.
-- [x] **US-IA-2:** Créer le formulaire de validation pré-rempli par l'IA.
-
-### Ligne de Développement: Jules 3 (Gestion Catalogue)
-- [x] **US-ANN-5:** Implémenter la dépublication d'une annonce.
-- [x] **US-ANN-6:** Implémenter la republication d'une annonce.
-- [ ] **US-ANN-7:** Indiquer qu'un article est vendu sur sa page de détail.
+- [ ] **US-ANN-7:** Indiquer qu'un article est "Vendu" sur sa page de détail pour éviter toute confusion.
+- [ ] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
+- [ ] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
+- [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
 
 ---
-## 🚀 Sprint 4: Logistique Avancée
+## Priorité 2 : Construire l'Historique et la Confiance
+*Objectif : Donner aux utilisateurs la visibilité sur leurs actions passées et renforcer la confiance au sein de la communauté.*
 
-### Ligne de Développement: Jules 1 (Configuration Venteur)
-- [x] **US-LOG-1:** Créer l'interface de gestion des adresses de retrait.
-- [x] **US-LOG-2:** Permettre d'activer les options de livraison sur une annonce.
-
-### Ligne de Développement: Jules 2 (Parcours Acheteur)
-- [x] **US-LOG-3:** Afficher les modes de livraison sur la page annonce.
-- [x] **US-LOG-4:** Intégrer le choix du mode de livraison dans le processus d'offre.
-- [ ] **US-LOG-5:** Créer l'interface de gestion des adresses de livraison.
-
-### Ligne de Développement: Jules 3 (Transparence & Recherche)
-- [x] **US-TRS-2:** Afficher le pseudo de l'acheteur sur la page de l'offre.
-- [x] **US-LOG-8:** Implémenter le filtre de recherche par distance.
+- [ ] **US-HIS-1:** Créer les pages "Mes Achats" et "Mes Ventes" pour lister les transactions.
+- [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée, accessible depuis les listes.
+- [ ] **US-COM-2:** Afficher la note moyenne et les avis sur le profil public d'un utilisateur.
+- [ ] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige.
 
 ---
-## 🚀 Sprint 5: Finalisation & Historique
+## Priorité 3 : Finaliser les Outils d'Administration
+*Objectif : Donner aux administrateurs les moyens de modérer la plateforme efficacement.*
 
-### Ligne de Développement: Jules 1 (Post-Vente)
-- [ ] **US-LOG-6:** Permettre au vendeur d'ajouter un code de suivi.
-- [ ] **US-LOG-7:** Afficher le code de suivi à l'acheteur.
-
-### Ligne de Développement: Jules 2 (Historique des Transactions)
-- [ ] **US-HIS-1:** Créer les pages listant les achats et les ventes.
-- [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée.
-
-### Ligne de Développement: Jules 3 (Portefeuille)
-- [x] **US-TRS-1:** Implémenter le paiement via le solde du portefeuille.
-- [x] **US-HIS-4:** Créer la page d'historique des mouvements du portefeuille.
+- [ ] **US-ADM-13:** Développer le module de modération des annonces (lister, rechercher, supprimer).
+- [ ] **US-ADM-14:** Développer le module de suivi et de gestion des litiges ouverts.
 
 ---
-## 🚀 Sprint 6: Communauté & IA de Masse
+## Priorité 4 : Conformité RGPD
+*Objectif : Mettre la plateforme en conformité avec les régulations sur la protection des données.*
 
-### Ligne de Développement: Jules 1 (Confiance)
-- [x] **US-COM-1:** Mettre en place le système de notation post-transaction.
-- [ ] **US-COM-2:** Afficher les notes sur les profils publics.
-- [ ] **US-COM-5:** Créer le formulaire d'ouverture de litige.
-
-### Ligne de Développement: Jules 2 (Communication)
-- [x] **US-COM-3:** Permettre de démarrer une conversation.
-- [x] **US-COM-4:** Créer l'interface de messagerie (boîte de réception).
-
-### Ligne de Développement: Jules 3 (IA v2)
-- [x] **US-IA-5:** Développer la capacité de l'IA à traiter plusieurs objets sur une photo.
-
----
-## 🚀 Sprint 7: Conformité
-
-### Lignes de Développement: Jules 1 & 2 (RGPD)
-- [ ] **US-ADM-1:** Développer la fonctionnalité d'export des données personnelles.
-- [ ] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données.
-
----
-## 🚀 Sprint 8: Administration & Modération
-
-### Lignes de Développement: Jules 1, 2 & 3 (Conjoint)
-- [x] **US-ADM-10:** Mettre en place le rôle "Admin" et l'accès sécurisé.
-- [x] **US-ADM-11:** Créer le dashboard avec les statistiques clés.
-- [x] **US-ADM-12:** Développer le module de gestion des utilisateurs.
-- [ ] **US-ADM-13:** Développer le module de modération des annonces.
-- [ ] **US-ADM-14:** Développer le module de suivi des litiges.
-
----
-## ✨ Améliorations & Corrections
-- [x] **BUG-101, BUG-106:** Refactoriser l'affichage des listes d'articles (accueil, profil) avec une carte unifiée et corriger l'alignement.
-- [x] **BUG-105:** Corriger l'affichage des images (tronquées) sur la page de détail de l'article.
-##  META: Stratégie de Développement
-- [x] **META-1:** Supprimer l'exigence des captures d'écran dans la documentation et le processus de développement.
-- [x] **META-2:** Ajouter le principe de conception de composants petits et réutilisables dans le guide de développement.
+- [ ] **US-ADM-1:** Développer la fonctionnalité d'export des données personnelles pour un utilisateur.
+- [ ] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données utilisateur.
