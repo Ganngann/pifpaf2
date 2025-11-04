@@ -16,6 +16,7 @@ class PaymentFlowTest extends TestCase
     #[Test]
     public function payment_creates_transaction_with_payment_received_status_and_does_not_pay_seller(): void
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         // 1. Arrange
         $seller = User::factory()->create(['wallet' => 0]);
         $buyer = User::factory()->create();

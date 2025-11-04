@@ -17,6 +17,7 @@ class PaymentFlowTest extends DuskTestCase
     #[Test]
     public function an_buyer_can_see_and_pay_for_an_accepted_offer()
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);

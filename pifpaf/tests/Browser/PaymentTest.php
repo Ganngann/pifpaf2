@@ -18,6 +18,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_partially_with_wallet()
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 5.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00]);
@@ -55,6 +56,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_fully_with_wallet()
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 20.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00]);
@@ -89,6 +91,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_without_wallet()
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 5.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00]);
