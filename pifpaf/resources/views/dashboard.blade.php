@@ -378,6 +378,16 @@
                                         </div>
                                     </a>
                                     <div class="mt-4 sm:mt-0">
+                                        @if ($completedTransaction->label_url)
+                                            <a href="{{ $completedTransaction->label_url }}" target="_blank" class="bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-700">Voir l'étiquette</a>
+                                        @else
+                                            <form action="{{ route('transactions.ship', $completedTransaction) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                                                    Créer l'envoi
+                                                </button>
+                                            </form>
+                                        @endif
                                         @if (!$completedTransaction->reviews()->where('reviewer_id', Auth::id())->exists())
                                             <x-review-modal :transaction="$completedTransaction" :recipientName="$buyer->name" />
                                         @else

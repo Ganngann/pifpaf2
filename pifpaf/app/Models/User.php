@@ -76,6 +76,11 @@ class User extends Authenticatable
         return $this->hasMany(PickupAddress::class);
     }
 
+    public function shippingAddresses()
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
     /**
      * Vérifie si l'utilisateur est un administrateur.
      *

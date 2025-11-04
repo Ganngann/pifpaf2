@@ -81,6 +81,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour l'historique des transactions
     Route::get('/purchases', [TransactionController::class, 'purchases'])->name('transactions.purchases');
     Route::get('/sales', [TransactionController::class, 'sales'])->name('transactions.sales');
+
+    // Route pour la création de l'envoi
+    Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'createShipment'])->name('transactions.ship');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
@@ -106,3 +109,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/styleguide', [StyleguideController::class, 'index'])->name('styleguide');
 });
+
+// Webhook pour Sendcloud
+Route::post('/webhooks/sendcloud', [\App\Http\Controllers\SendcloudWebhookController::class, 'handle'])->name('webhooks.sendcloud');
