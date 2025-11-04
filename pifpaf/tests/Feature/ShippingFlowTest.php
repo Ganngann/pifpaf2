@@ -56,4 +56,36 @@ class ShippingFlowTest extends TestCase
                    $request->method() == 'POST';
         });
     }
+
+    public function test_cannot_create_shipment_for_transaction_without_shipping_address()
+    {
+        // 1. Arrange
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id, 'status' => 'paid']);
+        // Create a transaction without a shipping address
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'completed', 'shipping_address_id' => null]);
+
+        // We don't need to fake the API here, as it should not be called.
+        Http::fake();
+
+        // 2. Act
+        $response = $this->actingAs($seller)->post(route('transactions.ship', $transaction));
+
+        // 3. Assert
+        $response->assertRedirect();
+        $response->assertSessionHas('error', 'Cette transaction ne nécessite pas d\'expédition car elle n\'a pas d\'adresse de livraison.');
+
+        // Assert the transaction was not updated in the database
+        $this->assertDatabaseHas('transactions', [
+            'id' => $transaction->id,
+            'sendcloud_parcel_id' => null,
+            'tracking_code' => null,
+            'status' => 'completed', // Status should remain unchanged
+        ]);
+
+        // Assert that no request was sent to the Sendcloud API
+        Http::assertNothingSent();
+    }
 }
