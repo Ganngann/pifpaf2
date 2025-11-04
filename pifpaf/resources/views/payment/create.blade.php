@@ -30,8 +30,9 @@
                         <p class="text-lg"><span class="font-semibold">Montant de l'offre :</span> {{ number_format($offer->amount, 2, ',', ' ') }} €</p>
                     </div>
 
-                    <form action="{{ route('payment.store', $offer) }}" method="POST">
+                    <form id="payment-form" action="{{ route('payment.store', $offer) }}" method="POST" x-data="paymentForm" @submit.prevent="handleSubmit">
                         @csrf
+                        <input type="hidden" name="payment_intent_id" x-ref="payment_intent_id">
 
                         @if ($walletBalance > 0)
                         <div class="mb-6">
@@ -53,40 +54,30 @@
                         </div>
 
 
-                        {{-- Formulaire de paiement par carte --}}
-                        <div x-show="!walletCoversAll" class="space-y-4">
-                             <h4 class="text-xl font-semibold mb-4">Paiement par carte</h4>
-                            {{-- Numéro de carte --}}
-                            <div>
-                                <label for="card_number" class="block font-medium text-sm text-gray-700">Numéro de carte de crédit</label>
-                                <input id="card_number" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="1234 5678 9101 1121" :required="!walletCoversAll">
+                        {{-- Conteneur pour Stripe Elements --}}
+                        <div x-show="!walletCoversAll">
+                            <h4 class="text-xl font-semibold mb-4">Paiement par carte</h4>
+                            <div id="card-element" class="p-4 border rounded-md shadow-sm">
+                                <!-- L'élément Stripe Card sera injecté ici -->
                             </div>
-
-                            <div class="grid grid-cols-3 gap-4">
-                                {{-- Date d'expiration --}}
-                                <div>
-                                    <label for="expiry_date" class="block font-medium text-sm text-gray-700">Date d'expiration</label>
-                                    <input id="expiry_date" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="MM/AA" :required="!walletCoversAll">
-                                </div>
-
-                                {{-- CVC --}}
-                                <div>
-                                    <label for="cvc" class="block font-medium text-sm text-gray-700">CVC</label>
-                                    <input id="cvc" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="123" :required="!walletCoversAll">
-                                </div>
-                            </div>
+                            <div id="card-errors" role="alert" class="text-red-600 mt-2 text-sm"></div>
                         </div>
 
-                         <div class="mt-6" x-show="walletCoversAll">
-                            <p class="text-green-600 font-semibold">Votre solde de portefeuille couvre la totalité de la commande.</p>
+                        <div class="mt-6" x-show="walletCoversAll">
+                           <p class="text-green-600 font-semibold">Votre solde de portefeuille couvre la totalité de la commande.</p>
                         </div>
 
-
-                        <div class="mt-6">
-                            <button type="submit" dusk="submit-payment-button" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
-                                <span x-show="!walletCoversAll">Payer </span>
-                                <span x-show="walletCoversAll">Confirmer et payer avec mon solde</span>
-                                <span x-text="formatCurrency(amountToPay)"></span>
+                        <div class="mt-8">
+                            <button type="submit"
+                                    dusk="submit-payment-button"
+                                    class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    :disabled="loading">
+                                <span x-show="loading" class="animate-spin mr-2">Processing...</span>
+                                <span x-show="!loading">
+                                    <span x-show="!walletCoversAll">Payer</span>
+                                    <span x-show="walletCoversAll">Confirmer et payer avec le solde</span>
+                                    <span x-text="formatCurrency(amountToPay)"></span>
+                                </span>
                             </button>
                         </div>
                     </form>
@@ -94,4 +85,89 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('paymentForm', () => ({
+                loading: false,
+                stripe: null,
+                cardElement: null,
+                clientSecret: '{{ $intent ? $intent->client_secret : null }}',
+
+                init() {
+                    if (this.clientSecret) {
+                        this.stripe = Stripe('{{ config('services.stripe.key') }}');
+                        const elements = this.stripe.elements();
+                        this.cardElement = elements.create('card', {
+                            style: {
+                                base: {
+                                    fontSize: '16px',
+                                    color: '#32325d',
+                                }
+                            }
+                        });
+                        this.cardElement.mount('#card-element');
+
+                        this.cardElement.on('change', (event) => {
+                            const displayError = document.getElementById('card-errors');
+                            if (event.error) {
+                                displayError.textContent = event.error.message;
+                            } else {
+                                displayError.textContent = '';
+                            }
+                        });
+                    }
+                },
+
+                async handleSubmit(event) {
+                    event.preventDefault();
+                    this.loading = true;
+
+                    const { useWallet, walletBalance, offerAmount } = this.$data;
+                    const walletCoversAll = useWallet && walletBalance >= offerAmount;
+
+                    // Si le portefeuille couvre tout, on soumet le formulaire directement
+                    if (walletCoversAll) {
+                        event.target.submit();
+                        return;
+                    }
+
+                    // Si le paiement par carte est nécessaire mais que l'intention n'a pas pu être créée
+                    if (!this.clientSecret) {
+                        alert("Le montant à payer par carte est trop faible pour être traité.");
+                        this.loading = false;
+                        return;
+                    }
+
+                    // Confirmer le paiement de la carte avec Stripe
+                    const { paymentIntent, error } = await this.stripe.confirmCardPayment(
+                        this.clientSecret, {
+                            payment_method: {
+                                card: this.cardElement,
+                                billing_details: {
+                                    // Idéalement, on ajouterait le nom et l'email de l'utilisateur ici
+                                    name: '{{ auth()->user()->name }}',
+                                    email: '{{ auth()->user()->email }}',
+                                }
+                            }
+                        }
+                    );
+
+                    if (error) {
+                        // Afficher l'erreur à l'utilisateur
+                        const errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = error.message;
+                        this.loading = false;
+                    } else {
+                        // Le paiement a réussi
+                        this.$refs.payment_intent_id.value = paymentIntent.id;
+                        event.target.submit();
+                    }
+                }
+            }));
+        });
+    </script>
+    @endpush
 </x-app-layout>
