@@ -161,8 +161,24 @@
                         @endif
                     @endauth
                 @else
+                    @php
+                        $soldTransaction = null;
+                        foreach ($item->offers as $offer) {
+                            if ($offer->transaction && $offer->status === 'paid' && $offer->transaction->status === 'completed') {
+                                $soldTransaction = $offer->transaction;
+                                break;
+                            }
+                        }
+                    @endphp
                     <div class="flex items-center justify-between mt-6">
-                        <span class="font-bold text-3xl">{{ number_format($item->price, 2, ',', ' ') }} €</span>
+                        <span class="font-bold text-3xl">
+                            @if ($soldTransaction)
+                                {{ number_format($soldTransaction->amount, 2, ',', ' ') }} €
+                            @else
+                                {{-- Fallback au cas où la transaction n'est pas trouvée --}}
+                                {{ number_format($item->price, 2, ',', ' ') }} €
+                            @endif
+                        </span>
                         <span class="bg-red-100 text-red-800 text-lg font-semibold mr-2 px-4 py-2 rounded-full">Article Vendu</span>
                     </div>
                 @endif
