@@ -80,7 +80,7 @@ class ItemController extends Controller
             }
         }
 
-        $items = $query->get();
+        $items = $query->paginate(12);
 
         return view('welcome', [
             'items' => $items,

@@ -60,9 +60,7 @@ class ProfileTest extends TestCase
 
         // Assert that the "no items" message is visible by checking the raw content
         $this->assertTrue(
-            str_contains($response->getContent(), 'Cet utilisateur n\'a aucun article en vente pour le moment.') ||
-            str_contains($response->getContent(), 'Cet utilisateur n&apos;a aucun article en vente pour le moment.') ||
-            str_contains($response->getContent(), 'Cet utilisateur n&#039;a aucun article en vente pour le moment.')
+            str_contains($response->getContent(), 'Aucun article trouvé.')
         );
     }
 }
