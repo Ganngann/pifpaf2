@@ -1,6 +1,6 @@
 @props(['item'])
 
-<div class="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+<div class="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col">
     <a href="{{ route('items.show', $item) }}" class="absolute inset-0 z-10">
         <span class="sr-only">Voir l'article {{ $item->title }}</span>
     </a>
@@ -9,18 +9,20 @@
         <x-ui.item-thumbnail :item="$item" class="w-full h-full object-cover" />
     </div>
 
-    <div class="p-4 bg-white">
-        <h3 class="font-bold text-lg truncate text-gray-800" title="{{ $item->title }}">
-            <a href="{{ route('items.show', $item) }}" class="hover:underline">
-                {{ $item->title }}
-            </a>
-        </h3>
+    <div class="p-4 bg-white flex flex-col flex-grow">
+        <div>
+            <h3 class="font-bold text-lg truncate text-gray-800" title="{{ $item->title }}">
+                <a href="{{ route('items.show', $item) }}" class="hover:underline">
+                    {{ $item->title }}
+                </a>
+            </h3>
 
-        <div class="mt-2">
-             <x-ui.user-profile-link :user="$item->user" />
+            <div class="mt-2">
+                <x-ui.user-profile-link :user="$item->user" />
+            </div>
         </div>
 
-        <div class="flex justify-between items-center mt-3">
+        <div class="flex justify-between items-center mt-auto pt-3">
             <p class="text-xl font-semibold text-gray-900">{{ number_format($item->price, 2, ',', ' ') }} €</p>
 
             <div class="text-sm text-gray-600">
