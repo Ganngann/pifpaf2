@@ -158,4 +158,30 @@ class TransactionController extends Controller
 
         return redirect()->route('dashboard')->with('error', 'Erreur lors de la création de l\'envoi.');
     }
+
+    /**
+     * Ajoute un numéro de suivi à une transaction.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Transaction $transaction
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function addTracking(Request $request, Transaction $transaction)
+    {
+        // On s'assure que l'utilisateur connecté est bien le vendeur de l'article concerné
+        $this->authorize('update', $transaction->offer->item);
+
+        // Valider la requête
+        $request->validate([
+            'tracking_code' => 'required|string|max:255',
+        ]);
+
+        // Mettre à jour la transaction avec le numéro de suivi et le nouveau statut
+        $transaction->update([
+            'tracking_code' => $request->tracking_code,
+            'status' => 'in_transit',
+        ]);
+
+        return redirect()->route('transactions.sales')->with('success', 'Numéro de suivi ajouté avec succès.');
+    }
 }
