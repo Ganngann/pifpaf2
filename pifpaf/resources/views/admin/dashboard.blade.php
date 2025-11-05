@@ -11,26 +11,31 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Statistiques Clés</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Statistique Utilisateurs -->
-                        <div class="bg-blue-100 p-6 rounded-lg">
-                            <h4 class="text-lg font-semibold text-blue-800">Utilisateurs</h4>
-                            <p class="text-3xl font-bold text-blue-900 mt-2">{{ $userCount }}</p>
-                            <a href="{{ route('admin.users.index') }}" class="text-blue-600 hover:underline mt-4 inline-block">Gérer les utilisateurs</a>
-                        </div>
 
-                        <!-- Statistique Annonces -->
-                        <div class="bg-green-100 p-6 rounded-lg">
-                            <h4 class="text-lg font-semibold text-green-800">Annonces</h4>
-                            <p class="text-3xl font-bold text-green-900 mt-2">{{ $itemCount }}</p>
-                            <a href="{{ route('admin.items.index') }}" class="text-green-600 hover:underline mt-4 inline-block">Gérer les annonces</a>
-                        </div>
+                        <x-admin.stat-card
+                            title="Utilisateurs"
+                            :count="$userCount"
+                            :link="route('admin.users.index')"
+                            linkText="Gérer les utilisateurs"
+                            color="blue"
+                        />
 
-                        <!-- Statistique Transactions -->
-                        <div class="bg-yellow-100 p-6 rounded-lg">
-                            <h4 class="text-lg font-semibold text-yellow-800">Transactions</h4>
-                            <p class="text-3xl font-bold text-yellow-900 mt-2">{{ $transactionCount }}</p>
-                            <a href="#" class="text-yellow-600 hover:underline mt-4 inline-block">Voir les transactions</a>
-                        </div>
+                        <x-admin.stat-card
+                            title="Annonces"
+                            :count="$itemCount"
+                            :link="route('admin.items.index')"
+                            linkText="Gérer les annonces"
+                            color="green"
+                        />
+
+                        <x-admin.stat-card
+                            title="Transactions"
+                            :count="$transactionCount"
+                            link="#"
+                            linkText="Voir les transactions"
+                            color="yellow"
+                        />
+
                     </div>
                 </div>
             </div>
