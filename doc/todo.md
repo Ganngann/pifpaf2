@@ -8,7 +8,7 @@
 
 - [x] **US-ANN-7:** Indiquer qu'un article est "Vendu" sur sa page de détail pour éviter toute confusion.
 - [ ] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
-- [ ] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
+- [x] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
 - [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
 
 ---
