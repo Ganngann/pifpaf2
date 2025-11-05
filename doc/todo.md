@@ -7,7 +7,7 @@
 *Objectif : Solidifier le parcours principal de vente et d'achat en complétant les fonctionnalités essentielles manquantes.*
 
 - [x] **US-ANN-7:** Indiquer qu'un article est "Vendu" sur sa page de détail pour éviter toute confusion.
-- [ ] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
+- [x] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
 - [x] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
 - [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
 
@@ -24,7 +24,7 @@
 ## Priorité 3 : Finaliser les Outils d'Administration
 *Objectif : Donner aux administrateurs les moyens de modérer la plateforme efficacement.*
 
-- [3] **US-ADM-13:** Développer le module de modération des annonces (lister, rechercher, supprimer).
+- [x] **US-ADM-13:** Développer le module de modération des annonces (lister, rechercher, supprimer).
 - [ ] **US-ADM-14:** Développer le module de suivi et de gestion des litiges ouverts.
 
 ---
