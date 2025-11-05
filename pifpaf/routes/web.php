@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
     // Routes pour l'historique des transactions
     Route::get('/purchases', [TransactionController::class, 'purchases'])->name('transactions.purchases');
     Route::get('/sales', [TransactionController::class, 'sales'])->name('transactions.sales');
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
 
     // Route pour la création de l'envoi
     Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'createShipment'])->name('transactions.ship');

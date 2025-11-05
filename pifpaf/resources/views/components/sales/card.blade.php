@@ -50,6 +50,10 @@
                 </a>
             @endif
 
+            <a href="{{ route('transactions.show', $transaction) }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Voir les détails
+            </a>
+            {{-- Placeholder for future actions --}}
             {{-- Formulaire pour ajouter un numéro de suivi --}}
             @if ($transaction->status === 'shipping_initiated' && !$transaction->tracking_code)
                 <form action="{{ route('transactions.addTracking', $transaction) }}" method="POST" class="flex items-center space-x-2">
