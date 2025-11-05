@@ -1,3 +1,5 @@
 @props(['description'])
 
-<p class="text-gray-600 mb-8">{{ $description }}</p>
+<div class="prose prose-lg max-w-none text-gray-700">
+    <p>{{ $description }}</p>
+</div>
