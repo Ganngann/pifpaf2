@@ -16,7 +16,7 @@
 *Objectif : Donner aux utilisateurs la visibilité sur leurs actions passées et renforcer la confiance au sein de la communauté.*
 
 - [x] **US-HIS-1:** Créer les pages "Mes Achats" et "Mes Ventes" pour lister les transactions.
-- [ ] **US-HIS-3:** Créer la vue détaillée d'une transaction passée, accessible depuis les listes.
+- [x] **US-HIS-3:** Créer la vue détaillée d'une transaction passée, accessible depuis les listes.
 - [x] **US-COM-2:** Afficher la note moyenne et les avis sur le profil public d'un utilisateur.
 - [ ] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige.
 
