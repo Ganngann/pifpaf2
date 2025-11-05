@@ -105,6 +105,21 @@ class TransactionController extends Controller
     }
 
     /**
+     * Affiche les détails d'une transaction.
+     *
+     * @param \App\Models\Transaction $transaction
+     * @return \Illuminate\View\View
+     */
+    public function show(Transaction $transaction)
+    {
+        $this->authorize('view', $transaction);
+
+        $transaction->load('offer.item.user', 'offer.user', 'review', 'shippingAddress');
+
+        return view('transactions.show', compact('transaction'));
+    }
+
+    /**
      * Create a shipment for a transaction.
      *
      * @param \App\Models\Transaction $transaction
