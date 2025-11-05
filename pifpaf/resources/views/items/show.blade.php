@@ -40,10 +40,15 @@
             <div class="p-8">
                 <h1 class="text-4xl font-bold mb-2" dusk="item-title">{{ $item->title }}</h1>
                 <div class="mb-6">
-                    <span class="text-gray-500">Vendu par :</span>
-                    <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
-                        {{ $item->user->name }}
-                    </a>
+                    <div>
+                        <span class="text-gray-500">Vendu par :</span>
+                        <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
+                            {{ $item->user->name }}
+                        </a>
+                    </div>
+                    <div class="mt-2 text-sm text-gray-500">
+                        Publié le {{ $item->created_at->format('d/m/Y') }}
+                    </div>
                 </div>
                 <p class="text-gray-600 mb-8">{{ $item->description }}</p>
                 <div x-data="{ deliveryMethod: '' }">
