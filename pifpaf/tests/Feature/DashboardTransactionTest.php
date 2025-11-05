@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use App\Models\User;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
 
 class DashboardTransactionTest extends TestCase
 {
@@ -20,15 +20,22 @@ class DashboardTransactionTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
-        $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'paid']);
-        Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'payment_received']);
+        $offer = Offer::factory()->create([
+            'item_id' => $item->id,
+            'user_id' => $buyer->id,
+            'status' => 'accepted',
+        ]);
+        Transaction::factory()->create([
+            'offer_id' => $offer->id,
+            'status' => 'payment_received',
+        ]);
 
         $response = $this->actingAs($seller)->get(route('dashboard'));
 
         $response->assertStatus(200);
         $response->assertSee('Transactions en cours');
         $response->assertSee($item->title);
-        $response->assertSee('Acheteur : ' . $buyer->name);
+        $response->assertSeeText('Acheteur : ' . $buyer->name);
     }
 
     #[Test]
@@ -37,15 +44,22 @@ class DashboardTransactionTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
-        $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'paid']);
-        Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'payment_received']);
+        $offer = Offer::factory()->create([
+            'item_id' => $item->id,
+            'user_id' => $buyer->id,
+            'status' => 'accepted',
+        ]);
+        Transaction::factory()->create([
+            'offer_id' => $offer->id,
+            'status' => 'payment_received',
+        ]);
 
         $response = $this->actingAs($buyer)->get(route('dashboard'));
 
         $response->assertStatus(200);
         $response->assertSee('Transactions en cours');
         $response->assertSee($item->title);
-        $response->assertSee('Vendeur : ' . $seller->name);
+        $response->assertSeeText('Vendeur : ' . $seller->name);
     }
 
     #[Test]
@@ -54,17 +68,20 @@ class DashboardTransactionTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
-        $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'paid']);
-        Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'completed']);
+        $offer = Offer::factory()->create([
+            'item_id' => $item->id,
+            'user_id' => $buyer->id,
+            'status' => 'paid',
+        ]);
+        Transaction::factory()->create([
+            'offer_id' => $offer->id,
+            'status' => 'completed',
+        ]);
 
-        $response = $this->actingAs($seller)->get(route('dashboard'));
+        $response = $this->actingAs($buyer)->get(route('dashboard'));
 
         $response->assertStatus(200);
-        $response->assertSee('Transactions en cours');
-        $response->assertViewHas('openTransactions', function ($transactions) use ($item) {
-            return !$transactions->contains(function ($transaction) use ($item) {
-                return $transaction->offer->item_id === $item->id;
-            });
-        });
+        $response->assertDontSee($item->title);
+        $response->assertSee('Vous n\'avez aucune transaction en cours.', false);
     }
 }

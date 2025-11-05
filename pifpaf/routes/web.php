@@ -67,6 +67,11 @@ Route::middleware('auth')->group(function () {
     // Routes pour la gestion des adresses de retrait
     Route::resource('profile/addresses', PickupAddressController::class)->names('profile.addresses');
 
+    // Routes pour la gestion des adresses de livraison
+    Route::resource('profile/shipping-addresses', \App\Http\Controllers\ShippingAddressController::class)
+        ->except(['index', 'show'])
+        ->names('profile.shipping_addresses');
+
     // Routes pour la file d'attente IA
     Route::get('/ai-requests', [AiRequestController::class, 'index'])->name('ai-requests.index');
     Route::post('/ai-requests', [AiRequestController::class, 'store'])->name('ai-requests.store');

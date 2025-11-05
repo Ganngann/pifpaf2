@@ -17,8 +17,11 @@ class PickupAddressController extends Controller
      */
     public function index()
     {
-        $addresses = Auth::user()->pickupAddresses;
-        return view('profile.addresses.index', compact('addresses'));
+        $user = Auth::user();
+        $pickupAddresses = $user->pickupAddresses;
+        $shippingAddresses = $user->shippingAddresses;
+
+        return view('profile.addresses.index', compact('pickupAddresses', 'shippingAddresses'));
     }
 
     /**
