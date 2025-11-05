@@ -24,7 +24,7 @@
 ## Priorité 3 : Finaliser les Outils d'Administration
 *Objectif : Donner aux administrateurs les moyens de modérer la plateforme efficacement.*
 
-- [ ] **US-ADM-13:** Développer le module de modération des annonces (lister, rechercher, supprimer).
+- [3] **US-ADM-13:** Développer le module de modération des annonces (lister, rechercher, supprimer).
 - [ ] **US-ADM-14:** Développer le module de suivi et de gestion des litiges ouverts.
 
 ---
