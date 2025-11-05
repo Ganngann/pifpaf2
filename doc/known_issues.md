@@ -1,53 +1,68 @@
-# Problèmes Connus
+# Problèmes Connus et Tests Défaillants
 
-Ce document liste les tests qui échouent ou sont désactivés dans la suite de tests de l'application.
+Ce document centralise les problèmes connus, les tests défaillants (failures) et les tests intentionnellement ignorés (skipped) dans la suite de tests du projet Pifpaf.
 
-## Suite de Tests Frontend (Laravel Dusk)
+L'objectif est de fournir une vue d'ensemble claire de l'état de la base de code pour éviter de perdre du temps sur des problèmes déjà identifiés et pour prioriser les corrections.
 
-### Tests en échec
+---
 
-- **Suite:** `Tests\Browser\PaymentTest`
-- **Test:** `a user can pay without wallet`
-- **Erreur:** `NoSuchElementException`
-- **Description:** Le test échoue car il ne trouve pas un élément attendu sur la page lors de la simulation d'un paiement par carte de crédit (sans utiliser le portefeuille).
-- **Trace de l'erreur:**
-  ```
-   FAILED  Tests\Browser\PaymentTest > a user can pa…  NoSuchElementException
-  no such element: Unable to locate element: {"method":"tag name","selector":"html"}
-  (Session info: chrome=142.0.7444.59)
+## Tests PHPUnit (Back-End)
 
-  at vendor/php-webdriver/webdriver/lib/Exception/WebDriverException.php:120
-    116▕                     throw new NoSuchAlertException($message, $results);
-    117▕                 case 'no such cookie':
-    118▕                     throw new NoSuchCookieException($message, $results);
-    119▕                 case 'no such element':
-  ➜ 120▕                     throw new NoSuchElementException($message, $results);
-    121▕                 case 'no such frame':
-    122▕                     throw new NoSuchFrameException($message, $results);
-    123▕                 case 'no such window':
-    124▕                     throw new NoSuchWindowException($message, $results);
+*Dernière exécution : 2025-11-05*
 
-       [2m+5 vendor frames  [22m
-  6   tests/Browser/PaymentTest.php:102
-  ```
+### Tests Ignorés (Skipped)
 
-### Tests Désactivés (Skipped)
+- **Test:** `Tests\Feature\Feature\PaymentFlowTest`
+  - **Raison :** Non spécifiée dans la sortie du test. Probablement désactivé pour éviter les appels API réels.
+  - **Fichier :** `pifpaf/tests/Feature/Feature/PaymentFlowTest.php`
 
-Les tests suivants sont intentionnellement désactivés (`skipped`) car ils concernent des fonctionnalités liées à l'IA qui sont en cours de développement ou de refactoring.
+- **Test:** `Tests\Feature\PaymentTest`
+  - **Raison :** "Les tests de paiement sont désactivés pour éviter les appels API réels."
+  - **Fichier :** `pifpaf/tests/Feature/PaymentTest.php`
 
-- `Tests\Browser\AiItemCreationDuskTest`
-- `Tests\Browser\MultiObjectAiItemCreationTest`
-- `Tests\Browser\ValidateAiSuggestionsTest`
+### Tests Défaillants (Failures)
 
-## Suite de Tests Backend (PHPUnit)
+*Aucun test défaillant lors de la dernière exécution.*
 
-### Suite de tests fragile
+---
 
-- **Suite:** `Tests\Feature\PickupAvailableTest`, `Tests\Feature\PaymentTest`, `Tests\Feature\WalletTest`
-- **Description:** Plusieurs tests dans ces suites échouent de manière intermittente ou en cascade. Le problème principal semble être le couplage fort avec le processus de paiement Stripe, qui est difficile à moquer de manière fiable dans l'environnement de test actuel. Les tentatives de correction ont montré que les tests sont sensibles à l'ordre d'exécution, ce qui indique un état partagé non maîtrisé.
-- **Action recommandée:** Une refonte de ces tests est nécessaire. Il faudrait notamment mettre en place une stratégie de mock centralisée et robuste pour les services externes comme Stripe, et s'assurer que chaque test est parfaitement isolé.
+## Tests Dusk (Front-End)
 
-### Nouveaux tests en échec
+*Dernière exécution : 2025-11-05*
 
-- **Suite:** `Tests\Feature\DashboardTransactionTest`
-- **Description:** Les tests créés pour la nouvelle fonctionnalité du tableau de bord (`open_sales_are_displayed_on_dashboard_for_seller` et `open_purchases_are_displayed_on_dashboard_for_buyer`) échouent car les relations (vendeur/acheteur) ne semblent pas être correctement chargées et disponibles dans la vue, malgré plusieurs tentatives de correction de la requête du contrôleur. Ce problème semble spécifique à l'environnement de test et n'a pas pu être résolu dans le temps imparti.
+### Tests Ignorés (Skipped)
+
+- **Test:** `Tests\Browser\AiItemCreationDuskTest`
+  - **Raison :** "Skipping AI test due to external dependency"
+  - **Fichier :** `pifpaf/tests/Browser/AiItemCreationDuskTest.php`
+
+- **Test:** `Tests\Browser\MultiObjectAiItemCreationTest`
+  - **Raison :** "Skipping this test as it is flaky and depends on AI service."
+  - **Fichier :** `pifpaf/tests/Browser/MultiObjectAiItemCreationTest.php`
+
+- **Test:** `Tests\Browser\PaymentFlowTest`
+  - **Raison :** "Les tests de paiement sont désactivés pour éviter les appels API réels."
+  - **Fichier :** `pifpaf/tests/Browser/PaymentFlowTest.php`
+
+- **Test:** `Tests\Browser\PaymentTest` (3 tests)
+  - **Raison :** "Les tests de paiement sont désactivés pour éviter les appels API réels."
+  - **Fichier :** `pifpaf/tests/Browser/PaymentTest.php`
+
+- **Test:** `Tests\Browser\ValidateAiSuggestionsTest`
+  - **Raison :** "Skipping AI validation test."
+  - **Fichier :** `pifpaf/tests/Browser/ValidateAiSuggestionsTest.php`
+
+
+### Tests Défaillants (Failures)
+
+- **Test:** `Tests\Browser\BuyerConfirmsReceptionTest` > `buyer can pay and then confirm reception`
+  - **Erreur :** `Did not see expected text [Article à Payer et Confirmer] within element [body].` Le test n'a pas trouvé le texte attendu sur le tableau de bord de l'acheteur.
+  - **Fichier :** `pifpaf/tests/Browser/BuyerConfirmsReceptionTest.php`
+
+- **Test:** `Tests\Browser\PickupAddressManagementTest` > `user can navigate to addresses page`
+  - **Erreur :** `Did not see expected text [Mes Adresses de Retrait] within element [body].` Le test n'a pas trouvé le titre attendu sur la page de gestion des adresses.
+  - **Fichier :** `pifpaf/tests/Browser/PickupAddressManagementTest.php`
+
+- **Test:** `Tests\Browser\PickupAddressManagementTest` > `user can add a new pickup address`
+  - **Erreur :** `JavascriptErrorException: javascript error: Cannot read properties of undefined (reading 'click')`. Erreur JavaScript lors de la tentative de clic sur un élément, probablement lié au menu déroulant ou à un composant Alpine.js.
+  - **Fichier :** `pifpaf/tests/Browser/PickupAddressManagementTest.php`
