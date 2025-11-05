@@ -228,62 +228,21 @@
                 </div>
             @endif
 
-            {{-- Section Mes Offres --}}
+            {{-- Section Transactions en cours --}}
             <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Mes offres</h3>
-                    @if ($offers->isEmpty())
+                    <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Transactions en cours</h3>
+                    @if ($openTransactions->isEmpty())
                         <div class="text-center text-gray-500">
-                            <p>Vous n'avez fait aucune offre pour le moment.</p>
-                            <a href="{{ route('welcome') }}" class="mt-2 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
-                                Voir les articles
-                            </a>
+                            <p>Vous n'avez aucune transaction en cours.</p>
                         </div>
                     @else
                         <div class="space-y-4">
-                            @foreach ($offers as $offer)
-                                <div class="p-4 border rounded-lg flex items-center justify-between">
-                                    <div>
-                                        <p class="font-semibold">
-                                            Article : <a href="{{ route('items.show', $offer->item) }}" class="text-blue-600 hover:underline">{{ $offer->item->title }}</a>
-                                        </p>
-                                        <p>Votre offre : <span class="font-bold">{{ number_format($offer->amount, 2, ',', ' ') }} €</span></p>
-                                        <p>Statut :
-                                            <span @class([
-                                                'font-semibold',
-                                                'text-yellow-600' => $offer->status === 'pending',
-                                                'text-green-600' => $offer->status === 'accepted' || $offer->status === 'paid',
-                                                'text-red-600' => $offer->status === 'rejected',
-                                            ])>
-                                                @if($offer->status === 'paid')
-                                                    Payée
-                                                @else
-                                                    {{ ucfirst($offer->status) }}
-                                                @endif
-                                            </span>
-                                        </p>
-                                        @if($offer->status === 'paid' && $offer->item->pickup_available && $offer->transaction)
-                                            <p class="mt-2 text-sm">
-                                                Code de retrait : <span class="font-bold text-lg text-green-600 tracking-widest">{{ $offer->transaction->pickup_code }}</span>
-                                            </p>
-                                        @endif
-                                    </div>
-                                    @if ($offer->status === 'accepted')
-                                        <a href="{{ route('payment.create', $offer) }}" dusk="pay-offer-{{ $offer->id }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-                                            Payer
-                                        </a>
-                                    @elseif ($offer->status === 'paid' && $offer->transaction && $offer->transaction->status === 'payment_received')
-                                        <form action="{{ route('transactions.confirm-reception', $offer->transaction) }}" method="POST" onsubmit="return confirm('Veuillez confirmer que vous avez bien reçu l\'article. Cette action est irréversible et transférera les fonds au vendeur.');">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-                                                Confirmer la réception
-                                            </button>
-                                        </form>
-                                    @elseif ($offer->transaction && $offer->transaction->status === 'completed' && !$offer->transaction->reviews()->where('reviewer_id', Auth::id())->exists())
-                                        <x-review-modal :transaction="$offer->transaction" :recipientName="$offer->item->user->name" />
-                                    @endif
-                                </div>
+                            @foreach ($openTransactions as $transaction)
+                                @php
+                                    $viewpoint = ($transaction->offer->user_id === Auth::id()) ? 'buyer' : 'seller';
+                                @endphp
+                                <x-dashboard.transaction-card :transaction="$transaction" :viewpoint="$viewpoint" />
                             @endforeach
                         </div>
                     @endif
