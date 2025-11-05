@@ -59,10 +59,8 @@
                 </form>
             @endif
 
-            @if ($transaction->status === 'completed' && !$transaction->review)
-                <a href="{{ route('reviews.store', $transaction) }}" class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600">
-                    Laisser un avis
-                </a>
+            @if ($transaction->status === 'completed' && !$transaction->reviews->contains('reviewer_id', Auth::id()))
+                <x-review-modal :transaction="$transaction" :recipientName="$transaction->offer->item->user->name" />
             @endif
         </div>
     </div>

@@ -179,7 +179,7 @@ class StyleguideController extends Controller
         // 2. Purchase completed, no review left
         $purchaseCompleted = clone $saleShipped;
         $purchaseCompleted->status = 'completed';
-        $purchaseCompleted->setRelation('review', null); // Ensure no review is associated for the button to show
+        $purchaseCompleted->setRelation('reviews', collect()); // Ensure no review is associated for the button to show
         $purchaseCompleted->load('offer.item.primaryImage', 'offer.item.user');
 
 
