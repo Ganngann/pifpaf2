@@ -5,7 +5,7 @@
         <span class="sr-only">Voir l'article {{ $item->title }}</span>
     </a>
 
-    <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden">
+    <div class="aspect-square w-full overflow-hidden">
         <x-ui.item-thumbnail :item="$item" class="w-full h-full object-cover" />
     </div>
 
