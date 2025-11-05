@@ -40,6 +40,7 @@ class LoginTest extends DuskTestCase
                 ->type('@email-input', $user->email)
                 ->type('@password-input', 'wrong-password')
                 ->press('@login-button')
+                ->pause(500) // Attendre que la page se recharge
                 ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertSee('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertPathIs('/login');
@@ -55,6 +56,7 @@ class LoginTest extends DuskTestCase
             $browser->loginAs($user)
                 ->visit('/dashboard')
                 ->click('@nav-user-dropdown')
+                ->pause(500) // Attendre l'animation du dropdown
                 ->waitFor('@nav-logout')
                 ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
             $browser->assertPathIs('/')

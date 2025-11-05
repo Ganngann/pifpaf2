@@ -24,7 +24,7 @@ class PickupAddressManagementTest extends DuskTestCase
             $browser->loginAs($user)
                     ->visit('/dashboard')
                     ->click('@nav-user-dropdown')
-                    ->waitForText('Mes Adresses')
+                    ->waitFor('@nav-addresses-link')
                     ->assertSee('Mes Adresses');
         });
     }
@@ -37,8 +37,8 @@ class PickupAddressManagementTest extends DuskTestCase
             $browser->loginAs($user)
                     ->visit('/dashboard')
                     ->click('@nav-user-dropdown')
-                    ->waitForText('Mes Adresses')
-                    ->clickLink('Mes Adresses')
+                    ->waitFor('@nav-addresses-link')
+                    ->click('@nav-addresses-link')
                     ->assertPathIs('/profile/addresses')
                     ->assertSee('Mes Adresses');
         });
