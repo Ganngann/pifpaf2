@@ -67,9 +67,23 @@
                             </a>
 
                             @if(Auth::user()->is_admin)
+                                <div class="border-t border-gray-200"></div>
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Administration') }}
+                                </div>
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Tableau de bord Admin
+                                </a>
+                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Utilisateurs
+                                </a>
+                                <a href="{{ route('admin.items.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Annonces
+                                </a>
                                 <a href="{{ route('styleguide') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Styleguide
                                 </a>
+                                <div class="border-t border-gray-200"></div>
                             @endif
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" dusk="logout-form">
@@ -141,9 +155,23 @@
                     </a>
 
                     @if(Auth::user()->is_admin)
+                        <div class="border-t border-gray-200"></div>
+                        <div class="block px-4 py-2 text-xs text-gray-400">
+                            {{ __('Administration') }}
+                        </div>
+                        <a href="{{ route('admin.dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Tableau de bord Admin
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Utilisateurs
+                        </a>
+                        <a href="{{ route('admin.items.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Annonces
+                        </a>
                         <a href="{{ route('styleguide') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                             Styleguide
                         </a>
+                        <div class="border-t border-gray-200"></div>
                     @endif
 
                     <!-- Authentication -->
