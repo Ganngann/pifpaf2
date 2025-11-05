@@ -19,9 +19,11 @@ class ItemPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Item $item): bool
+    public function view(?User $user, Item $item): bool
     {
-        return false;
+        // Anyone can view an item, so we return true.
+        // The user can be null if they are not logged in.
+        return true;
     }
 
     /**
