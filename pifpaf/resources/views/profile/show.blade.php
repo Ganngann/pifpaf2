@@ -34,15 +34,7 @@
 
             <div class="mt-8 pt-8 border-t">
                 <h2 class="text-2xl font-bold mb-4">Articles en vente</h2>
-                @if($user->items->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-                        @foreach($user->items as $item)
-                            <x-ui.item-card :item="$item" />
-                        @endforeach
-                    </div>
-                @else
-                    <p class="mt-4">Cet utilisateur n'a aucun article en vente pour le moment.</p>
-                @endif
+                <x-item-list :items="$items" />
             </div>
         </div>
     </div>

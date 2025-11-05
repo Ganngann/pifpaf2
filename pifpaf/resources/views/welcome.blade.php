@@ -49,14 +49,6 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            @forelse ($items as $item)
-                <x-ui.item-card :item="$item" />
-            @empty
-                <div class="col-span-full text-center text-gray-500">
-                    <p>Aucun article trouvé. Essayez d'ajuster vos filtres de recherche.</p>
-                </div>
-            @endforelse
-        </div>
+        <x-item-list :items="$items" />
     </div>
 </x-main-layout>
