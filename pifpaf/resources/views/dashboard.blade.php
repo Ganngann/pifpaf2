@@ -174,15 +174,6 @@
             </div>
 
             {{-- Section Ventes à retirer --}}
-            @php
-                $soldItemsForPickup = $items->filter(function ($item) {
-                    if ($item->status !== \App\Enums\ItemStatus::SOLD || !$item->pickup_available) {
-                        return false;
-                    }
-                    $paidOffer = $item->offers->firstWhere('status', 'paid');
-                    return $paidOffer && $paidOffer->transaction && $paidOffer->transaction->status !== 'pickup_completed';
-                });
-            @endphp
             @if ($soldItemsForPickup->isNotEmpty())
                 <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">

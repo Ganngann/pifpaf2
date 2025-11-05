@@ -59,14 +59,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
-
-        Mockery::mock('alias:\Stripe\PaymentIntent')
-            ->shouldReceive('retrieve')
-            ->andReturn((object) [
-                'status' => 'succeeded',
-                'amount' => $offer->amount * 100,
-            ]);
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
 
         $this->actingAs($buyer);
 
@@ -89,7 +82,7 @@ Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andRetu
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => false]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
 
         $this->actingAs($buyer);
 
@@ -105,9 +98,15 @@ Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andRetu
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
-        $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
-        $this->actingAs($buyer)->post(route('payment.store', $offer));
+        $offer = Offer::factory()->create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'status' => 'accepted',
+            'amount' => 10.00,
+            'delivery_method' => 'pickup'
+        ]);
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
+        $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
         $response = $this->actingAs($buyer)->get(route('dashboard'));
@@ -123,16 +122,16 @@ Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andRetu
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
 
         // Simuler le paiement
-        $this->actingAs($buyer)->post(route('payment.store', $offer));
+        $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
         $response = $this->actingAs($seller)->get(route('dashboard'));
 
         $response->assertSee('Transactions en cours');
-        $response->assertSee('Acheteur : ' . $buyer->name);
+        $response->assertSee(e('Acheteur : ' . $buyer->name), false);
         $response->assertSee($transaction->pickup_code);
     }
 
@@ -143,8 +142,8 @@ Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andRetu
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
-        $this->actingAs($buyer)->post(route('payment.store', $offer));
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
+        $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
         $response = $this->actingAs($seller)->patch(route('transactions.confirm-pickup', $transaction));
@@ -163,10 +162,10 @@ Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andRetu
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
+        Mockery::mock('alias:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) ['status' => 'succeeded','amount' => $offer->amount * 100,]);
 
         // Simuler le paiement
-        $this->actingAs($buyer)->post(route('payment.store', $offer));
+        $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
         // Confirmer le retrait

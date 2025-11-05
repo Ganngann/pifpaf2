@@ -103,9 +103,14 @@ class ItemController extends Controller
         $user = Auth::user();
         $userId = $user->id;
 
-        // Récupérer les articles du vendeur
+        // Récupérer les articles du vendeur avec toutes les relations nécessaires
         $items = $user->items()
-            ->with('primaryImage', 'offers.transaction', 'offers.user')
+            ->with([
+                'primaryImage',
+                'offers' => function ($query) {
+                    $query->with(['transaction', 'user']);
+                }
+            ])
             ->latest()
             ->get();
 
@@ -122,6 +127,17 @@ class ItemController extends Controller
         ->latest('updated_at')
         ->get();
 
+        // Filtrer les articles vendus en attente de retrait
+        $soldItemsForPickup = $items->filter(function ($item) {
+            if ($item->status !== \App\Enums\ItemStatus::SOLD || !$item->pickup_available) {
+                return false;
+            }
+            // Trouver l'offre qui a été payée
+            $paidOffer = $item->offers->firstWhere('status', 'paid');
+            // Vérifier si l'offre a une transaction et si cette transaction n'est pas encore complétée
+            return $paidOffer && $paidOffer->transaction && $paidOffer->transaction->status !== 'pickup_completed';
+        });
+
         // Récupérer les dernières ventes terminées pour l'historique
         $completedSales = $items->filter(function ($item) {
             return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
@@ -132,9 +148,11 @@ class ItemController extends Controller
         return view('dashboard', [
             'items' => $items,
             'openTransactions' => $openTransactions,
+            'soldItemsForPickup' => $soldItemsForPickup,
             'completedSales' => $completedSales,
         ]);
     }
+
 
     /**
      * Affiche le formulaire de création d'annonce.
