@@ -16,6 +16,7 @@ class PaymentTest extends TestCase
     #[Test]
     public function an_authenticated_user_can_pay_for_an_accepted_offer(): void
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         // 1. Arrange
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
