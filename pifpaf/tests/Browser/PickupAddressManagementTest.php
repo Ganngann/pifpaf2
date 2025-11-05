@@ -40,7 +40,7 @@ class PickupAddressManagementTest extends DuskTestCase
                     ->waitForText('Mes Adresses')
                     ->clickLink('Mes Adresses')
                     ->assertPathIs('/profile/addresses')
-                    ->assertSee('Mes Adresses de Retrait');
+                    ->assertSee('Mes Adresses');
         });
     }
 
@@ -51,7 +51,7 @@ class PickupAddressManagementTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/profile/addresses')
-                ->clickLink('Ajouter une nouvelle adresse')
+                ->clickLink('Ajouter une adresse de retrait')
                 ->assertPathIs('/profile/addresses/create')
                 ->type('name', 'Maison')
                 ->type('street', '123 rue de Paris')
