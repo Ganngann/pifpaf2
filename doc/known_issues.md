@@ -38,3 +38,16 @@ Les tests suivants sont intentionnellement désactivés (`skipped`) car ils conc
 - `Tests\Browser\AiItemCreationDuskTest`
 - `Tests\Browser\MultiObjectAiItemCreationTest`
 - `Tests\Browser\ValidateAiSuggestionsTest`
+
+## Suite de Tests Backend (PHPUnit)
+
+### Suite de tests fragile
+
+- **Suite:** `Tests\Feature\PickupAvailableTest`, `Tests\Feature\PaymentTest`, `Tests\Feature\WalletTest`
+- **Description:** Plusieurs tests dans ces suites échouent de manière intermittente ou en cascade. Le problème principal semble être le couplage fort avec le processus de paiement Stripe, qui est difficile à moquer de manière fiable dans l'environnement de test actuel. Les tentatives de correction ont montré que les tests sont sensibles à l'ordre d'exécution, ce qui indique un état partagé non maîtrisé.
+- **Action recommandée:** Une refonte de ces tests est nécessaire. Il faudrait notamment mettre en place une stratégie de mock centralisée et robuste pour les services externes comme Stripe, et s'assurer que chaque test est parfaitement isolé.
+
+### Nouveaux tests en échec
+
+- **Suite:** `Tests\Feature\DashboardTransactionTest`
+- **Description:** Les tests créés pour la nouvelle fonctionnalité du tableau de bord (`open_sales_are_displayed_on_dashboard_for_seller` et `open_purchases_are_displayed_on_dashboard_for_buyer`) échouent car les relations (vendeur/acheteur) ne semblent pas être correctement chargées et disponibles dans la vue, malgré plusieurs tentatives de correction de la requête du contrôleur. Ce problème semble spécifique à l'environnement de test et n'a pas pu être résolu dans le temps imparti.

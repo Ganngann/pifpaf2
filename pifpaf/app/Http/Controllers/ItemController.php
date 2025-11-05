@@ -101,14 +101,28 @@ class ItemController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Pour le vendeur, on charge les articles avec leur image principale et les offres
+        $userId = $user->id;
+
+        // Récupérer les articles du vendeur
         $items = $user->items()
             ->with('primaryImage', 'offers.transaction', 'offers.user')
             ->latest()
             ->get();
-        // Pour l'acheteur, on charge les offres avec la transaction
-        $offers = $user->offers()->with('item.user', 'transaction')->latest()->get();
 
+        // Récupérer les transactions ouvertes (achats et ventes)
+        $openTransactions = \App\Models\Transaction::where(function ($query) use ($userId) {
+            $query->whereHas('offer', function ($q) use ($userId) {
+                $q->where('user_id', $userId); // Achats
+            })->orWhereHas('offer.item', function ($q) use ($userId) {
+                $q->where('user_id', $userId); // Ventes
+            });
+        })
+        ->whereNotIn('status', ['completed', 'pickup_completed'])
+        ->with('offer.item.primaryImage', 'offer.item.user', 'offer.user')
+        ->latest('updated_at')
+        ->get();
+
+        // Récupérer les dernières ventes terminées pour l'historique
         $completedSales = $items->filter(function ($item) {
             return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
                 return $offer->transaction && $offer->transaction->status === 'completed';
@@ -117,7 +131,7 @@ class ItemController extends Controller
 
         return view('dashboard', [
             'items' => $items,
-            'offers' => $offers,
+            'openTransactions' => $openTransactions,
             'completedSales' => $completedSales,
         ]);
     }
