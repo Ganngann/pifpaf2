@@ -25,6 +25,16 @@ jobs:
     - name: Generate key
       working-directory: pifpaf
       run: php artisan key:generate
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Install NPM dependencies
+      working-directory: pifpaf
+      run: npm install
+    - name: Build assets
+      working-directory: pifpaf
+      run: npm run build
     - name: Directory Permissions
       working-directory: pifpaf
       run: chmod -R 777 storage bootstrap/cache
