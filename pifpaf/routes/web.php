@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/{offer}', [PaymentController::class, 'store'])->name('payment.store');
     Route::patch('/transactions/{transaction}/confirm-pickup', [TransactionController::class, 'confirmPickup'])->name('transactions.confirm-pickup');
     Route::patch('/transactions/{transaction}/confirm-reception', [TransactionController::class, 'confirmReception'])->name('transactions.confirm-reception');
+    Route::patch('/transactions/{transaction}/add-tracking', [TransactionController::class, 'addTracking'])->name('transactions.addTracking');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -86,6 +87,7 @@ Route::middleware('auth')->group(function () {
     // Routes pour l'historique des transactions
     Route::get('/purchases', [TransactionController::class, 'purchases'])->name('transactions.purchases');
     Route::get('/sales', [TransactionController::class, 'sales'])->name('transactions.sales');
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
 
     // Route pour la création de l'envoi
     Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'createShipment'])->name('transactions.ship');
@@ -109,6 +111,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'usersIndex'])->name('users.index');
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unban'])->name('users.unban');
+
+    // Gestion des annonces
+    Route::get('/items', [\App\Http\Controllers\AdminController::class, 'itemsIndex'])->name('items.index');
+    Route::delete('/items/{item}', [\App\Http\Controllers\AdminController::class, 'destroyItem'])->name('items.destroy');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -65,5 +66,47 @@ class AdminController extends Controller
     {
         $user->update(['banned_at' => null]);
         return redirect()->route('admin.users.index')->with('success', 'Utilisateur réactivé avec succès.');
+    }
+
+    /**
+     * Affiche la liste des annonces.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function itemsIndex(Request $request)
+    {
+        $query = Item::with('user');
+
+        if ($request->has('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where('title', 'like', $searchTerm)
+                  ->orWhere('description', 'like', $searchTerm)
+                  ->orWhereHas('user', function ($q) use ($searchTerm) {
+                      $q->where('name', 'like', $searchTerm);
+                  });
+        }
+
+        $items = $query->paginate(15);
+
+        return view('admin.items.index', compact('items'));
+    }
+
+    /**
+     * Supprime une annonce.
+     *
+     * @param  \App\Models\Item  $item
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyItem(Item $item)
+    {
+        // Supprimer les images associées de l'espace de stockage
+        foreach ($item->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        $item->delete();
+
+        return redirect()->route('admin.items.index')->with('success', 'Annonce supprimée avec succès.');
     }
 }

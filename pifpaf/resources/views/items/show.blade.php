@@ -40,10 +40,15 @@
             <div class="p-8">
                 <h1 class="text-4xl font-bold mb-2" dusk="item-title">{{ $item->title }}</h1>
                 <div class="mb-6">
-                    <span class="text-gray-500">Vendu par :</span>
-                    <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
-                        {{ $item->user->name }}
-                    </a>
+                    <div>
+                        <span class="text-gray-500">Vendu par :</span>
+                        <a href="{{ route('profile.show', $item->user) }}" class="font-semibold text-blue-600 hover:underline">
+                            {{ $item->user->name }}
+                        </a>
+                    </div>
+                    <div class="mt-2 text-sm text-gray-500">
+                        Publié le {{ $item->created_at->format('d/m/Y') }}
+                    </div>
                 </div>
                 <p class="text-gray-600 mb-8">{{ $item->description }}</p>
                 <div x-data="{ deliveryMethod: '' }">
@@ -161,8 +166,24 @@
                         @endif
                     @endauth
                 @else
+                    @php
+                        $soldTransaction = null;
+                        foreach ($item->offers as $offer) {
+                            if ($offer->transaction && $offer->status === 'paid' && $offer->transaction->status === 'completed') {
+                                $soldTransaction = $offer->transaction;
+                                break;
+                            }
+                        }
+                    @endphp
                     <div class="flex items-center justify-between mt-6">
-                        <span class="font-bold text-3xl">{{ number_format($item->price, 2, ',', ' ') }} €</span>
+                        <span class="font-bold text-3xl">
+                            @if ($soldTransaction)
+                                {{ number_format($soldTransaction->amount, 2, ',', ' ') }} €
+                            @else
+                                {{-- Fallback au cas où la transaction n'est pas trouvée --}}
+                                {{ number_format($item->price, 2, ',', ' ') }} €
+                            @endif
+                        </span>
                         <span class="bg-red-100 text-red-800 text-lg font-semibold mr-2 px-4 py-2 rounded-full">Article Vendu</span>
                     </div>
                 @endif

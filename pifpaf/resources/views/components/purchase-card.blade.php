@@ -40,6 +40,7 @@
 
         <!-- Actions -->
         <div class="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center justify-end gap-2">
+            <a href="{{ route('transactions.show', $transaction) }}" class="text-sm text-blue-500 hover:underline">Voir les détails</a>
             <a href="#" class="text-sm text-blue-500 hover:underline">Contacter le vendeur</a>
 
             @if ($transaction->label_url)

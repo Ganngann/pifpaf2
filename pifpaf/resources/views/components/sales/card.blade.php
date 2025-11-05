@@ -50,7 +50,29 @@
                 </a>
             @endif
 
+            <a href="{{ route('transactions.show', $transaction) }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Voir les détails
+            </a>
             {{-- Placeholder for future actions --}}
+            {{-- Formulaire pour ajouter un numéro de suivi --}}
+            @if ($transaction->status === 'shipping_initiated' && !$transaction->tracking_code)
+                <form action="{{ route('transactions.addTracking', $transaction) }}" method="POST" class="flex items-center space-x-2">
+                    @csrf
+                    @method('PATCH')
+                    <input type="text" name="tracking_code" placeholder="Numéro de suivi" class="w-full px-3 py-2 text-sm border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Ajouter
+                    </button>
+                </form>
+            @endif
+
+            {{-- Affichage du numéro de suivi --}}
+            @if ($transaction->tracking_code)
+                <div class="text-sm text-gray-600">
+                    <span class="font-semibold">N° de suivi :</span> {{ $transaction->tracking_code }}
+                </div>
+            @endif
+
              <a href="#" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Contacter l'acheteur
             </a>
