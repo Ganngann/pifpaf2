@@ -106,6 +106,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'usersIndex'])->name('users.index');
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unban'])->name('users.unban');
+
+    // Gestion des annonces
+    Route::get('/items', [\App\Http\Controllers\AdminController::class, 'itemsIndex'])->name('items.index');
+    Route::delete('/items/{item}', [\App\Http\Controllers\AdminController::class, 'destroyItem'])->name('items.destroy');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

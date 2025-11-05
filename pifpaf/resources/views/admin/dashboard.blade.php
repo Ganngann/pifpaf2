@@ -22,7 +22,7 @@
                         <div class="bg-green-100 p-6 rounded-lg">
                             <h4 class="text-lg font-semibold text-green-800">Annonces</h4>
                             <p class="text-3xl font-bold text-green-900 mt-2">{{ $itemCount }}</p>
-                            <a href="#" class="text-green-600 hover:underline mt-4 inline-block">Gérer les annonces</a>
+                            <a href="{{ route('admin.items.index') }}" class="text-green-600 hover:underline mt-4 inline-block">Gérer les annonces</a>
                         </div>
 
                         <!-- Statistique Transactions -->
