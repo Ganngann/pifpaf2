@@ -9,12 +9,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Review;
+use PHPUnit\Framework\Attributes\Test;
 
 class ProfilePageTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_displays_user_average_rating_and_reviews()
     {
         // 1. Arrange
@@ -67,7 +68,7 @@ class ProfilePageTest extends TestCase
         $response->assertSee('Transaction parfaite, je recommande.');
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_a_message_when_there_are_no_reviews()
     {
         // 1. Arrange

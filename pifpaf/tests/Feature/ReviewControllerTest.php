@@ -7,6 +7,7 @@ use App\Models\Offer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ReviewControllerTest extends TestCase
@@ -28,7 +29,7 @@ class ReviewControllerTest extends TestCase
         $this->transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'completed']);
     }
 
-    /** @test */
+    #[Test]
     public function buyer_can_leave_a_review_on_a_completed_transaction()
     {
         $this->actingAs($this->buyer);
@@ -46,7 +47,7 @@ class ReviewControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function seller_can_leave_a_review_on_a_completed_transaction()
     {
         $this->actingAs($this->seller);
@@ -64,7 +65,7 @@ class ReviewControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_leave_a_review_on_an_incomplete_transaction()
     {
         $this->transaction->update(['status' => 'payment_received']);
@@ -77,7 +78,7 @@ class ReviewControllerTest extends TestCase
         $this->assertDatabaseMissing('reviews', ['transaction_id' => $this->transaction->id]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_leave_a_review_on_a_transaction_they_are_not_part_of()
     {
         $unrelatedUser = User::factory()->create();
@@ -90,7 +91,7 @@ class ReviewControllerTest extends TestCase
         $this->assertDatabaseMissing('reviews', ['transaction_id' => $this->transaction->id]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_leave_two_reviews_for_the_same_transaction()
     {
         $this->actingAs($this->buyer);
@@ -104,7 +105,7 @@ class ReviewControllerTest extends TestCase
         $this->assertEquals(1, $this->transaction->reviews()->count());
     }
 
-    /** @test */
+    #[Test]
     public function rating_is_required_and_must_be_between_1_and_5()
     {
         $this->actingAs($this->buyer);

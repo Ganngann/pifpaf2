@@ -7,20 +7,21 @@ use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdminDashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function guests_are_redirected_from_admin_dashboard()
     {
         $this->get(route('admin.dashboard'))
             ->assertRedirect(route('login'));
     }
 
-    /** @test */
+    #[Test]
     public function non_admin_users_are_forbidden()
     {
         $user = User::factory()->create(['role' => 'user']);
@@ -30,7 +31,7 @@ class AdminDashboardTest extends TestCase
             ->assertForbidden();
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_see_dashboard_with_stats()
     {
         // Arrange
