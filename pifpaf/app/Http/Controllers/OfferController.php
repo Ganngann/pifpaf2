@@ -67,7 +67,7 @@ class OfferController extends Controller
              ->where('status', 'pending')
              ->update(['status' => 'rejected']);
 
-        return redirect()->route('payment.create', $offer);
+        return redirect()->route('checkout.summary', $offer);
     }
 
     /**
