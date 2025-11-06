@@ -63,10 +63,11 @@
                         <div class="flex items-center">
                             <input type="number" name="amount" id="amount" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500" placeholder="Votre offre (€)" required min="0.01" step="0.01">
                             <button type="submit"
+                                    dusk="submit-offer-button"
                                     class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-r-md transition-opacity duration-200"
                                     :disabled="!deliveryMethod"
                                     :class="{ 'opacity-50 cursor-not-allowed': !deliveryMethod }">
-                                Envoyer
+                                Envoyer l'offre
                             </button>
                         </div>
                         @error('amount')
