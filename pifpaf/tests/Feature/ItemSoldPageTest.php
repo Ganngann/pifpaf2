@@ -58,6 +58,6 @@ class ItemSoldPageTest extends TestCase
         $response->assertSee('Acheter');
         $response->assertSee('Contacter le vendeur');
         // Use a direct PHPUnit regex assertion on the response content for robustness
-        $this->assertMatchesRegularExpression('/<button[^>]*dusk="submit-offer-button"[^>]*>[\s\r\n]*Envoyer l\'offre[\s\r\n]*<\/button>/', $response->getContent());
+        $this->assertMatchesRegularExpression('/<button[^>]*dusk="submit-offer-button"[^>]*>[\s\r\n]*Envoyer l(&#039;|\')offre[\s\r\n]*<\/button>/', $response->getContent());
     }
 }

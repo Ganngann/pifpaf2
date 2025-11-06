@@ -12,7 +12,7 @@ Pifpaf est un Proof of Concept (PoC) pour une marketplace de seconde main qui se
 - **Stack Technique :** Laravel (Back-End), MySQL (Base de Données), SQLite (Tests).
 - **Hébergement PoC :** o2switch.
 
-Pour une description détaillée des fonctionnalités, veuillez consulter le dossier `/doc`.
+Pour une description détaillée des fonctionnalités, veuillez consulter le **[Dossier de Présentation Fonctionnel](./doc/functional_specification.md)**.
 
 ---
 

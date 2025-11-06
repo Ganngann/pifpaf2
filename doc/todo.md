@@ -3,7 +3,12 @@
 *Ce document a été entièrement mis à jour pour refléter l'état d'avancement réel du projet. Il sert de source de vérité unique pour la planification des prochaines étapes de développement.*
 
 ---
-## Priorité 1 : Finaliser le Système de Transaction et de Litiges
+## Priorité 1 : Finaliser le Système de payement
+- [ ] **US-CHK-1:** Accéder au récapitulatif de commande.
+- [ ] **US-CHK-2:** Valider le récapitulatif de commande.
+- [ ] **US-CHK-3:** Voir la confirmation de paiement.
+
+## Priorité 2 : Finaliser le Système de Transaction et de Litiges
 *Objectif : Compléter le cycle de vie d'une transaction en ajoutant les dernières touches à la logistique et en implémentant un système de gestion des litiges pour sécuriser les échanges.*
 
 - [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.

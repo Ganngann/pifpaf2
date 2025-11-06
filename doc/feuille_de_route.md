@@ -55,6 +55,7 @@ graph LR
             S5_HIS1["US-HIS-1: Page Mes Achats/Ventes"] --> S5_HIS3["US-HIS-3: Détail transaction"]
             S5_TRS1["US-TRS-1: Payer avec solde"]
             S5_HIS4["US-HIS-4: Historique portefeuille"]
+            CHK1["US-CHK-1: Accéder au récap"] --> CHK2["US-CHK-2: Valider récap"] --> CHK3["US-CHK-3: Voir confirmation"]
         end
     end
 

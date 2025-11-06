@@ -182,6 +182,33 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Elle affiche le solde actuel.
     - Elle liste toutes les transactions (crédit, débit, retrait) avec date, libellé et montant.
 
+### Epic 8: Expérience de Checkout Améliorée
+*Améliorer le parcours de paiement pour le rendre plus clair, plus rassurant et augmenter le taux de conversion.*
+
+- **US-CHK-1: Accéder au récapitulatif de commande**
+  - **En tant que** acheteur, **Je veux** être notifié et avoir un accès direct à une page de finalisation de commande dès que mon offre est acceptée, **Afin de** pouvoir payer rapidement et sans confusion.
+  - **Critères d'acceptation :**
+    - Quand un vendeur accepte une offre, l'acheteur est notifié (un message flash sur son dashboard est suffisant pour le MVP).
+    - Dans le dashboard de l'acheteur, les offres acceptées en attente de paiement ont un bouton proéminent "Finaliser la commande".
+    - Le parcours "Achat Immédiat" redirige également directement vers la page de récapitulatif.
+
+- **US-CHK-2: Valider le récapitulatif de commande**
+  - **En tant que** acheteur, **Je veux** voir une page qui récapitule tous les détails de ma commande avant de payer, **Afin d'**être sûr de mon achat.
+  - **Critères d'acceptation :**
+    - Une nouvelle page `/checkout/{offer}/summary` est créée.
+    - Elle affiche : l'article (photo, titre), le prix final, le mode de livraison choisi.
+    - Si la livraison est "Livraison à domicile", mon adresse de livraison par défaut est affichée, avec un lien pour la changer (utilisant la fonctionnalité de US-LOG-5).
+    - Si la livraison est "Remise en main propre", l'adresse du vendeur est clairement affichée.
+    - Un bouton unique "Procéder au paiement" mène à la page de paiement.
+
+- **US-CHK-3: Voir la confirmation de paiement**
+  - **En tant que** acheteur, **Je veux** être redirigé vers une page de confirmation claire après avoir payé, **Afin de** savoir que tout s'est bien passé et connaître les prochaines étapes.
+  - **Critères d'acceptation :**
+    - Après un paiement réussi, l'utilisateur est redirigé vers une nouvelle page `/checkout/{transaction}/success`.
+    - Cette page affiche "Paiement réussi !" et un résumé de la commande.
+    - Elle affiche les prochaines étapes en fonction du mode de livraison (ex: "Contactez le vendeur pour le retrait" ou "Le vendeur va expédier votre colis").
+    - Elle contient un lien vers le détail de la transaction (`transactions.show`).
+
 ---
 ## 🚀 Sprint 6: Communauté & IA de Masse
 
