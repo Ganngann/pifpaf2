@@ -99,7 +99,7 @@ class PaymentController extends Controller
             }
 
             // Vérification de sécurité : le montant payé correspond-il au montant attendu ?
-            $expectedAmountInCents = round($cardAmount * 100);
+            $expectedAmountInCents = (int) round($cardAmount * 100);
             if ($intent->amount !== $expectedAmountInCents) {
                 // Potentielle fraude ou erreur, on ne finalise pas
                 // On pourrait aussi rembourser le paiement ici
