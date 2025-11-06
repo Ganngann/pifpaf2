@@ -5,7 +5,7 @@
     $statusClass = 'text-gray-600';
 
     switch ($transaction->status) {
-        case 'payment_received':
+        case \App\Enums\TransactionStatus::PAYMENT_RECEIVED:
             if ($transaction->offer->delivery_method === 'pickup') {
                 $statusText = 'Paiement reçu - En attente de retrait';
                 $statusClass = 'text-yellow-600';
@@ -14,17 +14,17 @@
                 $statusClass = 'text-yellow-600';
             }
             break;
-        case 'shipping_initiated':
-            $statusText = 'Colis expédié';
-            $statusClass = 'text-blue-600';
-            break;
-        case 'pickup_completed':
+        case \App\Enums\TransactionStatus::PICKUP_COMPLETED:
              $statusText = 'Retrait effectué';
              $statusClass = 'text-green-600';
              break;
-        case 'completed':
+        case \App\Enums\TransactionStatus::COMPLETED:
             $statusText = 'Transaction terminée';
             $statusClass = 'text-green-600';
+            break;
+        case \App\Enums\TransactionStatus::DISPUTED:
+            $statusText = 'Litige en cours';
+            $statusClass = 'text-red-600';
             break;
         default:
             if ($transaction->offer->status === 'accepted') {

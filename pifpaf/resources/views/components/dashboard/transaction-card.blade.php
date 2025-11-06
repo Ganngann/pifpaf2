@@ -32,7 +32,7 @@
             {{-- Statut de la transaction --}}
             <x-dashboard.transaction-status :transaction="$transaction" :viewpoint="$viewpoint" />
 
-            @if ($isBuyer && $transaction->status === 'payment_received' && $offer->delivery_method === 'pickup')
+            @if ($isBuyer && $transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $offer->delivery_method === 'pickup')
                 <p class="mt-2 text-sm">
                     Code de retrait : <span class="font-bold text-lg text-green-600 tracking-widest">{{ $transaction->pickup_code }}</span>
                 </p>
@@ -48,9 +48,9 @@
                 <a href="{{ route('payment.create', $offer) }}" dusk="pay-offer-{{ $offer->id }}" class="btn-primary">
                     Payer
                 </a>
-            @elseif ($transaction->status === 'payment_received' && $offer->delivery_method === 'pickup')
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $offer->delivery_method === 'pickup')
                 <p class="text-sm text-gray-600">En attente du retrait par le vendeur.</p>
-            @elseif ($transaction->status === 'payment_received' && $offer->delivery_method === 'delivery')
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $offer->delivery_method === 'delivery')
                  <form action="{{ route('transactions.confirm-reception', $transaction) }}" method="POST" onsubmit="return confirm('Veuillez confirmer que vous avez bien reçu l\'article. Cette action est irréversible et transférera les fonds au vendeur.');">
                     @csrf
                     @method('PATCH')
@@ -58,13 +58,13 @@
                         Confirmer la réception
                     </button>
                 </form>
-            @elseif ($transaction->status === 'shipping_initiated')
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::SHIPPING_INITIATED)
                  <a href="#" class="btn-secondary">Suivre le colis</a> {{-- Lien de suivi à implémenter --}}
             @endif
 
         @else
             {{-- Actions pour le vendeur --}}
-            @if ($transaction->status === 'payment_received' && $offer->delivery_method === 'pickup')
+            @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $offer->delivery_method === 'pickup')
                  <form action="{{ route('transactions.confirm-pickup', $transaction) }}" method="POST">
                     @csrf
                     @method('PATCH')
@@ -72,7 +72,7 @@
                         Confirmer le retrait
                     </button>
                 </form>
-            @elseif ($transaction->status === 'payment_received' && $offer->delivery_method === 'delivery')
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $offer->delivery_method === 'delivery')
                 @if ($transaction->label_url)
                     <a href="{{ $transaction->label_url }}" target="_blank" class="btn-secondary">Voir l'étiquette</a>
                 @else
@@ -83,7 +83,7 @@
                         </button>
                     </form>
                 @endif
-            @elseif ($transaction->status === 'shipping_initiated')
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::SHIPPING_INITIATED)
                  <a href="#" class="btn-secondary">Suivre le colis</a> {{-- Lien de suivi à implémenter --}}
             @endif
         @endif

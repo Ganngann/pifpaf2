@@ -7,13 +7,13 @@
         </div>
         <span class="px-2 py-1 text-xs font-semibold rounded-full
             @switch($transaction->status)
-                @case('payment_received') bg-blue-100 text-blue-800 @break
-                @case('shipping_initiated') bg-yellow-100 text-yellow-800 @break
-                @case('completed') bg-green-100 text-green-800 @break
+                @case(\App\Enums\TransactionStatus::PAYMENT_RECEIVED) bg-blue-100 text-blue-800 @break
+                @case(\App\Enums\TransactionStatus::PICKUP_COMPLETED) bg-yellow-100 text-yellow-800 @break
+                @case(\App\Enums\TransactionStatus::COMPLETED) bg-green-100 text-green-800 @break
                 @default bg-gray-100 text-gray-800
             @endswitch
         ">
-            {{ Str::ucfirst(str_replace('_', ' ', $transaction->status)) }}
+            {{ Str::ucfirst(str_replace('_', ' ', $transaction->status->value)) }}
         </span>
     </div>
 

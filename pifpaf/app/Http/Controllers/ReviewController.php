@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Enums\TransactionStatus;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +18,7 @@ class ReviewController extends Controller
         ]);
 
         // Vérifier que la transaction est terminée
-        if ($transaction->status !== 'completed') {
+        if ($transaction->status !== TransactionStatus::COMPLETED) {
             return back()->with('error', 'Vous ne pouvez laisser un avis que pour une transaction terminée.');
         }
 

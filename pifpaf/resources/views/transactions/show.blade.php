@@ -25,7 +25,7 @@
                             <div class="text-right">
                                 <span class="text-sm text-gray-500">Statut</span>
                                 <p class="font-semibold px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm inline-block">
-                                    {{ $transaction->status }}
+                                    {{ $transaction->status->value }}
                                 </p>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                 </form>
                             @endif
                         @else <!-- L'utilisateur est l'acheteur -->
-                            @if ($transaction->status === 'payment_received')
+                            @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED)
                                 <form action="{{ route('transactions.confirm-reception', $transaction) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
@@ -139,6 +139,12 @@
                                 Laisser un avis
                             </a>
                         @endif --}}
+
+                        @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && !$transaction->dispute && Auth::id() === $transaction->offer->user_id)
+                            <a href="{{ route('disputes.create', $transaction) }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                                Signaler un problème
+                            </a>
+                        @endif
                     </div>
 
                 </div>

@@ -4,15 +4,15 @@
 
 ---
 ## Priorité 1 : Finaliser le Système de payement
-- [ ] **US-CHK-1:** Accéder au récapitulatif de commande.
+- [x] **US-CHK-1:** Accéder au récapitulatif de commande.
 - [ ] **US-CHK-2:** Valider le récapitulatif de commande.
 - [ ] **US-CHK-3:** Voir la confirmation de paiement.
 
 ## Priorité 2 : Finaliser le Système de Transaction et de Litiges
 *Objectif : Compléter le cycle de vie d'une transaction en ajoutant les dernières touches à la logistique et en implémentant un système de gestion des litiges pour sécuriser les échanges.*
 
-- [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
-- [ ] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige sur une transaction.
+- [x] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
+- [x] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige sur une transaction.
 - [ ] **US-ADM-14:** Développer le module de suivi et de gestion des litiges pour l'administrateur.
 
 ---

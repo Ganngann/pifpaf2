@@ -93,6 +93,10 @@ Route::middleware('auth')->group(function () {
 
     // Route pour la création de l'envoi
     Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'createShipment'])->name('transactions.ship');
+
+    // Routes pour les litiges
+    Route::get('/transactions/{transaction}/disputes/create', [\App\Http\Controllers\DisputeController::class, 'create'])->name('disputes.create');
+    Route::post('/transactions/{transaction}/disputes', [\App\Http\Controllers\DisputeController::class, 'store'])->name('disputes.store');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');

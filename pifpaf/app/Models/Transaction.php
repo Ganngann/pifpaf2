@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,10 @@ class Transaction extends Model
         'label_url',
     ];
 
+    protected $casts = [
+        'status' => TransactionStatus::class,
+    ];
+
     public function offer()
     {
         return $this->belongsTo(Offer::class);
@@ -35,5 +40,10 @@ class Transaction extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function dispute()
+    {
+        return $this->hasOne(Dispute::class);
     }
 }

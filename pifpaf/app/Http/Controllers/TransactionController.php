@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\WalletHistory;
 use App\Services\SendcloudService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Enums\TransactionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,7 @@ class TransactionController extends Controller
         $this->authorize('update', $transaction->offer->item);
 
         // Mettre à jour le statut de la transaction
-        $transaction->update(['status' => 'pickup_completed']);
+        $transaction->update(['status' => TransactionStatus::PICKUP_COMPLETED]);
 
         return redirect()->route('dashboard')->with('success', 'Retrait confirmé avec succès.');
     }
@@ -44,12 +45,12 @@ class TransactionController extends Controller
         }
 
         // On vérifie que la transaction est bien en attente de confirmation
-        if ($transaction->status !== 'payment_received') {
+        if ($transaction->status !== TransactionStatus::PAYMENT_RECEIVED) {
             return redirect()->route('dashboard')->with('error', 'Cette transaction n\'est pas en attente de confirmation.');
         }
 
         // Mettre à jour le statut de la transaction
-        $transaction->update(['status' => 'completed']);
+        $transaction->update(['status' => TransactionStatus::COMPLETED]);
 
         // Créditer le portefeuille du vendeur
         $seller = $transaction->offer->item->user;
@@ -150,7 +151,7 @@ class TransactionController extends Controller
                 'sendcloud_parcel_id' => data_get($parcelData, 'id'),
                 'tracking_code' => data_get($parcelData, 'tracking_number'),
                 'label_url' => data_get($parcelData, 'label.label_printer'),
-                'status' => 'shipping_initiated',
+                'status' => TransactionStatus::SHIPPING_INITIATED,
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
@@ -179,7 +180,7 @@ class TransactionController extends Controller
         // Mettre à jour la transaction avec le numéro de suivi et le nouveau statut
         $transaction->update([
             'tracking_code' => $request->tracking_code,
-            'status' => 'in_transit',
+            'status' => TransactionStatus::IN_TRANSIT,
         ]);
 
         return redirect()->route('transactions.sales')->with('success', 'Numéro de suivi ajouté avec succès.');
