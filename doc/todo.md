@@ -10,6 +10,9 @@
 - [x] **US-LOG-5:** Permettre aux acheteurs de gérer un carnet d'adresses de livraison dans leur profil.
 - [x] **US-LOG-6:** Permettre au vendeur d'ajouter un numéro de suivi à une commande.
 - [ ] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
+- [ ] **US-CHK-1:** Accéder au récapitulatif de commande.
+- [ ] **US-CHK-2:** Valider le récapitulatif de commande.
+- [ ] **US-CHK-3:** Voir la confirmation de paiement.
 
 ---
 ## Priorité 2 : Construire l'Historique et la Confiance
