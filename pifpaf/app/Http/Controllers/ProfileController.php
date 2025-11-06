@@ -74,4 +74,29 @@ class ProfileController extends Controller
 
         return view('profile.show', compact('user', 'items', 'averageRating', 'reviewCount'));
     }
+
+    /**
+     * Export the user's data.
+     */
+    public function export(Request $request)
+    {
+        $user = $request->user();
+
+        $data = [
+            'profile' => $user->toArray(),
+            'items' => $user->items->toArray(),
+            'offers' => $user->offers->toArray(),
+            'pickup_addresses' => $user->pickupAddresses->toArray(),
+            'shipping_addresses' => $user->shippingAddresses->toArray(),
+            'reviews_written' => $user->reviewsWritten->toArray(),
+            'reviews_received' => $user->reviewsReceived->toArray(),
+        ];
+
+        $json = json_encode($data, JSON_PRETTY_PRINT);
+
+        return response($json, 200, [
+            'Content-Type' => 'application/json',
+            'Content-Disposition' => 'attachment; filename="pifpaf_user_data.json"',
+        ]);
+    }
 }
