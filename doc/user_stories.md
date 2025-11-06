@@ -73,7 +73,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Au clic, le statut de l'annonce passe à "En ligne".
     - L'annonce redevient visible publiquement.
 
-- **US-ANN-7: Indiquer qu'un article est vendu sur sa page de détail**
+- **[TERMINÉ] US-ANN-7: Indiquer qu'un article est vendu sur sa page de détail**
   - **En tant que** utilisateur, **Je veux** voir une indication claire qu'un article est "Vendu" lorsque je consulte sa page de détail, **Afin de** ne pas tenter d'acheter un article indisponible.
   - **Critères d'acceptation :**
     - Sur la page de détail d'un article (`items.show`) dont le statut est "sold", un label "VENDU" est affiché de manière visible (par exemple, en superposition de l'image principale).
@@ -112,7 +112,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Si une seule option est disponible, elle est pré-sélectionnée.
     - Le choix impacte le calcul du prix final si des frais de livraison s'appliquent.
 
-- **US-LOG-5: Gérer les adresses de livraison**
+- **[TERMINÉ] US-LOG-5: Gérer les adresses de livraison**
   - **En tant qu'** acheteur, **Je veux** pouvoir gérer un carnet d'adresses de livraison dans mon profil.
   - **Critères d'acceptation :**
     - Une section "Mes Adresses de Livraison" est ajoutée au profil utilisateur (similaire à US-LOG-1).
@@ -137,7 +137,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 5: Suivi de Commande
 *Améliorer la transparence après la vente.*
 
-- **US-LOG-6: Ajouter un numéro de suivi**
+- **[TERMINÉ] US-LOG-6: Ajouter un numéro de suivi**
   - **En tant que** vendeur, **Je veux** pouvoir ajouter un numéro de suivi à une commande expédiée.
   - **Critères d'acceptation :**
     - Dans la page "Mes Ventes", pour une commande "Expédiée", un champ permet de saisir et d'enregistrer un numéro de suivi.
@@ -152,14 +152,14 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 6: Historique des Transactions
 *Donner aux utilisateurs une vue claire de leur activité passée.*
 
-- **US-HIS-1: Historique d'achats et de ventes**
+- **[TERMINÉ] US-HIS-1: Historique d'achats et de ventes**
   - **En tant qu'** utilisateur, **Je veux** des pages "Mes Achats" et "Mes Ventes".
   - **Critères d'acceptation :**
     - Le menu utilisateur contient des liens vers ces deux pages.
     - Chaque page liste les transactions de manière claire (photo, titre, prix, date, statut) et est paginée.
     - L'affichage est optimisé pour mobile.
 
-- **US-HIS-3: Détail d'une transaction**
+- **[TERMINÉ] US-HIS-3: Détail d'une transaction**
   - **En tant qu'** utilisateur, **Je veux** cliquer sur une transaction pour en voir tous les détails.
   - **Critères d'acceptation :**
     - Chaque transaction dans l'historique est cliquable.
@@ -222,7 +222,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Il ouvre un formulaire simple : une note de 1 à 5 étoiles et un champ de commentaire.
     - Un utilisateur ne peut laisser qu'un seul avis par transaction.
 
-- **US-COM-2: Consulter les avis**
+- **[TERMINÉ] US-COM-2: Consulter les avis**
   - **En tant qu'** utilisateur, **Je veux** consulter les avis sur le profil public des autres.
   - **Critères d'acceptation :**
     - Le profil public d'un utilisateur affiche sa note moyenne et le nombre d'avis.
@@ -305,7 +305,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Une page liste tous les utilisateurs avec une fonction de recherche.
     - Chaque utilisateur a un bouton "Bannir" / "Réactiver" qui change son statut et l'empêche/autorise sa connexion.
 
-- **US-ADM-13: Gestion des Annonces**
+- **[TERMINÉ] US-ADM-13: Gestion des Annonces**
   - **En tant qu'** administrateur, **Je veux** pouvoir lister et supprimer des annonces.
   - **Critères d'acceptation :**
     - Une page liste toutes les annonces avec une fonction de recherche.
