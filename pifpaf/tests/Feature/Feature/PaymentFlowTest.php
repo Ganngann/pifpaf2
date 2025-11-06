@@ -8,15 +8,21 @@ use App\Models\Offer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Mockery;
 
 class PaymentFlowTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     #[Test]
     public function payment_creates_transaction_with_payment_received_status_and_does_not_pay_seller(): void
     {
-        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         // 1. Arrange
         $seller = User::factory()->create(['wallet' => 0]);
         $buyer = User::factory()->create();
@@ -27,9 +33,18 @@ class PaymentFlowTest extends TestCase
             'status' => 'accepted',
         ]);
 
+        // Simuler l'API Stripe
+        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
+            'status' => 'succeeded',
+            'amount' => round($offer->amount * 100),
+        ]);
+
         // 2. Act
         $response = $this->actingAs($buyer)
-                         ->post(route('payment.store', $offer));
+                         ->post(route('payment.store', $offer), [
+                             'payment_intent_id' => 'pi_mock_id',
+                             'use_wallet' => false,
+                         ]);
 
         // 3. Assert
         $response->assertRedirect(route('dashboard'));

@@ -8,15 +8,21 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Mockery;
 
 class PaymentTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     #[Test]
     public function an_authenticated_user_can_pay_for_an_accepted_offer(): void
     {
-        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         // 1. Arrange
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
@@ -27,12 +33,21 @@ class PaymentTest extends TestCase
             'status' => 'accepted',
         ]);
 
+        // Simuler l'API Stripe
+        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
+            'status' => 'succeeded',
+            'amount' => round($offer->amount * 100),
+        ]);
+
         // 2. Act
-        $response = $this->actingAs($buyer)->post(route('payment.store', $offer));
+        $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
+            'payment_intent_id' => 'pi_mock_id',
+            'use_wallet' => false,
+        ]);
 
         // 3. Assert
         $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Paiement effectué avec succès ! Votre commande est en attente de confirmation de réception.');
+        $response->assertSessionHas('success', 'Paiement effectué avec succès !');
 
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id,

@@ -112,7 +112,7 @@ class ItemController extends Controller
                 }
             ])
             ->latest()
-            ->get();
+            ->paginate(10);
 
         // Récupérer les transactions ouvertes (achats et ventes)
         $openTransactions = \App\Models\Transaction::where(function ($query) use ($userId) {
