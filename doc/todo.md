@@ -21,3 +21,12 @@
 
 - [x] **US-ADM-1:** Développer la fonctionnalité d'export des données personnelles pour un utilisateur.
 - [x] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données utilisateur.
+
+## Priorité 3 : Améliorer la Qualité et la Stabilité
+*Objectif : Augmenter significativement la couverture de test du code pour fiabiliser les fonctionnalités critiques, réduire les régressions et faciliter la maintenance future.*
+
+- [ ] **US-TEST-1:** Améliorer la couverture de test du `PaymentController`.
+- [ ] **US-TEST-2:** Améliorer la couverture de test du `PickupAddressController`.
+- [ ] **US-TEST-3:** Améliorer la couverture de test de la logique d'IA (`AiRequestController`, `ProcessAiImage`).
+- [ ] **US-TEST-4:** Améliorer la couverture de test des `Policies` d'autorisation.
+- [ ] **US-TEST-5:** Améliorer la couverture de test des contrôleurs orphelins.

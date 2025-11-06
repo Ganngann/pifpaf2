@@ -316,3 +316,45 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
   - **Critères d'acceptation :**
     - Une page liste les transactions avec le statut "En litige".
     - L'admin peut voir les détails de la transaction et les messages échangés pour prendre une décision (rembourser, etc.).
+
+---
+## 🚀 Sprint 9: Amélioration de la Qualité et de la Stabilité
+
+### Epic 13: Couverture de Test
+*Augmenter la couverture de test du code pour garantir la stabilité, la maintenabilité et réduire les régressions futures.*
+
+- **US-TEST-1: Couverture du `PaymentController`**
+  - **En tant que** développeur, **Je veux** écrire des tests unitaires et fonctionnels complets pour le `PaymentController`, **Afin de** sécuriser le processus de paiement qui est critique pour l'application.
+  - **Critères d'acceptation :**
+    - La méthode `create` est couverte par un test qui vérifie la création correcte de l'intention de paiement.
+    - La méthode `store` est couverte par des tests simulant un paiement réussi et un paiement échoué.
+    - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
+
+- **US-TEST-2: Couverture du `PickupAddressController`**
+  - **En tant que** développeur, **Je veux** écrire des tests fonctionnels pour toutes les méthodes CRUD du `PickupAddressController`, **Afin de** garantir la fiabilité de la gestion des adresses de retrait pour les vendeurs.
+  - **Critères d'acceptation :**
+    - Les actions `index`, `create`, `store`, `edit`, `update`, et `destroy` sont entièrement testées.
+    - Les tests vérifient que les autorisations (policies) sont correctement appliquées pour chaque action.
+    - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
+
+- **US-TEST-3: Couverture de la Logique IA**
+  - **En tant que** développeur, **Je veux** écrire des tests pour le `AiRequestController` et le job `ProcessAiImage`, **Afin de** fiabiliser l'ensemble du processus de création d'annonce assistée par IA.
+  - **Critères d'acceptation :**
+    - Les différentes méthodes du `AiRequestController` sont testées.
+    - Le job `ProcessAiImage` est testé unitairement pour les cas de succès et d'échec, en simulant la réponse de l'API externe.
+    - La couverture des lignes des deux classes doit atteindre un minimum de 90%.
+
+- **US-TEST-4: Couverture des `Policies` d'autorisation**
+  - **En tant que** développeur, **Je veux** écrire des tests unitaires pour les `Policies` de l'application qui ont une faible couverture, **Afin de** s'assurer que les permissions des utilisateurs sont appliquées de manière stricte et correcte.
+  - **Critères d'acceptation :**
+    - Les méthodes des policies `ConversationPolicy`, `ItemPolicy`, `PickupAddressPolicy`, `ShippingAddressPolicy`, et `TransactionPolicy` sont rigoureusement testées.
+    - Chaque test couvre les cas où une autorisation doit être accordée et ceux où elle doit être refusée.
+    - La couverture globale des lignes pour chaque classe de Policy testée doit atteindre un minimum de 90%.
+
+- **US-TEST-5: Couverture des Contrôleurs Orphelins**
+  - **En tant que** développeur, **Je veux** augmenter la couverture de test pour les contrôleurs ayant une couverture partielle, **Afin de** renforcer la robustesse globale de l'application et de finaliser l'effort de fiabilisation.
+  - **Critères d'acceptation :**
+    - La couverture des méthodes `store` et `destroy` de `AuthenticatedSessionController` est améliorée.
+    - La couverture de la méthode `store` de `RegisteredUserController` est améliorée.
+    - La couverture des méthodes CRUD de `ItemImageController` est améliorée.
+    - La couverture des lignes pour ces contrôleurs doit atteindre un minimum de 90%.
