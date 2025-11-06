@@ -48,21 +48,4 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: |
-        # Exécuter les tests et stocker la sortie et le code de sortie
-        OUTPUT=$(php artisan test)
-        EXIT_CODE=$?
-    
-        echo "$OUTPUT"
-    
-        # Vérifier s'il y a des échecs (FAIL) dans la sortie
-        if echo "$OUTPUT" | grep -q 'FAIL'; then
-            echo "🚨 Des tests ont échoué !"
-            exit 1 # Échec de l'étape si un FAIL est trouvé
-        fi
-    
-        # Si aucun FAIL n'est trouvé, forcer le succès (0) de l'étape CI
-        if [ $EXIT_CODE -ne 0 ]; then
-            echo "⚠️ Avertissements détectés, mais tous les tests sont PASS."
-        fi
-        exit 0
+      run: php artisan test
