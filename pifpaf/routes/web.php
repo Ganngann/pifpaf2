@@ -51,8 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transactions/{transaction}/confirm-reception', [TransactionController::class, 'confirmReception'])->name('transactions.confirm-reception');
     Route::patch('/transactions/{transaction}/add-tracking', [TransactionController::class, 'addTracking'])->name('transactions.addTracking');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/export', [ProfileController::class, 'export'])->name('profile.export');
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::post('/wallet/withdraw', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
 

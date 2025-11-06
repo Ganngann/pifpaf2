@@ -50,6 +50,9 @@
                             <a href="{{ route('ai-requests.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Mes Analyses IA
                             </a>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mon Profil
+                            </a>
                             <a href="{{ route('wallet.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Mon Portefeuille
                             </a>
