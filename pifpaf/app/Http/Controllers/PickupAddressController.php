@@ -115,4 +115,15 @@ class PickupAddressController extends Controller
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse mise à jour avec succès.');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(PickupAddress $address)
+    {
+        $this->authorize('delete', $address);
+
+        $address->delete();
+
+        return redirect()->route('profile.addresses.index')->with('success', 'Adresse supprimée avec succès.');
+    }
 }
