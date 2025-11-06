@@ -97,48 +97,52 @@ graph LR
     style S3_IA2 fill:#d4edda,stroke:#c3e6cb
     style S3_ANN5 fill:#d4edda,stroke:#c3e6cb
     style S3_ANN6 fill:#d4edda,stroke:#c3e6cb
+    style S3_ANN7 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG1 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG2 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG3 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG4 fill:#d4edda,stroke:#c3e6cb
+    style S4_LOG5 fill:#d4edda,stroke:#c3e6cb
     style S4_TRS2 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG8 fill:#d4edda,stroke:#c3e6cb
+    style S5_LOG6 fill:#d4edda,stroke:#c3e6cb
+    style S5_HIS1 fill:#d4edda,stroke:#c3e6cb
+    style S5_HIS3 fill:#d4edda,stroke:#c3e6cb
     style S5_TRS1 fill:#d4edda,stroke:#c3e6cb
     style S5_HIS4 fill:#d4edda,stroke:#c3e6cb
     style S6_COM1 fill:#d4edda,stroke:#c3e6cb
+    style S6_COM2 fill:#d4edda,stroke:#c3e6cb
     style S6_COM3 fill:#d4edda,stroke:#c3e6cb
-    style S6_COM4 fill:#d4edda,stroke:#c3e6cb
     style S6_IA5 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM10 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM11 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM12 fill:#d4edda,stroke:#c3e6cb
+    style S8_ADM13 fill:#d4edda,stroke:#c3e6cb
 ```
 
 ## 3. État d'Avancement par Thème
 
 ### ✔️ Thème 0-2 : Fondations (Terminé)
-- **Statut :** Un socle fonctionnel permettant de s'inscrire, de créer une annonce simple, de l'acheter avec un système de paiement et de portefeuille simulé.
+- **Statut :** Socle fonctionnel stable.
 
-### 🗺️ Thème 3 : Vendeur Augmenté (Partiellement Terminé)
-- **Statut :** La majorité des fonctionnalités sont implémentées (galerie d'images, IA MVP, gestion du catalogue).
-- **Restant :** `US-ANN-7` (Indiquer qu'un article est vendu sur sa page de détail).
+### ✔️ Thème 3 : Vendeur Augmenté (Terminé)
+- **Statut :** Toutes les fonctionnalités de ce thème sont désormais implémentées.
 
-### 🗺️ Thème 4 : Logistique Avancée (Partiellement Terminé)
-- **Statut :** Le parcours de configuration vendeur et de sélection par l'acheteur est presque complet. La recherche par distance est fonctionnelle.
-- **Restant :** `US-LOG-5` (Créer l'interface de gestion des adresses de livraison pour l'acheteur).
+### ✔️ Thème 4 : Logistique Avancée (Terminé)
+- **Statut :** L'ensemble du parcours de gestion des adresses et de sélection des modes de livraison est fonctionnel.
 
 ### 🗺️ Thème 5 : Finalisation & Historique (Partiellement Terminé)
-- **Statut :** Le paiement par portefeuille et son historique sont fonctionnels.
-- **Restant :** `US-LOG-6` & `US-LOG-7` (Gestion du suivi de colis), `US-HIS-1` & `US-HIS-3` (Historique détaillé des transactions).
+- **Statut :** L'historique des transactions et la gestion du portefeuille sont en place.
+- **Restant :** `US-LOG-7` (Permettre à l'acheteur de consulter le numéro de suivi).
 
 ### 🗺️ Thème 6 : Communauté & IA v2 (Partiellement Terminé)
-- **Statut :** La messagerie interne, le système de notation initial et l'IA multi-objets sont implémentés.
-- **Restant :** `US-COM-2` (Affichage des notes sur le profil), `US-COM-5` (Gestion des litiges).
+- **Statut :** La messagerie, les avis et l'IA multi-objets sont fonctionnels.
+- **Restant :** `US-COM-5` (Mettre en place la gestion des litiges côté utilisateur).
 
 ### 🗺️ Thème 7 : Conformité (Non commencé)
 - **Statut :** Les fonctionnalités liées au RGPD n'ont pas encore été implémentées.
 - **Restant :** `US-ADM-1` (Export des données), `US-ADM-2` (Suppression de compte).
 
 ### 🗺️ Thème 8 : Administration & Modération (Partiellement Terminé)
-- **Statut :** Le socle de l'interface d'administration est en place (accès, dashboard, gestion utilisateurs).
-- **Restant :** `US-ADM-13` (Gestion des annonces), `US-ADM-14` (Gestion des litiges).
+- **Statut :** Les outils de base pour la gestion des utilisateurs et des annonces sont en place.
+- **Restant :** `US-ADM-14` (Interface de gestion des litiges pour l'administrateur).
