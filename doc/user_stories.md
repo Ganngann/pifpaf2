@@ -201,7 +201,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Le profil public d'un utilisateur affiche sa note moyenne et le nombre d'avis.
     - Une section liste tous les avis reçus (note, commentaire, auteur).
 
-- **US-COM-5: Gestion des litiges**
+- **[TERMINÉ] US-COM-5: Gestion des litiges**
   - **En tant qu'** utilisateur, **Je veux** pouvoir ouvrir un litige sur une transaction.
   - **Critères d'acceptation :**
     - Un bouton "Signaler un problème" est visible sur le détail de la transaction après le paiement.

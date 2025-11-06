@@ -34,7 +34,7 @@
             </div>
             <div class="flex items-center justify-between text-sm text-gray-800 mt-1">
                 <span>Statut</span>
-                <span class="font-semibold px-2 py-1 bg-gray-200 text-gray-800 rounded-full text-xs">{{ $transaction->status }}</span>
+                <span class="font-semibold px-2 py-1 bg-gray-200 text-gray-800 rounded-full text-xs">{{ $transaction->status->value }}</span>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
                 </a>
             @endif
 
-            @if ($transaction->status === 'payment_received')
+            @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED)
                 <form action="{{ route('transactions.confirm-reception', $transaction) }}" method="POST">
                     @csrf
                     @method('PATCH')
@@ -59,7 +59,7 @@
                 </form>
             @endif
 
-            @if ($transaction->status === 'completed' && !$transaction->reviews->contains('reviewer_id', Auth::id()))
+            @if ($transaction->status === \App\Enums\TransactionStatus::COMPLETED && !$transaction->reviews->contains('reviewer_id', Auth::id()))
                 <x-review-modal :transaction="$transaction" :recipientName="$transaction->offer->item->user->name" />
             @endif
         </div>

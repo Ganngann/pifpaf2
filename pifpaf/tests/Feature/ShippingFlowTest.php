@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\ShippingAddress;
+use App\Enums\TransactionStatus;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +24,7 @@ class ShippingFlowTest extends TestCase
         $item = Item::factory()->create(['user_id' => $seller->id, 'weight' => 500, 'width' => 10, 'height' => 10, 'length' => 10]);
         $shippingAddress = ShippingAddress::factory()->create(['user_id' => $buyer->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id, 'status' => 'paid']);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'completed', 'shipping_address_id' => $shippingAddress->id]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::COMPLETED, 'shipping_address_id' => $shippingAddress->id]);
 
         // Fake the Sendcloud API response
         Http::fake([
@@ -48,7 +49,7 @@ class ShippingFlowTest extends TestCase
             'sendcloud_parcel_id' => 12345,
             'tracking_code' => 'TRACK123',
             'label_url' => 'http://example.com/label.pdf',
-            'status' => 'shipping_initiated',
+            'status' => TransactionStatus::SHIPPING_INITIATED->value,
         ]);
 
         Http::assertSent(function ($request) {
@@ -65,7 +66,7 @@ class ShippingFlowTest extends TestCase
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id, 'status' => 'paid']);
         // Create a transaction without a shipping address
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'completed', 'shipping_address_id' => null]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::COMPLETED, 'shipping_address_id' => null]);
 
         // We don't need to fake the API here, as it should not be called.
         Http::fake();
@@ -82,7 +83,7 @@ class ShippingFlowTest extends TestCase
             'id' => $transaction->id,
             'sendcloud_parcel_id' => null,
             'tracking_code' => null,
-            'status' => 'completed', // Status should remain unchanged
+            'status' => TransactionStatus::COMPLETED->value, // Status should remain unchanged
         ]);
 
         // Assert that no request was sent to the Sendcloud API

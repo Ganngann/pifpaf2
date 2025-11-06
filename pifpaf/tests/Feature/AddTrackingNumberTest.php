@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Item;
+use App\Enums\TransactionStatus;
 use App\Models\Offer;
 use App\Models\Transaction;
 use App\Models\User;
@@ -21,7 +22,7 @@ class AddTrackingNumberTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'shipping_initiated']);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
 
         $trackingNumber = '123456789';
 
@@ -36,7 +37,7 @@ class AddTrackingNumberTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'tracking_code' => $trackingNumber,
-            'status' => 'in_transit',
+            'status' => TransactionStatus::IN_TRANSIT->value,
         ]);
     }
 
@@ -48,7 +49,7 @@ class AddTrackingNumberTest extends TestCase
         $unauthorizedUser = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'shipping_initiated']);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
 
         $trackingNumber = '123456789';
 
@@ -62,7 +63,7 @@ class AddTrackingNumberTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'tracking_code' => null,
-            'status' => 'shipping_initiated',
+            'status' => TransactionStatus::SHIPPING_INITIATED->value,
         ]);
     }
 
@@ -73,7 +74,7 @@ class AddTrackingNumberTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => 'shipping_initiated']);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
 
         $response = $this->actingAs($seller)
             ->patch(route('transactions.addTracking', $transaction), [
@@ -85,7 +86,7 @@ class AddTrackingNumberTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'tracking_code' => null,
-            'status' => 'shipping_initiated',
+            'status' => TransactionStatus::SHIPPING_INITIATED->value,
         ]);
     }
 }
