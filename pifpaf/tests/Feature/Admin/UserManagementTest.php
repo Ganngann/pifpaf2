@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -20,7 +21,7 @@ class UserManagementTest extends TestCase
         $this->user = User::factory()->create(['role' => 'user']);
     }
 
-    /** @test */
+    #[Test]
     public function only_admins_can_access_the_user_management_page()
     {
         // Un non-administrateur reçoit une erreur 403
@@ -34,7 +35,7 @@ class UserManagementTest extends TestCase
              ->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function user_list_is_displayed_correctly()
     {
         $this->actingAs($this->admin)
@@ -43,7 +44,7 @@ class UserManagementTest extends TestCase
              ->assertSee($this->user->email);
     }
 
-    /** @test */
+    #[Test]
     public function search_functionality_works()
     {
         $userToFind = User::factory()->create(['name' => 'John Doe Search']);
@@ -54,7 +55,7 @@ class UserManagementTest extends TestCase
              ->assertDontSee($this->user->name);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_ban_a_user()
     {
         $this->actingAs($this->admin)
@@ -63,7 +64,7 @@ class UserManagementTest extends TestCase
         $this->assertNotNull($this->user->fresh()->banned_at);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_unban_a_user()
     {
         $this->user->update(['banned_at' => now()]);
@@ -75,7 +76,7 @@ class UserManagementTest extends TestCase
         $this->assertNull($this->user->fresh()->banned_at);
     }
 
-    /** @test */
+    #[Test]
     public function a_banned_user_cannot_log_in()
     {
         // Bannir l'utilisateur
@@ -91,7 +92,7 @@ class UserManagementTest extends TestCase
         $this->assertGuest();
     }
 
-    /** @test */
+    #[Test]
     public function a_logged_in_user_is_logged_out_on_next_request_if_banned()
     {
         // Se connecter en tant qu'utilisateur normal

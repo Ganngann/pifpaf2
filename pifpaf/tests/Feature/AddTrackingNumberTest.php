@@ -7,13 +7,14 @@ use App\Models\Offer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AddTrackingNumberTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function a_seller_can_add_a_tracking_number_to_a_transaction()
     {
         $seller = User::factory()->create();
@@ -39,7 +40,7 @@ class AddTrackingNumberTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function an_unauthorized_user_cannot_add_a_tracking_number()
     {
         $seller = User::factory()->create();
@@ -65,7 +66,7 @@ class AddTrackingNumberTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function a_tracking_number_is_required()
     {
         $seller = User::factory()->create();

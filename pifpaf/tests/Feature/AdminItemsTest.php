@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AdminItemsTest extends TestCase
@@ -21,7 +22,7 @@ class AdminItemsTest extends TestCase
         $this->user = User::factory()->create(['role' => 'user']);
     }
 
-    /** @test */
+    #[Test]
     public function non_admins_cannot_access_the_admin_items_index()
     {
         $this->actingAs($this->user)
@@ -29,7 +30,7 @@ class AdminItemsTest extends TestCase
              ->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_access_the_admin_items_index()
     {
         $this->actingAs($this->admin)
@@ -38,7 +39,7 @@ class AdminItemsTest extends TestCase
              ->assertViewIs('admin.items.index');
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_view_a_list_of_items()
     {
         $item1 = Item::factory()->create(['title' => 'Item Alpha']);
@@ -50,7 +51,7 @@ class AdminItemsTest extends TestCase
              ->assertSee('Item Beta');
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_search_for_items_by_title()
     {
         Item::factory()->create(['title' => 'Specific Search Term']);
@@ -62,7 +63,7 @@ class AdminItemsTest extends TestCase
              ->assertDontSee('Another Item');
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_search_for_items_by_seller_name()
     {
         $seller = User::factory()->create(['name' => 'John Doe']);
@@ -75,7 +76,7 @@ class AdminItemsTest extends TestCase
              ->assertDontSee('Anonymous Item');
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_delete_an_item()
     {
         $item = Item::factory()->create();
@@ -86,7 +87,7 @@ class AdminItemsTest extends TestCase
         $this->assertDatabaseMissing('items', ['id' => $item->id]);
     }
 
-    /** @test */
+    #[Test]
     public function non_admins_cannot_delete_an_item()
     {
         $item = Item::factory()->create();
