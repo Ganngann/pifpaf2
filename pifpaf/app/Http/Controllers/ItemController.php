@@ -98,21 +98,33 @@ class ItemController extends Controller
     /**
      * Affiche le tableau de bord avec les annonces de l'utilisateur.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $userId = $user->id;
 
+        $status = $request->query('status');
+        $validStatuses = [ItemStatus::AVAILABLE->value, ItemStatus::UNPUBLISHED->value, ItemStatus::SOLD->value];
+
+        if ($status && !in_array($status, $validStatuses)) {
+            abort(400, 'Invalid status filter.');
+        }
+
         // Récupérer les articles du vendeur avec toutes les relations nécessaires
-        $items = $user->items()
+        $itemsQuery = $user->items()
             ->with([
                 'primaryImage',
                 'offers' => function ($query) {
                     $query->with(['transaction', 'user']);
                 }
             ])
-            ->latest()
-            ->paginate(10);
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->latest();
+
+        $items = $itemsQuery->paginate(10)->appends($request->query());
+
 
         // Récupérer les transactions ouvertes (achats et ventes)
         $openTransactions = \App\Models\Transaction::where(function ($query) use ($userId) {
