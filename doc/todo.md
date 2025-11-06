@@ -20,4 +20,4 @@
 *Objectif : Mettre la plateforme en conformité avec les régulations européennes sur la protection des données, un point essentiel pour la confiance des utilisateurs et la légalité du service.*
 
 - [ ] **US-ADM-1:** Développer la fonctionnalité d'export des données personnelles pour un utilisateur.
-- [ ] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données utilisateur.
+- [x] **US-ADM-2:** Implémenter la suppression sécurisée du compte et des données utilisateur.
