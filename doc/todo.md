@@ -30,3 +30,13 @@
 - [x] **US-TEST-3:** Améliorer la couverture de test de la logique d'IA (`AiRequestController`, `ProcessAiImage`).
 - [x] **US-TEST-4:** Améliorer la couverture de test des `Policies` d'autorisation.
 - [x] **US-TEST-5:** Améliorer la couverture de test des contrôleurs orphelins.
+
+- lier chaque transaction de l'historique du walet avec la transaction correspondante
+- faire passer tous les le mouvements par le walet, meme dans le cas d'un payement par carte (credit du payement carte puis débit du montant de l'achat)
+- quand on clique sur "Créer l'envoi" sur le tableau de bord, il ne se passe rien
+- sur la boutique, coriger le disign des filtres
+- sur la page produit, le drop menu passe sous le contenu
+- ajouter la possibilitée de définir une adresse comme adrresse par défaut
+- sur le tableau de bord, montrer par défaut les articles en lignes, puis hors ligne, puis vendus, puis tous
+- enlever pour le vendeur la possibilitée de confirmer le retrait
+- 
