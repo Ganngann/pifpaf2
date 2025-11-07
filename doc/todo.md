@@ -13,7 +13,7 @@
 
 - [x] **US-LOG-7:** Permettre à l'acheteur de consulter le numéro de suivi de sa commande.
 - [x] **US-COM-5:** Mettre en place un formulaire simple pour qu'un utilisateur puisse ouvrir un litige sur une transaction.
-- [ ] **US-ADM-14:** Développer le module de suivi et de gestion des litiges pour l'administrateur.
+- [x] **US-ADM-14:** Développer le module de suivi et de gestion des litiges pour l'administrateur.
 
 ---
 ## Priorité 2 : Assurer la Conformité RGPD
