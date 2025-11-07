@@ -122,6 +122,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Gestion des annonces
     Route::get('/items', [\App\Http\Controllers\AdminController::class, 'itemsIndex'])->name('items.index');
     Route::delete('/items/{item}', [\App\Http\Controllers\AdminController::class, 'destroyItem'])->name('items.destroy');
+
+    // Gestion des litiges
+    Route::get('/disputes', [\App\Http\Controllers\AdminController::class, 'disputesIndex'])->name('disputes.index');
+    Route::get('/disputes/{dispute}', [\App\Http\Controllers\AdminController::class, 'disputesShow'])->name('disputes.show');
+    Route::post('/disputes/{dispute}/resolve-for-buyer', [\App\Http\Controllers\AdminController::class, 'resolveForBuyer'])->name('disputes.resolveForBuyer');
+    Route::post('/disputes/{dispute}/resolve-for-seller', [\App\Http\Controllers\AdminController::class, 'resolveForSeller'])->name('disputes.resolveForSeller');
+    Route::post('/disputes/{dispute}/close', [\App\Http\Controllers\AdminController::class, 'closeDispute'])->name('disputes.close');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
