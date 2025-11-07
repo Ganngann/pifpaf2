@@ -5,7 +5,7 @@
 ---
 ## Priorité 1 : Finaliser le Système de payement
 - [x] **US-CHK-1:** Accéder au récapitulatif de commande.
-- [ ] **US-CHK-2:** Valider le récapitulatif de commande.
+- [x] **US-CHK-2:** Valider le récapitulatif de commande.
 - [ ] **US-CHK-3:** Voir la confirmation de paiement.
 
 ## Priorité 2 : Finaliser le Système de Transaction et de Litiges
