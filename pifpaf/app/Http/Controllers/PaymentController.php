@@ -108,7 +108,7 @@ class PaymentController extends Controller
         }
 
         // Début de la transaction de base de données pour garantir l'intégrité
-        DB::transaction(function () use ($user, $offer, $walletAmountToUse, $cardAmount, $offerAmount) {
+        $transaction = DB::transaction(function () use ($user, $offer, $walletAmountToUse, $cardAmount, $offerAmount) {
             // Mettre à jour le solde du portefeuille si utilisé
             if ($walletAmountToUse > 0) {
                 $user->wallet -= $walletAmountToUse;
@@ -129,13 +129,15 @@ class PaymentController extends Controller
             }
 
             // Création de la transaction
-            Transaction::create($transactionData);
+            $newTransaction = Transaction::create($transactionData);
 
             // Mise à jour des statuts
             $offer->update(['status' => 'paid']);
             $offer->item->update(['status' => 'sold']);
+
+            return $newTransaction;
         });
 
-        return redirect()->route('dashboard')->with('success', 'Paiement effectué avec succès !');
+        return redirect()->route('checkout.success', ['transaction' => $transaction]);
     }
 }
