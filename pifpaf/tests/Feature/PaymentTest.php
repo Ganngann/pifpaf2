@@ -71,4 +71,48 @@ class PaymentTest extends TestCase
             'status' => 'sold',
         ]);
     }
+
+    #[Test]
+    public function an_authenticated_user_can_pay_using_their_wallet_and_it_creates_a_history_entry(): void
+    {
+        // 1. Arrange
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create(['wallet' => 100.00]);
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'status' => 'accepted',
+            'amount' => 50.00,
+        ]);
+
+        // Simuler l'API Stripe
+        Mockery::mock('alias:' . PaymentIntent::class);
+
+        // 2. Act
+        $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
+            'use_wallet' => true,
+        ]);
+
+        // 3. Assert
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
+
+        $this->assertDatabaseHas('transactions', [
+            'offer_id' => $offer->id,
+            'amount' => 50.00,
+            'wallet_amount' => 50.00,
+            'card_amount' => 0,
+            'status' => 'payment_received',
+        ]);
+
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id,
+            'type' => 'debit',
+            'amount' => 50.00,
+            'description' => 'Achat de l\'article : ' . $item->title,
+        ]);
+
+        $this->assertEquals(50.00, $buyer->fresh()->wallet);
+    }
 }
