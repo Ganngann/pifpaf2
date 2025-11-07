@@ -27,6 +27,12 @@
             'count'   => 'text-yellow-900',
             'link'    => 'text-yellow-600',
         ],
+        'red' => [
+            'wrapper' => 'bg-red-100',
+            'title'   => 'text-red-800',
+            'count'   => 'text-red-900',
+            'link'    => 'text-red-600',
+        ],
     ];
 
     $selected_color = $color_classes[$color] ?? $color_classes['blue'];
