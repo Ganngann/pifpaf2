@@ -14,7 +14,7 @@ sudo apt-get update
 
 # --- Installation de PHP ---
 echo "Installation de PHP 8.3 et des extensions requises..."
-sudo apt-get install -y php8.3 php8.3-xml php8.3-dom php8.3-curl php8.3-mbstring php8.3-zip php8.3-sqlite3 php8.3-gd
+sudo apt-get install -y php8.3 php8.3-xml php8.3-dom php8.3-curl php8.3-mbstring php8.3-zip php8.3-sqlite3 php8.3-gd php8.3-pcov
 
 # --- Installation de Google Chrome pour Laravel Dusk ---
 echo "Installation de Google Chrome..."
