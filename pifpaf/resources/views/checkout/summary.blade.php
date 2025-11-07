@@ -19,9 +19,9 @@
                         <div>
                             <h4 class="font-semibold text-gray-800">Article</h4>
                             <div class="mt-2 flex">
-                                <img src="{{ optional($offer->item->primaryImage)->image_path ? asset('storage/' . $offer->item->primaryImage->image_path) : asset('images/placeholder.jpg') }}" alt="{{ $offer->item->name }}" class="w-24 h-24 object-cover rounded-md">
+                                <img src="{{ optional($offer->item->primaryImage)->image_path ? asset('storage/' . $offer->item->primaryImage->image_path) : asset('images/placeholder.jpg') }}" alt="{{ $offer->item->title }}" class="w-24 h-24 object-cover rounded-md">
                                 <div class="ml-4">
-                                    <p class="font-bold">{{ $offer->item->name }}</p>
+                                    <p class="font-bold">{{ $offer->item->title }}</p>
                                     <p class="text-sm text-gray-600">Vendu par : {{ $offer->item->user->name }}</p>
                                     <p class="text-lg font-bold text-gray-800 mt-2">{{ number_format($offer->amount, 2, ',', ' ') }} €</p>
                                 </div>
@@ -33,16 +33,35 @@
                             <h4 class="font-semibold text-gray-800">Livraison</h4>
                             <div class="mt-2">
                                 @if($offer->delivery_method == 'pickup')
-                                    <p>Remise en main propre</p>
+                                    <p><strong>Remise en main propre</strong></p>
                                     <p class="text-sm text-gray-600 mt-1">
-                                        Adresse du vendeur : {{ $offer->item->pickupAddress->street }}, {{ $offer->item->pickupAddress->city }}
+                                        <strong>Adresse de retrait :</strong><br>
+                                        {{ $offer->item->pickupAddress->street }},<br>
+                                        {{ $offer->item->pickupAddress->postal_code }} {{ $offer->item->pickupAddress->city }}
                                     </p>
                                 @else
                                     <p>Livraison standard</p>
-                                    {{-- Ici, on affichera l'adresse de livraison de l'acheteur --}}
-                                    <p class="text-sm text-gray-600 mt-1">
-                                        Adresse de livraison : À implémenter (carnet d'adresses)
-                                    </p>
+                                    @if($shippingAddress)
+                                        <div class="text-sm text-gray-600 mt-1">
+                                            <p>
+                                                <strong>Adresse de livraison :</strong><br>
+                                                {{ $shippingAddress->name }}<br>
+                                                {{ $shippingAddress->street }},<br>
+                                                {{ $shippingAddress->postal_code }} {{ $shippingAddress->city }},<br>
+                                                {{ $shippingAddress->country }}
+                                            </p>
+                                            <a href="{{ route('profile.edit') }}#shipping-addresses" class="text-indigo-600 hover:text-indigo-900 text-xs mt-2 inline-block">
+                                                Modifier l'adresse
+                                            </a>
+                                        </div>
+                                    @else
+                                        <div class="text-sm text-red-600 mt-1 p-4 border border-red-300 rounded-md bg-red-50">
+                                            <p><strong>Aucune adresse de livraison configurée.</strong></p>
+                                            <a href="{{ route('profile.edit') }}#shipping-addresses" class="text-indigo-600 hover:text-indigo-900 font-semibold">
+                                                Veuillez en ajouter une à votre profil pour continuer.
+                                            </a>
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
 

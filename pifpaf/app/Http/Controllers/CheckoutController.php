@@ -26,6 +26,8 @@ class CheckoutController extends Controller
             return redirect()->route('dashboard')->withErrors(['error' => 'This offer is not ready for checkout.']);
         }
 
-        return view('checkout.summary', compact('offer'));
+        $shippingAddress = Auth::user()->shippingAddresses()->first();
+
+        return view('checkout.summary', compact('offer', 'shippingAddress'));
     }
 }
