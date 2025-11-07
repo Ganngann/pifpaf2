@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\ItemImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Address;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,7 +30,9 @@ class ItemFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'pickup_available' => true,
             'delivery_available' => true,
-            'pickup_address_id' => \App\Models\PickupAddress::factory(),
+            'pickup_address_id' => function (array $attributes) {
+                return Address::factory()->create(['type' => 'pickup', 'user_id' => $attributes['user_id']])->id;
+            },
         ];
     }
 

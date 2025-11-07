@@ -10,7 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ItemImageController;
-use App\Http\Controllers\PickupAddressController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AiRequestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StyleguideController;
@@ -69,13 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/item-images/{itemImage}/set-primary', [ItemImageController::class, 'setPrimary'])->name('item-images.set-primary');
     Route::post('/item-images/reorder', [ItemImageController::class, 'reorder'])->name('item-images.reorder');
 
-    // Routes pour la gestion des adresses de retrait
-    Route::resource('profile/addresses', PickupAddressController::class)->names('profile.addresses');
-
-    // Routes pour la gestion des adresses de livraison
-    Route::resource('profile/shipping-addresses', \App\Http\Controllers\ShippingAddressController::class)
-        ->except(['index', 'show'])
-        ->names('profile.shipping_addresses');
+    // Routes pour la gestion des adresses
+    Route::resource('profile/addresses', AddressController::class)->names('profile.addresses');
 
     // Routes pour la file d'attente IA
     Route::get('/ai-requests', [AiRequestController::class, 'index'])->name('ai-requests.index');

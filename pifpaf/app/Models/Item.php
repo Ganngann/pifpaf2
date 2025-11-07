@@ -94,6 +94,6 @@ class Item extends Model
      */
     public function pickupAddress()
     {
-        return $this->belongsTo(PickupAddress::class);
+        return $this->belongsTo(Address::class, 'pickup_address_id');
     }
 }

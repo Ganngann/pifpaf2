@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Modifier l\'adresse de retrait') }}
+            {{ $address->type === 'pickup' ? __('Modifier l\'adresse de retrait') : __('Modifier l\'adresse de livraison') }}
         </h2>
     </x-slot>
 
@@ -12,7 +12,7 @@
                     <form action="{{ route('profile.addresses.update', $address) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        @include('profile.addresses._form')
+                        @include('profile.addresses._form', ['address' => $address, 'type' => $address->type])
                     </form>
                 </div>
             </div>

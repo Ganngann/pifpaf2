@@ -32,7 +32,7 @@
                     <!-- Contenu de l'onglet Adresses de retrait -->
                     <div x-show="tab === 'pickup'" id="pickup-addresses">
                         <div class="flex justify-end mb-4">
-                            <a href="{{ route('profile.addresses.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <a href="{{ route('profile.addresses.create', ['type' => 'pickup']) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Ajouter une adresse de retrait
                             </a>
                         </div>
@@ -43,8 +43,13 @@
                                         <p class="font-bold">{{ $address->name }}</p>
                                         <p>{{ $address->street }}, {{ $address->city }}, {{ $address->postal_code }}</p>
                                     </div>
-                                    <div>
+                                    <div class="flex items-center">
                                         <a href="{{ route('profile.addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
+                                        <form action="{{ route('profile.addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                                        </form>
                                     </div>
                                 </div>
                             @empty
@@ -56,7 +61,7 @@
                     <!-- Contenu de l'onglet Adresses de livraison -->
                     <div x-show="tab === 'shipping'" id="shipping-addresses" style="display: none;">
                         <div class="flex justify-end mb-4">
-                            <a href="{{ route('profile.shipping_addresses.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <a href="{{ route('profile.addresses.create', ['type' => 'shipping']) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Ajouter une adresse de livraison
                             </a>
                         </div>
@@ -68,8 +73,8 @@
                                         <p>{{ $address->street }}, {{ $address->postal_code }} {{ $address->city }}, {{ $address->country }}</p>
                                     </div>
                                     <div class="flex items-center">
-                                        <a href="{{ route('profile.shipping_addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
-                                        <form action="{{ route('profile.shipping_addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+                                        <a href="{{ route('profile.addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
+                                        <form action="{{ route('profile.addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>

@@ -71,14 +71,19 @@ class User extends Authenticatable
         return $this->hasMany(AiRequest::class);
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
     public function pickupAddresses()
     {
-        return $this->hasMany(PickupAddress::class);
+        return $this->hasMany(Address::class)->where('type', 'pickup');
     }
 
     public function shippingAddresses()
     {
-        return $this->hasMany(ShippingAddress::class);
+        return $this->hasMany(Address::class)->where('type', 'shipping');
     }
 
     /**

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ajouter une nouvelle adresse de retrait') }}
+            {{ $type === 'pickup' ? __('Ajouter une nouvelle adresse de retrait') : __('Ajouter une nouvelle adresse de livraison') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,8 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('profile.addresses.store') }}" method="POST">
                         @csrf
-                        @include('profile.addresses._form')
+                        <input type="hidden" name="type" value="{{ $type }}">
+                        @include('profile.addresses._form', ['address' => new \App\Models\Address(), 'type' => $type])
                     </form>
                 </div>
             </div>

@@ -18,6 +18,13 @@
         <label for="postal_code" class="block text-sm font-medium text-gray-700">Code Postal</label>
         <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code', $address->postal_code ?? '') }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
     </div>
+
+    @if ($type === 'shipping')
+        <div>
+            <label for="country" class="block text-sm font-medium text-gray-700">Pays</label>
+            <input type="text" name="country" id="country" value="{{ old('country', $address->country ?? '') }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </div>
+    @endif
 </div>
 
 <div class="mt-6 flex justify-end">
