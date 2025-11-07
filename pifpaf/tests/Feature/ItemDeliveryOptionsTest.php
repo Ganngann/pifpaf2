@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\PickupAddress;
+use App\Models\Address;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,7 +19,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
+        $pickupAddress = Address::factory()->create(['user_id' => $user->id, 'type' => 'pickup']);
 
         $response = $this->actingAs($user)->post(route('items.store'), [
             'title' => 'Test Item',
@@ -45,7 +45,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
-        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
+        $pickupAddress = Address::factory()->create(['user_id' => $user->id, 'type' => 'pickup']);
 
         $response = $this->actingAs($user)->put(route('items.update', $item), [
             'title' => 'Updated Title',

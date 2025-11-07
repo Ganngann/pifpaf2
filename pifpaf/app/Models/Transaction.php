@@ -34,7 +34,7 @@ class Transaction extends Model
 
     public function shippingAddress()
     {
-        return $this->belongsTo(ShippingAddress::class);
+        return $this->belongsTo(Address::class, 'shipping_address_id');
     }
 
     public function reviews()

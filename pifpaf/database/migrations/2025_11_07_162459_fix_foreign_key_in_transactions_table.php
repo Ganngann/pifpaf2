@@ -12,10 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->foreignId('shipping_address_id')->nullable()->after('pickup_code');
-            $table->string('sendcloud_parcel_id')->nullable()->after('shipping_address_id');
-            $table->string('tracking_code')->nullable()->after('sendcloud_parcel_id');
-            $table->text('label_url')->nullable()->after('tracking_code');
+            // Supprimer l'ancienne contrainte de clé étrangère
+            $table->dropForeign(['shipping_address_id']);
+
+            // Ajouter la nouvelle contrainte de clé étrangère
+            $table->foreign('shipping_address_id')
+                  ->references('id')
+                  ->on('addresses')
+                  ->onDelete('set null');
         });
     }
 
@@ -25,8 +29,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
+            // Supprimer la nouvelle contrainte
             $table->dropForeign(['shipping_address_id']);
-            $table->dropColumn(['shipping_address_id', 'sendcloud_parcel_id', 'tracking_code', 'label_url']);
         });
     }
 };
