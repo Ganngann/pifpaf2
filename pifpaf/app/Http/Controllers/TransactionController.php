@@ -65,15 +65,6 @@ class TransactionController extends Controller
             'description' => 'Vente de l\'article : ' . $transaction->offer->item->title,
         ]);
 
-        // Enregistrer l'historique du portefeuille pour l'acheteur (débit)
-        $buyer = $transaction->offer->user;
-        WalletHistory::create([
-            'user_id' => $buyer->id,
-            'type' => 'debit',
-            'amount' => $transaction->amount,
-            'description' => 'Achat de l\'article : ' . $transaction->offer->item->title,
-        ]);
-
         return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');
     }
 

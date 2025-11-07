@@ -59,12 +59,6 @@ class WalletHistoryTest extends TestCase
             'description' => 'Vente de l\'article : Mon Super Article',
         ]);
 
-        $this->assertDatabaseHas('wallet_histories', [
-            'user_id' => $buyer->id,
-            'type' => 'debit',
-            'amount' => 30,
-            'description' => 'Achat de l\'article : Mon Super Article',
-        ]);
     }
 
     /**

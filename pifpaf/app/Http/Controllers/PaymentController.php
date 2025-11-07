@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Offer;
 use App\Models\Transaction;
+use App\Models\WalletHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -113,6 +114,14 @@ class PaymentController extends Controller
             if ($walletAmountToUse > 0) {
                 $user->wallet -= $walletAmountToUse;
                 $user->save();
+
+                // Enregistrer l'historique du portefeuille pour le débit
+                WalletHistory::create([
+                    'user_id' => $user->id,
+                    'type' => 'debit',
+                    'amount' => $walletAmountToUse,
+                    'description' => 'Achat de l\'article : ' . $offer->item->title,
+                ]);
             }
 
             // Préparer les données de la transaction
