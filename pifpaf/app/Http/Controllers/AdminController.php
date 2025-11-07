@@ -22,8 +22,9 @@ class AdminController extends Controller
         $userCount = User::count();
         $itemCount = Item::count();
         $transactionCount = Transaction::count();
+        $openDisputesCount = Dispute::where('status', 'open')->count();
 
-        return view('admin.dashboard', compact('userCount', 'itemCount', 'transactionCount'));
+        return view('admin.dashboard', compact('userCount', 'itemCount', 'transactionCount', 'openDisputesCount'));
     }
 
     /**

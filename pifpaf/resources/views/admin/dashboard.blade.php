@@ -10,7 +10,15 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Statistiques Clés</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+                        <x-admin.stat-card
+                            title="Litiges en cours"
+                            :count="$openDisputesCount"
+                            :link="route('admin.disputes.index')"
+                            linkText="Gérer les litiges"
+                            color="red"
+                        />
 
                         <x-admin.stat-card
                             title="Utilisateurs"
