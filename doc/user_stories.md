@@ -143,7 +143,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Dans la page "Mes Ventes", pour une commande "Expédiée", un champ permet de saisir et d'enregistrer un numéro de suivi.
     - Une fois ajouté, le statut de la commande peut passer à "En transit".
 
-- **US-LOG-7: Consulter le suivi**
+- **[TERMINÉ] US-LOG-7: Consulter le suivi**
   - **En tant qu'** acheteur, **Je veux** pouvoir consulter le numéro de suivi depuis le détail de ma commande.
   - **Critères d'acceptation :**
     - Dans la page "Mes Achats", le numéro de suivi est affiché pour les commandes concernées.
@@ -185,14 +185,14 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 8: Expérience de Checkout Améliorée
 *Améliorer le parcours de paiement pour le rendre plus clair, plus rassurant et augmenter le taux de conversion.*
 
-- **US-CHK-1: Accéder au récapitulatif de commande**
+- **[TERMINÉ] US-CHK-1: Accéder au récapitulatif de commande**
   - **En tant que** acheteur, **Je veux** être notifié et avoir un accès direct à une page de finalisation de commande dès que mon offre est acceptée, **Afin de** pouvoir payer rapidement et sans confusion.
   - **Critères d'acceptation :**
     - Quand un vendeur accepte une offre, l'acheteur est notifié (un message flash sur son dashboard est suffisant pour le MVP).
     - Dans le dashboard de l'acheteur, les offres acceptées en attente de paiement ont un bouton proéminent "Finaliser la commande".
     - Le parcours "Achat Immédiat" redirige également directement vers la page de récapitulatif.
 
-- **US-CHK-2: Valider le récapitulatif de commande**
+- **[TERMINÉ] US-CHK-2: Valider le récapitulatif de commande**
   - **En tant que** acheteur, **Je veux** voir une page qui récapitule tous les détails de ma commande avant de payer, **Afin d'**être sûr de mon achat.
   - **Critères d'acceptation :**
     - Une nouvelle page `/checkout/{offer}/summary` est créée.
@@ -201,7 +201,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Si la livraison est "Remise en main propre", l'adresse du vendeur est clairement affichée.
     - Un bouton unique "Procéder au paiement" mène à la page de paiement.
 
-- **US-CHK-3: Voir la confirmation de paiement**
+- **[TERMINÉ] US-CHK-3: Voir la confirmation de paiement**
   - **En tant que** acheteur, **Je veux** être redirigé vers une page de confirmation claire après avoir payé, **Afin de** savoir que tout s'est bien passé et connaître les prochaines étapes.
   - **Critères d'acceptation :**
     - Après un paiement réussi, l'utilisateur est redirigé vers une nouvelle page `/checkout/{transaction}/success`.
@@ -268,13 +268,13 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 11: RGPD
 *Garantir aux utilisateurs le contrôle de leurs données.*
 
-- **US-ADM-1: Portabilité des données**
+- **[TERMINÉ] US-ADM-1: Portabilité des données**
   - **En tant qu'** utilisateur, **Je veux** pouvoir télécharger une archive de mes données personnelles.
   - **Critères d'acceptation :**
     - Dans les paramètres du compte, un bouton "Télécharger mes données".
     - Au clic, un fichier JSON contenant les informations du compte, adresses, annonces, et transactions est généré et téléchargé.
 
-- **US-ADM-2: Droit à l'oubli**
+- **[TERMINÉ] US-ADM-2: Droit à l'oubli**
   - **En tant qu'** utilisateur, **Je veux** pouvoir supprimer mon compte et mes données.
   - **Critères d'acceptation :**
     - Dans les paramètres, un bouton "Supprimer mon compte".
@@ -311,7 +311,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Une page liste toutes les annonces avec une fonction de recherche.
     - Chaque annonce a un bouton "Supprimer" pour la modération.
 
-- **US-ADM-14: Gestion des Litiges**
+- **[TERMINÉ] US-ADM-14: Gestion des Litiges**
   - **En tant qu'** administrateur, **Je veux** pouvoir consulter et intervenir sur les litiges.
   - **Critères d'acceptation :**
     - Une page liste les transactions avec le statut "En litige".
@@ -323,38 +323,129 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ### Epic 13: Couverture de Test
 *Augmenter la couverture de test du code pour garantir la stabilité, la maintenabilité et réduire les régressions futures.*
 
-- **US-TEST-1: Couverture du `PaymentController`**
+- **[TERMINÉ] US-TEST-1: Couverture du `PaymentController`**
   - **En tant que** développeur, **Je veux** écrire des tests unitaires et fonctionnels complets pour le `PaymentController`, **Afin de** sécuriser le processus de paiement qui est critique pour l'application.
   - **Critères d'acceptation :**
     - La méthode `create` est couverte par un test qui vérifie la création correcte de l'intention de paiement.
     - La méthode `store` est couverte par des tests simulant un paiement réussi et un paiement échoué.
     - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
 
-- **US-TEST-2: Couverture du `PickupAddressController`**
+- **[TERMINÉ] US-TEST-2: Couverture du `PickupAddressController`**
   - **En tant que** développeur, **Je veux** écrire des tests fonctionnels pour toutes les méthodes CRUD du `PickupAddressController`, **Afin de** garantir la fiabilité de la gestion des adresses de retrait pour les vendeurs.
   - **Critères d'acceptation :**
     - Les actions `index`, `create`, `store`, `edit`, `update`, et `destroy` sont entièrement testées.
     - Les tests vérifient que les autorisations (policies) sont correctement appliquées pour chaque action.
     - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
 
-- **US-TEST-3: Couverture de la Logique IA**
+- **[TERMINÉ] US-TEST-3: Couverture de la Logique IA**
   - **En tant que** développeur, **Je veux** écrire des tests pour le `AiRequestController` et le job `ProcessAiImage`, **Afin de** fiabiliser l'ensemble du processus de création d'annonce assistée par IA.
   - **Critères d'acceptation :**
     - Les différentes méthodes du `AiRequestController` sont testées.
     - Le job `ProcessAiImage` est testé unitairement pour les cas de succès et d'échec, en simulant la réponse de l'API externe.
     - La couverture des lignes des deux classes doit atteindre un minimum de 90%.
 
-- **US-TEST-4: Couverture des `Policies` d'autorisation**
+- **[TERMINÉ] US-TEST-4: Couverture des `Policies` d'autorisation**
   - **En tant que** développeur, **Je veux** écrire des tests unitaires pour les `Policies` de l'application qui ont une faible couverture, **Afin de** s'assurer que les permissions des utilisateurs sont appliquées de manière stricte et correcte.
   - **Critères d'acceptation :**
     - Les méthodes des policies `ConversationPolicy`, `ItemPolicy`, `PickupAddressPolicy`, `ShippingAddressPolicy`, et `TransactionPolicy` sont rigoureusement testées.
     - Chaque test couvre les cas où une autorisation doit être accordée et ceux où elle doit être refusée.
     - La couverture globale des lignes pour chaque classe de Policy testée doit atteindre un minimum de 90%.
 
-- **US-TEST-5: Couverture des Contrôleurs Orphelins**
+- **[TERMINÉ] US-TEST-5: Couverture des Contrôleurs Orphelins**
   - **En tant que** développeur, **Je veux** augmenter la couverture de test pour les contrôleurs ayant une couverture partielle, **Afin de** renforcer la robustesse globale de l'application et de finaliser l'effort de fiabilisation.
   - **Critères d'acceptation :**
     - La couverture des méthodes `store` et `destroy` de `AuthenticatedSessionController` est améliorée.
     - La couverture de la méthode `store` de `RegisteredUserController` est améliorée.
     - La couverture des méthodes CRUD de `ItemImageController` est améliorée.
     - La couverture des lignes pour ces contrôleurs doit atteindre un minimum de 90%.
+
+---
+## 🚀 Sprint 10: Améliorations & Corrections
+
+### Epic 14: Améliorations UX/UI
+*Polir l'interface utilisateur pour une expérience plus intuitive et agréable.*
+
+- **US-UX-1: Corriger le design des filtres**
+  - **En tant que** utilisateur, **Je veux** que les filtres sur la page boutique soient bien alignés et esthétiques, **Afin de** pouvoir les utiliser facilement.
+  - **Critères d'acceptation :**
+    - Les éléments du formulaire de filtre (labels, champs) sont correctement alignés.
+    - Le design est responsive et s'affiche correctement sur mobile.
+
+- **US-UX-2: Organiser le tableau de bord vendeur**
+  - **En tant que** vendeur, **Je veux** que mes annonces soient triées par statut sur mon tableau de bord, **Afin de** visualiser rapidement les articles pertinents.
+  - **Critères d'acceptation :**
+    - Par défaut, les annonces "En ligne" sont affichées en premier.
+    - Ensuite, les annonces "Hors ligne", puis "Vendu".
+    - Des options de filtre permettent de n'afficher qu'un seul statut.
+
+- **US-LOG-9: Définir une adresse par défaut**
+  - **En tant que** utilisateur, **Je veux** pouvoir marquer une de mes adresses (livraison ou retrait) comme étant "par défaut", **Afin de** ne pas avoir à la sélectionner à chaque fois.
+  - **Critères d'acceptation :**
+    - Dans les formulaires de gestion d'adresses, une case à cocher "Définir par défaut" est présente.
+    - Lors du processus de commande, l'adresse par défaut est pré-sélectionnée.
+
+### Epic 15: Fiabilisation des Flux
+*Améliorer la logique métier pour la rendre plus robuste et cohérente.*
+
+- **US-TRS-3: Sécuriser la confirmation de réception**
+  - **En tant que** vendeur, **Je veux** être certain que seul l'acheteur peut confirmer la réception d'un article, **Afin de** prévenir les abus et les erreurs.
+  - **Critères d'acceptation :**
+    - Le bouton "Confirmer la réception" n'est visible et actif que pour l'utilisateur qui est l'acheteur de la transaction.
+    - Une policy (`TransactionPolicy`) est en place pour bloquer toute tentative non autorisée côté serveur.
+
+- **US-WAL-1: Lier l'historique du portefeuille**
+  - **En tant que** utilisateur, **Je veux** voir un lien vers la transaction correspondante depuis chaque entrée de mon historique de portefeuille, **Afin de** comprendre facilement l'origine de chaque mouvement.
+  - **Critères d'acceptation :**
+    - Dans la table `wallet_histories`, une colonne `transaction_id` (nullable) est ajoutée.
+    - Sur la page "Mon Portefeuille", chaque ligne de l'historique liée à un achat ou une vente contient un lien vers la page de détail de la transaction.
+
+- **US-WAL-2: Centraliser les paiements via le portefeuille**
+  - **En tant que** développeur, **Je veux** refactoriser le flux de paiement pour que tous les achats par carte créditent d'abord le portefeuille avant de le débiter, **Afin de** simplifier la logique comptable et l'historique.
+  - **Critères d'acceptation :**
+    - Lors d'un paiement par carte, deux opérations sont enregistrées dans l'historique du portefeuille : un crédit du montant payé, suivi d'un débit pour l'achat.
+    - La transaction finale enregistre bien que le paiement a été fait via le portefeuille.
+
+### Epic 16: Corrections de Bugs
+*Éliminer les bugs pour assurer le bon fonctionnement de la plateforme.*
+
+- **US-BUG-1: Réparer la création d'envoi**
+  - **En tant que** vendeur, **Je veux** que le bouton "Créer l'envoi" sur mon tableau de bord fonctionne, **Afin de** pouvoir expédier mes commandes.
+  - **Critères d'acceptation :**
+    - Le clic sur le bouton déclenche l'action attendue (par exemple, appel à l'API Sendcloud, affichage d'une modale, etc.).
+    - Le problème (JavaScript, route, etc.) qui empêche le fonctionnement est identifié et corrigé.
+
+- **US-BUG-2: Corriger l'affichage du menu déroulant (Issue #188)**
+  - **En tant que** utilisateur, **Je veux** que le menu déroulant sur la page produit s'affiche au-dessus des autres éléments, **Afin de** pouvoir interagir avec son contenu.
+  - **Critères d'acceptation :**
+    - Le problème de `z-index` ou de positionnement CSS est corrigé.
+    - Le menu apparaît correctement sur toutes les tailles d'écran.
+
+- **US-BUG-3: Persistance du sélecteur de statut (Issue #189)**
+  - **En tant que** vendeur, **Je veux** que les options de filtrage de statut restent visibles sur mon tableau de bord même si une liste est vide, **Afin de** pouvoir naviguer entre les statuts sans être bloqué.
+  - **Critères d'acceptation :**
+    - Sur la page du tableau de bord (`/dashboard`), les onglets de statut ("En ligne", "Hors ligne", "Vendu") sont toujours affichés.
+    - Si une catégorie est vide, un message "Aucun article trouvé pour ce statut" s'affiche sous les onglets.
+    - L'utilisateur peut cliquer sur n'importe quel onglet de statut à tout moment.
+
+- **US-BUG-4: Image manquante au checkout (Issue #173)**
+  - **En tant qu'** acheteur, **Je veux** voir l'image de l'article que je m'apprête à acheter sur la page de récapitulatif de commande, **Afin d'**être certain de mon achat.
+  - **Critères d'acceptation :**
+    - Sur la page `/checkout/{offer}/summary`, l'image principale de l'article est correctement affichée.
+    - La requête pour charger l'image ne produit pas d'erreur 404.
+
+- **US-BUG-5: Empêcher les paiements multiples (Issue #136)**
+  - **En tant qu'** acheteur, **Je veux** que le bouton de paiement soit désactivé après l'avoir cliqué une première fois, **Afin d'**éviter d'être débité plusieurs fois par erreur.
+  - **Critères d'acceptation :**
+    - Lors de la soumission du formulaire de paiement Stripe, le bouton "Payer" est immédiatement désactivé.
+    - Un indicateur visuel (ex: spinner) montre que le paiement est en cours de traitement.
+    - L'utilisateur ne peut pas soumettre le formulaire une seconde fois.
+
+### Epic 17: Amélioration de la gestion des adresses
+*Fournir une expérience plus fiable et visuelle lors de la gestion des adresses.*
+
+- **US-LOG-10: Vérification et visualisation des adresses (Issue #107)**
+  - **En tant que** utilisateur, **Je veux** que l'adresse que je saisis soit validée et affichée sur une carte, **Afin de** m'assurer de son exactitude.
+  - **Critères d'acceptation :**
+    - Lors de l'ajout ou de la modification d'une adresse, un appel est fait à une API de géocodage pour valider l'adresse.
+    - Si l'adresse est valide, une petite carte (ex: OpenStreetMap, Google Maps) s'affiche avec un marqueur à l'emplacement trouvé.
+    - Si l'adresse est invalide ou ambiguë, un message d'erreur est affiché à l'utilisateur.

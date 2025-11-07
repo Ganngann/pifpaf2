@@ -80,6 +80,33 @@ graph LR
         S8_ADM11 --> S8_ADM14["US-ADM-14: Gestion Litiges"]
     end
 
+    %% === Thème: Qualité & Stabilité ===
+    subgraph "Thème: Qualité & Stabilité"
+        direction TB
+        T1["US-TEST-1: Couv. PaymentController"]
+        T2["US-TEST-2: Couv. PickupAddressController"]
+        T3["US-TEST-3: Couv. Logique IA"]
+        T4["US-TEST-4: Couv. Policies"]
+        T5["US-TEST-5: Couv. Contrôleurs Orphelins"]
+    end
+
+    %% === Thème: Améliorations & Corrections ===
+    subgraph "Thème: Améliorations & Corrections"
+        direction TB
+        UX1["US-UX-1: Design filtres"]
+        UX2["US-UX-2: Tri dashboard"]
+        LOG9["US-LOG-9: Adresse défaut"]
+        TRS3["US-TRS-3: Sécuriser confirmation"]
+        WAL1["US-WAL-1: Lier historique wallet"]
+        WAL2["US-WAL-2: Centraliser paiements"]
+        BUG1["US-BUG-1: Rép. création envoi"]
+        BUG2["US-BUG-2: Rép. z-index menu"]
+        BUG3["US-BUG-3: #189 Sélecteur statut"]
+        BUG4["US-BUG-4: #173 Img checkout"]
+        BUG5["US-BUG-5: #136 Paiements multiples"]
+        LOG10["US-LOG-10: #107 Vérif. adresse"]
+    end
+
     %% === Dépendances Inter-Thèmes ===
     F_Annonces --> S3_ANN1 & S3_IA1 & S3_ANN5
     F_Auth --> S4_LOG1 & S4_LOG5
@@ -107,18 +134,31 @@ graph LR
     style S4_TRS2 fill:#d4edda,stroke:#c3e6cb
     style S4_LOG8 fill:#d4edda,stroke:#c3e6cb
     style S5_LOG6 fill:#d4edda,stroke:#c3e6cb
+    style S5_LOG7 fill:#d4edda,stroke:#c3e6cb
     style S5_HIS1 fill:#d4edda,stroke:#c3e6cb
     style S5_HIS3 fill:#d4edda,stroke:#c3e6cb
     style S5_TRS1 fill:#d4edda,stroke:#c3e6cb
     style S5_HIS4 fill:#d4edda,stroke:#c3e6cb
+    style CHK1 fill:#d4edda,stroke:#c3e6cb
+    style CHK2 fill:#d4edda,stroke:#c3e6cb
+    style CHK3 fill:#d4edda,stroke:#c3e6cb
     style S6_COM1 fill:#d4edda,stroke:#c3e6cb
     style S6_COM2 fill:#d4edda,stroke:#c3e6cb
+    style S6_COM5 fill:#d4edda,stroke:#c3e6cb
     style S6_COM3 fill:#d4edda,stroke:#c3e6cb
     style S6_IA5 fill:#d4edda,stroke:#c3e6cb
+    style S7_RGPD1 fill:#d4edda,stroke:#c3e6cb
+    style S7_RGPD2 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM10 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM11 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM12 fill:#d4edda,stroke:#c3e6cb
     style S8_ADM13 fill:#d4edda,stroke:#c3e6cb
+    style S8_ADM14 fill:#d4edda,stroke:#c3e6cb
+    style T1 fill:#d4edda,stroke:#c3e6cb
+    style T2 fill:#d4edda,stroke:#c3e6cb
+    style T3 fill:#d4edda,stroke:#c3e6cb
+    style T4 fill:#d4edda,stroke:#c3e6cb
+    style T5 fill:#d4edda,stroke:#c3e6cb
 ```
 
 ## 3. État d'Avancement par Thème
@@ -132,18 +172,21 @@ graph LR
 ### ✔️ Thème 4 : Logistique Avancée (Terminé)
 - **Statut :** L'ensemble du parcours de gestion des adresses et de sélection des modes de livraison est fonctionnel.
 
-### 🗺️ Thème 5 : Finalisation & Historique (Partiellement Terminé)
-- **Statut :** L'historique des transactions et la gestion du portefeuille sont en place.
-- **Restant :** `US-LOG-7` (Permettre à l'acheteur de consulter le numéro de suivi).
+### ✔️ Thème 5 : Finalisation & Historique (Terminé)
+- **Statut :** Le parcours de checkout et la gestion de l'historique sont complets.
 
-### 🗺️ Thème 6 : Communauté & IA v2 (Partiellement Terminé)
-- **Statut :** La messagerie, les avis et l'IA multi-objets sont fonctionnels.
-- **Restant :** `US-COM-5` (Mettre en place la gestion des litiges côté utilisateur).
+### ✔️ Thème 6 : Communauté & IA v2 (Terminé)
+- **Statut :** La messagerie, les avis, les litiges et l'IA multi-objets sont fonctionnels.
 
-### 🗺️ Thème 7 : Conformité (Non commencé)
-- **Statut :** Les fonctionnalités liées au RGPD n'ont pas encore été implémentées.
-- **Restant :** `US-ADM-1` (Export des données), `US-ADM-2` (Suppression de compte).
+### ✔️ Thème 7 : Conformité (Terminé)
+- **Statut :** Les fonctionnalités liées au RGPD sont implémentées.
 
-### 🗺️ Thème 8 : Administration & Modération (Partiellement Terminé)
-- **Statut :** Les outils de base pour la gestion des utilisateurs et des annonces sont en place.
-- **Restant :** `US-ADM-14` (Interface de gestion des litiges pour l'administrateur).
+### ✔️ Thème 8 : Administration & Modération (Terminé)
+- **Statut :** Les outils de base pour la gestion des utilisateurs, des annonces et des litiges sont en place.
+
+### ✔️ Thème 9 : Qualité & Stabilité (Terminé)
+- **Statut :** La couverture de test a été améliorée sur les composants critiques.
+
+### 🗺️ Thème 10 : Améliorations & Corrections (Non commencé)
+- **Statut :** Ensemble de corrections et d'améliorations de l'expérience utilisateur.
+- **Restant :** `US-UX-1`, `US-UX-2`, `US-LOG-9`, `US-TRS-3`, `US-WAL-1`, `US-WAL-2`, `US-BUG-1`, `US-BUG-2`, `US-BUG-3`, `US-BUG-4`, `US-BUG-5`, `US-LOG-10`.
