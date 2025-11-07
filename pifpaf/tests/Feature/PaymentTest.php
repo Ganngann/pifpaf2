@@ -52,8 +52,8 @@ class PaymentTest extends TestCase
         ]);
 
         // 3. Assert
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Paiement effectué avec succès !');
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id,

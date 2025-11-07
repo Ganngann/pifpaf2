@@ -43,7 +43,8 @@ class WalletTest extends TestCase
         ]);
 
         // Vérifier la redirection
-        $response->assertRedirect(route('dashboard'));
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
 
         // Recharger les données du vendeur depuis la base de données pour vérifier qu'il n'est PAS encore crédité
         $seller->refresh();
