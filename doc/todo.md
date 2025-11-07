@@ -29,4 +29,4 @@
 - [x] **US-TEST-2:** Améliorer la couverture de test du `PickupAddressController`.
 - [x] **US-TEST-3:** Améliorer la couverture de test de la logique d'IA (`AiRequestController`, `ProcessAiImage`).
 - [x] **US-TEST-4:** Améliorer la couverture de test des `Policies` d'autorisation.
-- [ ] **US-TEST-5:** Améliorer la couverture de test des contrôleurs orphelins.
+- [x] **US-TEST-5:** Améliorer la couverture de test des contrôleurs orphelins.
