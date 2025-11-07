@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Mockery;
+use Stripe\PaymentIntent;
 
 class PaymentTest extends TestCase
 {
@@ -34,10 +35,15 @@ class PaymentTest extends TestCase
         ]);
 
         // Simuler l'API Stripe
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        Mockery::mock('alias:' . PaymentIntent::class)
+            ->shouldReceive('retrieve')
+            ->once()
+            ->with('pi_mock_id')
+            ->andReturn((object)[
+                'id' => 'pi_mock_id',
+                'status' => 'succeeded',
+                'amount' => (int) round($offer->amount * 100),
+            ]);
 
         // 2. Act
         $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
