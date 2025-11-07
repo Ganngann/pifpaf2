@@ -53,8 +53,8 @@ class SendcloudWebhookController extends Controller
         // This is a simplified mapping. A real application would need a more comprehensive list.
         // See https://docs.sendcloud.com/api/v2/docs/parcels-statuses-events
         return match ($sendcloudStatusId) {
-            11 => 'shipped',       // En route
-            12 => 'delivered',     // Delivered
+            11 => 'in_transit',       // En route
+            12 => 'completed',     // Delivered, we'll consider it completed for now
             default => null,      // For other statuses, do nothing for now
         };
     }

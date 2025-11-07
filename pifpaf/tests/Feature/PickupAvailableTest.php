@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Mockery;
+use Stripe\PaymentIntent;
 
 class PickupAvailableTest extends TestCase
 {
@@ -24,6 +25,19 @@ class PickupAvailableTest extends TestCase
     {
         Mockery::close();
         parent::tearDown();
+    }
+
+    private function mockStripePaymentIntent(string $id, float $amount)
+    {
+        Mockery::mock('alias:' . PaymentIntent::class)
+            ->shouldReceive('retrieve')
+            ->once()
+            ->with($id)
+            ->andReturn((object)[
+                'id' => $id,
+                'status' => 'succeeded',
+                'amount' => (int) round($amount * 100),
+            ]);
     }
 
     #[Test]
@@ -60,10 +74,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
 
         $this->actingAs($buyer);
 
@@ -86,10 +97,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => false]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
 
         $this->actingAs($buyer);
 
@@ -112,10 +120,7 @@ class PickupAvailableTest extends TestCase
             'amount' => 10.00,
             'delivery_method' => 'pickup'
         ]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
         $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
@@ -132,10 +137,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
 
         // Simuler le paiement
         $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
@@ -155,10 +157,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
         $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
         $transaction = $offer->refresh()->transaction;
 
@@ -178,10 +177,7 @@ class PickupAvailableTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'pickup_available' => true]);
         $offer = Offer::factory()->create(['user_id' => $buyer->id, 'item_id' => $item->id, 'status' => 'accepted', 'amount' => 10.00]);
-        Mockery::mock('overload:\Stripe\PaymentIntent')->shouldReceive('retrieve')->andReturn((object) [
-            'status' => 'succeeded',
-            'amount' => round($offer->amount * 100),
-        ]);
+        $this->mockStripePaymentIntent('pi_fake', $offer->amount);
 
         // Simuler le paiement
         $this->actingAs($buyer)->post(route('payment.store', $offer), ['payment_intent_id' => 'pi_fake']);
