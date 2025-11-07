@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
+use App\Models\Dispute;
 use App\Models\Item;
 use App\Models\Transaction;
 use App\Models\User;
@@ -108,5 +110,109 @@ class AdminController extends Controller
         $item->delete();
 
         return redirect()->route('admin.items.index')->with('success', 'Annonce supprimée avec succès.');
+    }
+
+    /**
+     * Affiche la liste des litiges.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function disputesIndex(Request $request)
+    {
+        $query = Dispute::with(['transaction.offer.item', 'user'])->where('status', 'open');
+
+        if ($request->has('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where('reason', 'like', $searchTerm)
+                  ->orWhereHas('user', function ($q) use ($searchTerm) {
+                      $q->where('name', 'like', $searchTerm);
+                  });
+        }
+
+        $disputes = $query->latest()->paginate(15);
+
+        return view('admin.disputes.index', compact('disputes'));
+    }
+
+    /**
+     * Affiche les détails d'un litige.
+     *
+     * @param  \App\Models\Dispute  $dispute
+     * @return \Illuminate\View\View
+     */
+    public function disputesShow(Dispute $dispute)
+    {
+        $dispute->load(['transaction.offer.item.user', 'transaction.offer.user', 'user']);
+
+        $transaction = $dispute->transaction;
+        $item = $transaction->offer->item;
+        $buyer = $transaction->offer->user;
+        $seller = $item->user;
+
+        // Trouver la conversation liée à cet item entre l'acheteur et le vendeur
+        $conversation = Conversation::where('item_id', $item->id)
+            ->where('buyer_id', $buyer->id)
+            ->where('seller_id', $seller->id)
+            ->with('messages.user')
+            ->first();
+
+        return view('admin.disputes.show', compact('dispute', 'transaction', 'item', 'buyer', 'seller', 'conversation'));
+    }
+
+    /**
+     * Résout un litige en faveur de l'acheteur (remboursement).
+     *
+     * @param  \App\Models\Dispute  $dispute
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function resolveForBuyer(Dispute $dispute)
+    {
+        $transaction = $dispute->transaction;
+        $buyer = $transaction->offer->user;
+
+        // Recréditer le portefeuille de l'acheteur
+        $buyer->wallet += $transaction->amount;
+        $buyer->save();
+
+        // Mettre à jour les statuts
+        $dispute->update(['status' => 'closed']);
+        $transaction->update(['status' => 'refunded']);
+
+        return redirect()->route('admin.disputes.index')->with('success', 'Litige résolu en faveur de l\'acheteur. Le montant a été remboursé.');
+    }
+
+    /**
+     * Résout un litige en faveur du vendeur.
+     *
+     * @param  \App\Models\Dispute  $dispute
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function resolveForSeller(Dispute $dispute)
+    {
+        $transaction = $dispute->transaction;
+        $seller = $transaction->offer->item->user;
+
+        // Créditer le portefeuille du vendeur
+        $seller->wallet += $transaction->amount;
+        $seller->save();
+
+        // Mettre à jour les statuts
+        $dispute->update(['status' => 'closed']);
+        $transaction->update(['status' => 'completed']);
+
+        return redirect()->route('admin.disputes.index')->with('success', 'Litige résolu en faveur du vendeur. Le montant a été transféré.');
+    }
+
+    /**
+     * Clôture un litige sans action financière.
+     *
+     * @param  \App\Models\Dispute  $dispute
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function closeDispute(Dispute $dispute)
+    {
+        $dispute->update(['status' => 'closed']);
+        return redirect()->route('admin.disputes.index')->with('success', 'Le litige a été clôturé.');
     }
 }
