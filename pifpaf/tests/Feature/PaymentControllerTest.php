@@ -135,8 +135,9 @@ class PaymentControllerTest extends TestCase
             'payment_intent_id' => 'pi_123',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Paiement effectué avec succès !');
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
+
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 0, 'card_amount' => 50.00, 'status' => 'payment_received',
         ]);
@@ -162,8 +163,9 @@ class PaymentControllerTest extends TestCase
             'use_wallet' => true,
         ]);
 
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success');
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
+
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 50.00, 'card_amount' => 0,
         ]);
@@ -198,8 +200,9 @@ class PaymentControllerTest extends TestCase
             'payment_intent_id' => 'pi_456',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success');
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
+
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id, 'amount' => 100.00, 'wallet_amount' => 30.00, 'card_amount' => 70.00,
         ]);

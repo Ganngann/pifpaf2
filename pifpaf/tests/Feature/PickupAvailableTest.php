@@ -83,8 +83,8 @@ class PickupAvailableTest extends TestCase
             'use_wallet' => false,
         ]);
 
-        $response->assertRedirect(route('dashboard'));
         $transaction = Transaction::where('offer_id', $offer->id)->first();
+        $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertNotNull($transaction->pickup_code);
         $this->assertEquals(6, strlen($transaction->pickup_code));

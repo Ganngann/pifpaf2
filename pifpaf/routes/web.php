@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
     Route::patch('/offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
     Route::get('/checkout/{offer}/summary', [CheckoutController::class, 'summary'])->name('checkout.summary');
+    Route::get('/checkout/{transaction}/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/payment/{offer}', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/payment/{offer}', [PaymentController::class, 'store'])->name('payment.store');
     Route::patch('/transactions/{transaction}/confirm-pickup', [TransactionController::class, 'confirmPickup'])->name('transactions.confirm-pickup');
