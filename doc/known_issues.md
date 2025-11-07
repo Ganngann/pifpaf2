@@ -8,17 +8,11 @@ L'objectif est de fournir une vue d'ensemble claire de l'état de la base de cod
 
 ## Tests PHPUnit (Back-End)
 
-*Dernière exécution : 2025-11-05*
+*Dernière exécution : 2025-11-07*
 
 ### Tests Ignorés (Skipped)
 
-- **Test:** `Tests\Feature\Feature\PaymentFlowTest`
-  - **Raison :** Les tests de paiement sont désactivés pour éviter les appels API réels.
-  - **Fichier :** `pifpaf/tests/Feature/Feature/PaymentFlowTest.php`
-
-- **Test:** `Tests\Feature\PaymentTest`
-  - **Raison :** "Les tests de paiement sont désactivés pour éviter les appels API réels."
-  - **Fichier :** `pifpaf/tests/Feature/PaymentTest.php`
+*Aucun test ignoré lors de la dernière exécution.*
 
 ### Tests Défaillants (Failures)
 
@@ -28,7 +22,7 @@ L'objectif est de fournir une vue d'ensemble claire de l'état de la base de cod
 
 ## Tests Dusk (Front-End)
 
-*Dernière exécution : 2025-11-05*
+*Dernière exécution : 2025-11-07*
 
 ### Tests Ignorés (Skipped)
 
