@@ -67,7 +67,7 @@ class ProfileController extends Controller
     public function show(User $user)
     {
         $user->load('reviewsReceived.reviewer');
-        $items = $user->items()->available()->with(['designatedPrimaryImage', 'images'])->latest()->paginate(9);
+        $items = $user->items()->available()->with(['designatedPrimaryImage', 'images'])->latest()->paginate(8);
 
         $averageRating = $user->reviewsReceived->avg('rating');
         $reviewCount = $user->reviewsReceived->count();
