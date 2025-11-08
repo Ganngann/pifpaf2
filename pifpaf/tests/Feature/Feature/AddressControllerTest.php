@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Feature;
 
-use App\Enums\AddressType;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,8 +39,8 @@ class AddressControllerTest extends TestCase
     #[Test]
     public function user_can_see_their_own_addresses_on_index_page(): void
     {
-        $pickupAddress = Address::factory()->create(['user_id' => $this->user->id, 'name' => 'My Pickup Address', 'type' => AddressType::PICKUP]);
-        $shippingAddress = Address::factory()->create(['user_id' => $this->user->id, 'name' => 'My Shipping Address', 'type' => AddressType::DELIVERY]);
+        $pickupAddress = Address::factory()->create(['user_id' => $this->user->id, 'name' => 'My Pickup Address']);
+        $shippingAddress = Address::factory()->delivery()->create(['user_id' => $this->user->id, 'name' => 'My Shipping Address']);
         $otherAddress = Address::factory()->create(['user_id' => $this->otherUser->id, 'name' => 'Other User Address']);
 
         $this->actingAs($this->user)
@@ -53,7 +52,7 @@ class AddressControllerTest extends TestCase
     }
 
     #[Test]
-    public function user_can_store_a_new_pickup_address(): void
+    public function user_can_store_a_new_address_for_both_pickup_and_delivery(): void
     {
         Http::fake([
             'geocode.maps.co/*' => Http::response([
@@ -66,7 +65,9 @@ class AddressControllerTest extends TestCase
             'street' => 'Grand Place 1',
             'city' => 'Bruxelles',
             'postal_code' => '1000',
-            'type' => 'pickup',
+            'country' => 'Belgique',
+            'is_for_pickup' => true,
+            'is_for_delivery' => true,
         ];
 
         $this->actingAs($this->user)
@@ -76,41 +77,35 @@ class AddressControllerTest extends TestCase
         $this->assertDatabaseHas('addresses', [
             'user_id' => $this->user->id,
             'name' => 'Maison',
-            'type' => AddressType::PICKUP,
+            'is_for_pickup' => true,
+            'is_for_delivery' => true,
             'latitude' => '50.8503',
             'longitude' => '4.3517',
         ]);
     }
 
     #[Test]
-    public function user_can_store_a_new_shipping_address(): void
+    public function user_must_select_at_least_one_address_type(): void
     {
         $addressData = [
-            'name' => 'Bureau',
-            'street' => 'Rue de la Loi 16',
-            'city' => 'Bruxelles',
-            'postal_code' => '1000',
-            'country' => 'Belgique',
-            'type' => 'delivery',
+            'name' => 'Adresse Invalide',
+            'street' => 'Rue de l\'Erreur 1',
+            'city' => 'Testville',
+            'postal_code' => '1234',
+            'is_for_pickup' => false,
+            'is_for_delivery' => false,
         ];
 
         $this->actingAs($this->user)
             ->post(route('profile.addresses.store'), $addressData)
-            ->assertRedirect(route('profile.addresses.index'));
-
-        $this->assertDatabaseHas('addresses', [
-            'user_id' => $this->user->id,
-            'name' => 'Bureau',
-            'type' => AddressType::DELIVERY,
-            'country' => 'Belgique',
-        ]);
+            ->assertSessionHasErrors('type');
     }
 
 
     #[Test]
     public function user_can_update_their_own_address(): void
     {
-        $address = Address::factory()->create(['user_id' => $this->user->id, 'type' => AddressType::PICKUP]);
+        $address = Address::factory()->create(['user_id' => $this->user->id, 'is_for_pickup' => true, 'is_for_delivery' => false]);
 
         Http::fake([
             'geocode.maps.co/*' => Http::response([
@@ -123,6 +118,8 @@ class AddressControllerTest extends TestCase
             'street' => 'Meir 1',
             'city' => 'Anvers',
             'postal_code' => '2000',
+            'is_for_pickup' => true,
+            'is_for_delivery' => true,
         ];
 
         $this->actingAs($this->user)
@@ -133,6 +130,7 @@ class AddressControllerTest extends TestCase
             'id' => $address->id,
             'name' => 'Bureau',
             'city' => 'Anvers',
+            'is_for_delivery' => true,
             'latitude' => '51.2194',
         ]);
     }

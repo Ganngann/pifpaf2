@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\AddressType;
 use App\Models\Address;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,7 +19,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
+        $address = Address::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->post(route('items.store'), [
             'title' => 'Test Item',
@@ -46,7 +45,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
-        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
+        $address = Address::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->put(route('items.update', $item), [
             'title' => 'Updated Title',

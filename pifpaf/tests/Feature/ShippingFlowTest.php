@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\AddressType;
 use App\Models\Address;
 use App\Models\Item;
 use App\Models\Offer;
@@ -23,7 +22,7 @@ class ShippingFlowTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'weight' => 500, 'width' => 10, 'height' => 10, 'length' => 10]);
-        $address = Address::factory()->create(['user_id' => $buyer->id, 'type' => AddressType::DELIVERY]);
+        $address = Address::factory()->delivery()->create(['user_id' => $buyer->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id, 'status' => 'paid']);
         $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::COMPLETED, 'address_id' => $address->id]);
 

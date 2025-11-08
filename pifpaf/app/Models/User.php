@@ -85,7 +85,7 @@ class User extends Authenticatable
      */
     public function pickupAddresses(): HasMany
     {
-        return $this->addresses()->where('type', AddressType::PICKUP);
+        return $this->addresses()->where('is_for_pickup', true);
     }
 
     /**
@@ -93,7 +93,7 @@ class User extends Authenticatable
      */
     public function shippingAddresses(): HasMany
     {
-        return $this->addresses()->where('type', AddressType::DELIVERY);
+        return $this->addresses()->where('is_for_delivery', true);
     }
 
     /**

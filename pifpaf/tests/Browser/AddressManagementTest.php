@@ -35,52 +35,32 @@ class AddressManagementTest extends DuskTestCase
                     ->waitFor('@nav-addresses-link')
                     ->click('@nav-addresses-link')
                     ->assertPathIs('/profile/addresses')
-                    ->assertSee('Mes Adresses');
+                    ->assertSee('Toutes mes adresses');
         });
     }
 
-    public function testUserCanAddANewPickupAddress()
+    public function testUserCanAddANewAddressForBothPickupAndDelivery()
     {
         $user = User::factory()->create();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit('/profile/addresses')
-                ->clickLink('Ajouter une adresse de retrait')
+                ->clickLink('Ajouter une adresse')
                 ->assertPathIs('/profile/addresses/create')
-                ->type('name', 'Maison')
+                ->type('name', 'Maison & Bureau')
                 ->type('street', '123 rue de Paris')
                 ->type('city', 'Paris')
                 ->type('postal_code', '75001')
-                ->select('type', 'pickup')
-                ->press('Enregistrer')
-                ->waitForText('Adresse ajoutée avec succès.')
-                ->assertPathIs('/profile/addresses')
-                ->assertSee('Maison');
-        });
-    }
-
-    public function testUserCanAddANewShippingAddress()
-    {
-        $this->markTestSkipped('This test is failing intermittently due to a JavascriptErrorException and needs further investigation.');
-
-        $user = User::factory()->create();
-
-        $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(route('profile.addresses.index'))
-                ->clickLink('Ajouter une adresse de livraison')
-                ->assertPathIs('/profile/addresses/create')
-                ->type('name', 'Bureau')
-                ->type('street', '456 Avenue des Champs-Élysées')
-                ->type('city', 'Paris')
-                ->type('postal_code', '75008')
                 ->type('country', 'France')
-                ->select('type', 'delivery')
-                ->press('Enregistrer')
+                ->check('is_for_pickup')
+                ->check('is_for_delivery')
+                ->press('button[type="submit"]')
                 ->waitForText('Adresse ajoutée avec succès.')
                 ->assertPathIs('/profile/addresses')
-                ->assertSee('Bureau');
+                ->assertSee('Maison & Bureau')
+                ->assertSee('Retrait')
+                ->assertSee('Livraison');
         });
     }
 }

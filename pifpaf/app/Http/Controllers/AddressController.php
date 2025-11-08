@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AddressType;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +17,9 @@ class AddressController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $pickupAddresses = $user->pickupAddresses;
-        $shippingAddresses = $user->shippingAddresses;
+        $addresses = Auth::user()->addresses()->get();
 
-        return view('profile.addresses.index', compact('pickupAddresses', 'shippingAddresses'));
+        return view('profile.addresses.index', compact('addresses'));
     }
 
     /**
@@ -43,17 +40,22 @@ class AddressController extends Controller
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
-            'type' => 'required|string|in:pickup,delivery'
+            'country' => 'nullable|string|max:255',
         ]);
 
-        $validatedData['type'] = $validatedData['type'] === 'pickup' ? AddressType::PICKUP : AddressType::DELIVERY;
+        $isForPickup = $request->boolean('is_for_pickup');
+        $isForDelivery = $request->boolean('is_for_delivery');
 
-        // Geocoding only for pickup addresses
-        if($validatedData['type'] === AddressType::PICKUP) {
+        if (!$isForPickup && !$isForDelivery) {
+            return back()->withErrors(['type' => 'Vous devez sélectionner au moins un type d\'adresse (retrait ou livraison).'])->withInput();
+        }
+
+        $validatedData['is_for_pickup'] = $isForPickup;
+        $validatedData['is_for_delivery'] = $isForDelivery;
+
+        if ($isForPickup) {
             $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
-            $response = Http::get('https://geocode.maps.co/search', [
-                'q' => $addressString,
-            ]);
+            $response = Http::get('https://geocode.maps.co/search', ['q' => $addressString]);
 
             if ($response->successful() && count($response->json()) > 0) {
                 $geocodedData = $response->json()[0];
@@ -62,14 +64,11 @@ class AddressController extends Controller
             }
         }
 
-        if ($validatedData['type'] === AddressType::DELIVERY) {
-            $validatedData['country'] = $request->input('country');
-        }
-
         Auth::user()->addresses()->create($validatedData);
 
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse ajoutée avec succès.');
     }
+
 
     /**
      * Display the specified resource.
@@ -100,31 +99,35 @@ class AddressController extends Controller
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
+            'country' => 'nullable|string|max:255',
         ]);
 
-        // Geocoding only for pickup addresses
-        if($address->type === AddressType::PICKUP) {
+        $isForPickup = $request->boolean('is_for_pickup');
+        $isForDelivery = $request->boolean('is_for_delivery');
+
+        if (!$isForPickup && !$isForDelivery) {
+            return back()->withErrors(['type' => 'Vous devez sélectionner au moins un type d\'adresse (retrait ou livraison).'])->withInput();
+        }
+
+        $validatedData['is_for_pickup'] = $isForPickup;
+        $validatedData['is_for_delivery'] = $isForDelivery;
+
+        if ($isForPickup) {
             $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
-            $response = Http::get('https://geocode.maps.co/search', [
-                'q' => $addressString,
-            ]);
+            $response = Http::get('https://geocode.maps.co/search', ['q' => $addressString]);
 
             if ($response->successful() && count($response->json()) > 0) {
                 $geocodedData = $response->json()[0];
                 $validatedData['latitude'] = $geocodedData['lat'];
                 $validatedData['longitude'] = $geocodedData['lon'];
             } else {
-                // En cas d'échec du géocodage, on ne met pas à jour les coordonnées
-                // pour ne pas écraser d'anciennes valeurs correctes.
                 $validatedData['latitude'] = $address->latitude;
                 $validatedData['longitude'] = $address->longitude;
             }
+        } else {
+            $validatedData['latitude'] = null;
+            $validatedData['longitude'] = null;
         }
-
-        if ($address->type === AddressType::DELIVERY) {
-            $validatedData['country'] = $request->input('country');
-        }
-
 
         $address->update($validatedData);
 
