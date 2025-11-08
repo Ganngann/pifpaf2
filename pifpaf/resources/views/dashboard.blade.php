@@ -13,7 +13,7 @@
             <div class="space-y-6">
                 <x-ui.card>
                     <div class="p-6 border-b border-gray-200">
-                        @if($items->isEmpty())
+                        @if(!$userHasItems)
                             <x-dashboard.empty-dashboard />
                         @else
                             <x-dashboard.annonces-list :items="$items" />
