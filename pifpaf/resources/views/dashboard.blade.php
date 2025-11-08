@@ -199,13 +199,15 @@
                                             Payer
                                         </a>
                                     @elseif ($offer->status === 'paid' && $offer->transaction && $offer->transaction->status === 'payment_received')
-                                        <form action="{{ route('transactions.confirm-reception', $offer->transaction) }}" method="POST" onsubmit="return confirm('Veuillez confirmer que vous avez bien reçu l\'article. Cette action est irréversible et transférera les fonds au vendeur.');">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-                                                Confirmer la réception
-                                            </button>
-                                        </form>
+                                        @can('confirmReception', $offer->transaction)
+                                            <form action="{{ route('transactions.confirm-reception', $offer->transaction) }}" method="POST" onsubmit="return confirm('Veuillez confirmer que vous avez bien reçu l\'article. Cette action est irréversible et transférera les fonds au vendeur.');">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
+                                                    Confirmer la réception
+                                                </button>
+                                            </form>
+                                        @endcan
                                     @endif
                                 </div>
                             @endforeach

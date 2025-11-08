@@ -38,6 +38,7 @@ class ConfirmReceptionPolicyTest extends TestCase
         $this->offer = Offer::factory()->create([
             'item_id' => $this->item->id,
             'user_id' => $this->buyer->id,
+            'status' => 'paid',
         ]);
 
         $this->transaction = Transaction::factory()->create([
@@ -46,8 +47,13 @@ class ConfirmReceptionPolicyTest extends TestCase
         ]);
     }
 
-    public function test_buyer_can_confirm_reception(): void
+    public function test_buyer_can_confirm_reception_and_sees_button(): void
     {
+        // Test de la vue
+        $response = $this->actingAs($this->buyer)->get(route('dashboard'));
+        $response->assertSee('Confirmer la réception');
+
+        // Test de l'action
         $response = $this->actingAs($this->buyer)
             ->patch(route('transactions.confirm-reception', $this->transaction));
 
@@ -58,8 +64,13 @@ class ConfirmReceptionPolicyTest extends TestCase
         ]);
     }
 
-    public function test_seller_cannot_confirm_reception(): void
+    public function test_seller_cannot_confirm_reception_and_doesnt_see_button(): void
     {
+        // Test de la vue
+        $response = $this->actingAs($this->seller)->get(route('dashboard'));
+        $response->assertDontSee('Confirmer la réception');
+
+        // Test de l'action
         $response = $this->actingAs($this->seller)
             ->patch(route('transactions.confirm-reception', $this->transaction));
 
