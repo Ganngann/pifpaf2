@@ -10,8 +10,8 @@
 <div class="p-4 border rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
     <div class="flex items-center mb-4 sm:mb-0">
         <a href="{{ route('items.show', $item) }}">
-            @if ($item->primaryImage && $item->primaryImage->path)
-                <img src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
+            @if ($item->primary_image && $item->primary_image->path)
+                <img src="{{ asset('storage/' . $item->primary_image->path) }}" alt="{{ $item->title }}" class="w-16 h-16 object-cover rounded mr-4">
             @else
                 <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded mr-4">
                     <span class="text-gray-500 text-xs text-center">?</span>

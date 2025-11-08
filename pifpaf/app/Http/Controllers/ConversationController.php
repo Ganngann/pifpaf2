@@ -21,7 +21,7 @@ class ConversationController extends Controller
 
         $conversations = Conversation::where('buyer_id', $user->id)
             ->orWhere('seller_id', $user->id)
-            ->with(['item.primaryImage', 'latestMessage', 'buyer', 'seller'])
+            ->with(['item.designatedPrimaryImage', 'item.images', 'latestMessage', 'buyer', 'seller'])
             ->get()
             // Trier pour que les conversations avec le message le plus récent apparaissent en premier
             ->sortByDesc(function ($conversation) {

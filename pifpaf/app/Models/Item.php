@@ -74,19 +74,21 @@ class Item extends Model
     }
 
     /**
-     * Obtenir l'image principale de l'annonce.
+     * Obtenir l'image principale désignée de l'annonce (relation).
      */
-    public function primaryImage()
+    public function designatedPrimaryImage()
     {
-        return $this->hasOne(ItemImage::class)
-            ->where('is_primary', true)
-            ->withDefault(function ($itemImage, $item) {
-                // Si aucune image n'est marquée comme principale,
-                // on retourne la première image de la galerie.
-                if ($item->images()->exists()) {
-                    return $item->images()->first();
-                }
-            });
+        return $this->hasOne(ItemImage::class)->where('is_primary', true);
+    }
+
+    /**
+     * Accesseur pour obtenir l'image principale avec une logique de repli.
+     *
+     * @return \App\Models\ItemImage|null
+     */
+    public function getPrimaryImageAttribute()
+    {
+        return $this->designatedPrimaryImage ?? $this->images->first();
     }
 
     /**

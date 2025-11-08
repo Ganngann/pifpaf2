@@ -71,9 +71,6 @@ Route::middleware('auth')->group(function () {
 
     // Routes pour la gestion des adresses
     Route::resource('profile/addresses', AddressController::class)->names('profile.addresses');
-    Route::resource('profile/shipping-addresses', \App\Http\Controllers\ShippingAddressController::class)
-        ->except(['index', 'show'])
-        ->names('profile.shipping_addresses');
 
     // Routes pour la file d'attente IA
     Route::get('/ai-requests', [AiRequestController::class, 'index'])->name('ai-requests.index');

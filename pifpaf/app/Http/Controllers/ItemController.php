@@ -26,7 +26,7 @@ class ItemController extends Controller
      */
     public function welcome(Request $request)
     {
-        $query = Item::query()->with('primaryImage')->available()->latest();
+        $query = Item::query()->with(['designatedPrimaryImage', 'images'])->available()->latest();
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -116,7 +116,8 @@ class ItemController extends Controller
         // Récupérer les articles du vendeur avec toutes les relations nécessaires
         $itemsQuery = $user->items()
             ->with([
-                'primaryImage',
+                'designatedPrimaryImage',
+                'images',
                 'offers' => function ($query) {
                     $query->with(['transaction', 'user']);
                 }
@@ -138,7 +139,7 @@ class ItemController extends Controller
             });
         })
         ->whereNotIn('status', ['completed', 'pickup_completed'])
-        ->with('offer.item.primaryImage', 'offer.item.user', 'offer.user')
+        ->with(['offer.item.designatedPrimaryImage', 'offer.item.images', 'offer.item.user', 'offer.user'])
         ->latest('updated_at')
         ->get();
 

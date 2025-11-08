@@ -78,7 +78,7 @@ class TransactionController extends Controller
     {
         $purchases = Transaction::whereHas('offer', function ($query) {
             $query->where('user_id', Auth::id());
-        })->with(['offer.item.primaryImage', 'offer.item.user', 'reviews'])->latest()->paginate(10);
+        })->with(['offer.item.designatedPrimaryImage', 'offer.item.images', 'offer.item.user', 'reviews'])->latest()->paginate(10);
 
         return view('transactions.purchases', compact('purchases'));
     }
@@ -92,7 +92,7 @@ class TransactionController extends Controller
     {
         $sales = Transaction::whereHas('offer.item', function ($query) {
             $query->where('user_id', Auth::id());
-        })->with('offer.item.primaryImage', 'offer.user')->latest()->paginate(10);
+        })->with(['offer.item.designatedPrimaryImage', 'offer.item.images', 'offer.user'])->latest()->paginate(10);
 
         return view('transactions.sales', compact('sales'));
     }
