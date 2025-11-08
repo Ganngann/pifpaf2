@@ -289,6 +289,7 @@ class ItemController extends Controller
         ]);
 
         $item = new Item($validatedData);
+        $item->status = ItemStatus::UNPUBLISHED;
         $item->delivery_available = $request->boolean('delivery_available');
         $item->pickup_available = $request->boolean('pickup_available');
         // N'assigner address_id que si le retrait est activé

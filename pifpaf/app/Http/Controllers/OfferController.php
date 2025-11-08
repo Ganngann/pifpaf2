@@ -58,14 +58,6 @@ class OfferController extends Controller
         $offer->delivery_method = $request->delivery_method;
         $offer->save();
 
-        // Mettre à jour le statut de l'article
-        $item->status = ItemStatus::SOLD;
-        $item->save();
-
-        // Rejeter les autres offres en attente pour cet article
-        Offer::where('item_id', $item->id)
-             ->where('status', 'pending')
-             ->update(['status' => 'rejected']);
 
         return redirect()->route('checkout.summary', $offer);
     }
@@ -81,10 +73,6 @@ class OfferController extends Controller
         // Mettre à jour le statut de l'offre
         $offer->update(['status' => 'accepted']);
 
-        // Refuser toutes les autres offres pour cet article
-        Offer::where('item_id', $offer->item_id)
-             ->where('id', '!=', $offer->id)
-             ->update(['status' => 'rejected']);
 
         return redirect()->route('dashboard')->with('success', 'Offre acceptée ! L\'acheteur doit maintenant procéder au paiement.');
     }

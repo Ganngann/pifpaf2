@@ -26,6 +26,7 @@ class ItemSearchTest extends TestCase
             'category' => 'Vêtements',
             'price' => 25.50,
             'user_id' => $user->id,
+            'status' => 'available',
         ]);
 
         Item::factory()->create([
@@ -34,6 +35,7 @@ class ItemSearchTest extends TestCase
             'category' => 'Électronique',
             'price' => 450.00,
             'user_id' => $user->id,
+            'status' => 'available',
         ]);
 
         Item::factory()->create([
@@ -42,6 +44,7 @@ class ItemSearchTest extends TestCase
             'category' => 'Maison',
             'price' => 899.99,
             'user_id' => $user->id,
+            'status' => 'available',
         ]);
 
         Item::factory()->create([
@@ -50,6 +53,7 @@ class ItemSearchTest extends TestCase
             'category' => 'Sport',
             'price' => 320.00,
             'user_id' => $user->id,
+            'status' => 'available',
         ]);
     }
 

@@ -54,7 +54,7 @@ class ItemStatusTest extends TestCase
     public function another_user_cannot_unpublish_an_item()
     {
         $owner = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $owner->id]);
+        $item = Item::factory()->create(['user_id' => $owner->id, 'status' => 'available']);
 
         $notOwner = User::factory()->create();
 

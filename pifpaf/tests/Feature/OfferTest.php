@@ -69,7 +69,7 @@ class OfferTest extends TestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'status' => 'available']);
         $offer = Offer::factory()->create([
             'item_id' => $item->id,
             'user_id' => $buyer->id,
@@ -97,7 +97,7 @@ class OfferTest extends TestCase
 
         $response->assertRedirect(route('dashboard'));
         $this->assertDatabaseHas('offers', ['id' => $offer1->id, 'status' => 'accepted']);
-        $this->assertDatabaseHas('offers', ['id' => $offer2->id, 'status' => 'rejected']);
+        $this->assertDatabaseHas('offers', ['id' => $offer2->id, 'status' => 'pending']);
     }
 
     public function test_seller_can_reject_offer()
@@ -126,5 +126,30 @@ class OfferTest extends TestCase
 
         // Acting as a random user
         $this->actingAs($rando)->patch(route('offers.accept', $offer))->assertForbidden();
+    }
+
+    public function test_buy_now_does_not_change_item_status_or_reject_other_offers()
+    {
+        $seller = User::factory()->create();
+        $buyer1 = User::factory()->create();
+        $buyer2 = User::factory()->create();
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'price' => 50,
+            'delivery_available' => true,
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
+        $otherOffer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer2->id, 'status' => 'pending']);
+
+        $response = $this->actingAs($buyer1)->post(route('offers.buyNow', $item), [
+            'delivery_method' => 'delivery',
+        ]);
+
+        $item->refresh();
+        $this->assertEquals(\App\Enums\ItemStatus::AVAILABLE, $item->status);
+
+        $this->assertDatabaseHas('offers', ['id' => $otherOffer->id, 'status' => 'pending']);
+
+        $response->assertRedirect();
     }
 }

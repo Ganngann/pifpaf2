@@ -19,7 +19,7 @@ class HomepageTest extends TestCase
     public function welcome_page_loads_successfully_and_displays_items(): void
     {
         $user = User::factory()->create();
-        $items = Item::factory()->count(3)->create(['user_id' => $user->id]);
+        $items = Item::factory()->count(3)->create(['user_id' => $user->id, 'status' => 'available']);
 
         $response = $this->get(route('welcome'));
 

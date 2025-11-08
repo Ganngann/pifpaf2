@@ -166,6 +166,12 @@ class PaymentController extends Controller
             $offer->update(['status' => 'paid']);
             $offer->item->update(['status' => 'sold']);
 
+            // 6. Refuser les autres offres en attente pour cet article
+            Offer::where('item_id', $offer->item_id)
+                ->where('id', '!=', $offer->id)
+                ->where('status', 'pending')
+                ->update(['status' => 'rejected']);
+
             return $newTransaction;
         });
 

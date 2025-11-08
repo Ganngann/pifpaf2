@@ -22,8 +22,8 @@ class ProfileTest extends TestCase
         $user = User::factory()->create();
 
         // Create items for the user
-        $item1 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon premier objet']);
-        $item2 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon deuxième objet']);
+        $item1 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon premier objet', 'status' => 'available']);
+        $item2 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon deuxième objet', 'status' => 'available']);
 
         // Access the user's profile page
         $response = $this->get(route('profile.show', $user));

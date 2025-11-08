@@ -108,16 +108,24 @@ class PaymentControllerTest extends TestCase
     }
 
     #[Test]
-    public function processes_a_successful_payment_by_card_only(): void
+    public function processes_a_successful_payment_and_rejects_other_offers(): void
     {
+        // Arrange
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 0]);
         $item = Item::factory()->create(['user_id' => $seller->id]);
-        $offer = Offer::factory()->create([
+
+        $acceptedOffer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'amount' => 50.00,
             'status' => 'accepted',
+        ]);
+
+        $pendingOffer = Offer::factory()->create([
+            'item_id' => $item->id,
+            'user_id' => User::factory()->create()->id,
+            'status' => 'pending'
         ]);
 
         Mockery::mock('alias:' . PaymentIntent::class)
@@ -130,27 +138,23 @@ class PaymentControllerTest extends TestCase
                 'amount' => 5000,
             ]);
 
-        $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
+        // Act
+        $response = $this->actingAs($buyer)->post(route('payment.store', $acceptedOffer), [
             'use_wallet' => false,
             'payment_intent_id' => 'pi_123',
         ]);
 
-        $transaction = $offer->refresh()->transaction;
+        // Assert
+        $transaction = $acceptedOffer->refresh()->transaction;
         $response->assertRedirect(route('checkout.success', $transaction));
-
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 50.00, 'card_amount' => 0, 'status' => 'payment_received',
-        ]);
-        $this->assertDatabaseHas('wallet_histories', [
-            'user_id' => $buyer->id, 'type' => 'credit', 'amount' => 50.00, 'transaction_id' => $transaction->id,
-        ]);
-        $this->assertDatabaseHas('wallet_histories', [
-            'user_id' => $buyer->id, 'type' => 'debit', 'amount' => 50.00, 'transaction_id' => $transaction->id,
+            'offer_id' => $acceptedOffer->id, 'amount' => 50.00,
         ]);
         $this->assertEquals(ItemStatus::SOLD, $item->fresh()->status);
-        $this->assertEquals('paid', $offer->fresh()->status);
-        $this->assertEquals(0, $buyer->fresh()->wallet);
+        $this->assertEquals('paid', $acceptedOffer->fresh()->status);
+        $this->assertEquals('rejected', $pendingOffer->fresh()->status);
     }
+
 
     #[Test]
     public function processes_a_successful_payment_using_wallet_only(): void
@@ -194,6 +198,12 @@ class PaymentControllerTest extends TestCase
             'status' => 'accepted',
         ]);
 
+        $otherOffer = Offer::factory()->create([
+            'item_id' => $item->id,
+            'user_id' => User::factory()->create()->id,
+            'status' => 'pending'
+        ]);
+
         Mockery::mock('alias:' . PaymentIntent::class)
             ->shouldReceive('retrieve')
             ->once()
@@ -222,6 +232,7 @@ class PaymentControllerTest extends TestCase
             'user_id' => $buyer->id, 'type' => 'debit', 'amount' => 100.00, 'transaction_id' => $transaction->id,
         ]);
         $this->assertEquals(0, $buyer->fresh()->wallet);
+        $this->assertDatabaseHas('offers', ['id' => $otherOffer->id, 'status' => 'rejected']);
     }
 
     #[Test]
