@@ -151,6 +151,21 @@ class PaymentController extends Controller
             // Création de la transaction
             $newTransaction = Transaction::create($transactionData);
 
+            // Mettre à jour le solde du portefeuille si utilisé
+            if ($walletAmountToUse > 0) {
+                $user->wallet -= $walletAmountToUse;
+                $user->save();
+
+                // Enregistrer l'historique du portefeuille pour le débit
+                WalletHistory::create([
+                    'user_id' => $user->id,
+                    'type' => 'debit',
+                    'amount' => $walletAmountToUse,
+                    'description' => 'Achat de l\'article : ' . $offer->item->title,
+                    'transaction_id' => $newTransaction->id,
+                ]);
+            }
+
             // Mise à jour des statuts
             $offer->update(['status' => 'paid']);
             $offer->item->update(['status' => 'sold']);
