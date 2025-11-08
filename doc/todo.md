@@ -18,3 +18,5 @@
 - [x] **US-BUG-4:** (Issue #173) Corriger l'affichage de l'image sur la page de checkout.
 - [ ] **US-BUG-5:** (Issue #136) Empêcher les paiements multiples sur un même article.
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
+- [ ] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
+- [ ] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.

@@ -141,3 +141,19 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Une tâche planifiée (scheduled job) s'exécute régulièrement (ex: toutes les heures).
     - La tâche recherche les transactions dont le statut est `delivered` et dont le `delivered_at` date de plus de 72 heures.
     - Pour chaque transaction trouvée, le statut est mis à jour à `completed`, et les fonds sont transférés au portefeuille du vendeur.
+
+- **US-TRS-10: Génération de l'étiquette d'expédition via Sendcloud**
+  - **En tant que** vendeur, **Je veux** pouvoir générer et télécharger une étiquette d'expédition depuis la page de la transaction, **Afin de** pouvoir envoyer mes articles facilement.
+  - **Critères d'acceptation :**
+    - Sur une transaction payée (`payment_received`) nécessitant une livraison, un bouton "Générer l'étiquette" est visible.
+    - Le clic sur ce bouton appelle le `SendcloudService` pour créer un colis via l'API.
+    - En cas de succès, la transaction est mise à jour avec l'ID du colis Sendcloud, le numéro de suivi, et le statut passe à `shipping_initiated`.
+    - L'interface affiche un lien "Télécharger l'étiquette" qui pointe vers l'URL fournie par Sendcloud.
+
+- **US-TRS-11: Traitement des webhooks Sendcloud pour le suivi automatique**
+  - **En tant que** système, **Je veux** recevoir et traiter les webhooks de Sendcloud pour mettre à jour le statut des livraisons, **Afin d'**informer en temps réel le vendeur et l'acheteur.
+  - **Critères d'acceptation :**
+    - Un endpoint `POST /webhooks/sendcloud` est configuré et sécurisé par la vérification de la signature HMAC.
+    - Le webhook `parcel_status_changed` est traité.
+    - Le statut du colis reçu de Sendcloud est mappé à un statut interne de la transaction (ex: `shipped`, `in_transit`, `delivered`).
+    - La transaction correspondante est mise à jour en base de données avec le nouveau statut.
