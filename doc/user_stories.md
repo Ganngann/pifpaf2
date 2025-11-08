@@ -157,3 +157,10 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Le webhook `parcel_status_changed` est traité.
     - Le statut du colis reçu de Sendcloud est mappé à un statut interne de la transaction (ex: `shipped`, `in_transit`, `delivered`).
     - La transaction correspondante est mise à jour en base de données avec le nouveau statut.
+
+- **US-TRS-12: Notification de livraison à l'acheteur**
+  - **En tant qu'** acheteur, **Je veux** recevoir une notification (e-mail) lorsque mon colis est marqué comme "Livré", **Afin d'**être informé rapidement et de pouvoir confirmer la réception.
+  - **Critères d'acceptation :**
+    - Quand le statut d'une transaction passe à `delivered` (via le webhook Sendcloud), un événement est déclenché.
+    - Cet événement met en file d'attente l'envoi d'un e-mail à l'acheteur de la transaction.
+    - L'e-mail informe l'acheteur de la livraison et contient un lien direct vers la page de la transaction pour "Confirmer la réception" ou "Signaler un problème".

@@ -20,3 +20,4 @@
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
 - [ ] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
 - [ ] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.
+- [ ] **US-TRS-12:** Envoyer une notification par e-mail à l'acheteur lors de la livraison.
