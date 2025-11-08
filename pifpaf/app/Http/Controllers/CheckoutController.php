@@ -27,6 +27,9 @@ class CheckoutController extends Controller
             return redirect()->route('dashboard')->withErrors(['error' => 'This offer is not ready for checkout.']);
         }
 
+        // Eager load relationships for efficiency and to prevent N+1 issues
+        $offer->load('item.address', 'item.user', 'item.primaryImage');
+
         $shippingAddress = Auth::user()->shippingAddresses()->first();
 
         return view('checkout.summary', compact('offer', 'shippingAddress'));
