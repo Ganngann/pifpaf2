@@ -105,6 +105,9 @@ class ItemController extends Controller
         $user = Auth::user();
         $userId = $user->id;
 
+        // Vérifier si l'utilisateur a des annonces, indépendamment des filtres.
+        $userHasItems = $user->items()->exists();
+
         $status = $request->query('status');
         $validStatuses = [ItemStatus::AVAILABLE->value, ItemStatus::UNPUBLISHED->value, ItemStatus::SOLD->value];
 
@@ -174,6 +177,7 @@ class ItemController extends Controller
         })->take(5);
 
         return view('dashboard', [
+            'userHasItems' => $userHasItems,
             'items' => $items,
             'openTransactions' => $openTransactions,
             'soldItemsForPickup' => $soldItemsForPickup,
