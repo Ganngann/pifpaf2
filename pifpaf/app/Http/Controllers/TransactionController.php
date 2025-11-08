@@ -37,9 +37,7 @@ class TransactionController extends Controller
     public function confirmReception(Transaction $transaction)
     {
         // On s'assure que l'utilisateur connecté est bien l'acheteur
-        if (Auth::id() !== $transaction->offer->user_id) {
-            abort(403);
-        }
+        $this->authorize('confirmReception', $transaction);
 
         // On vérifie que la transaction est bien en attente de confirmation
         if ($transaction->status !== 'payment_received') {
