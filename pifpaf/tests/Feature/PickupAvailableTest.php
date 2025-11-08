@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Enums\AddressType;
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
-use App\Models\PickupAddress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,7 +46,7 @@ class PickupAvailableTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
+        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
         $this->actingAs($user);
 
         $itemData = [
@@ -55,7 +56,7 @@ class PickupAvailableTest extends TestCase
             'price' => 10,
             'images' => [UploadedFile::fake()->image('photo.jpg')],
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ];
 
         $this->post(route('items.store'), $itemData);
@@ -63,7 +64,7 @@ class PickupAvailableTest extends TestCase
         $this->assertDatabaseHas('items', [
             'title' => 'Mon article',
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
     }
 

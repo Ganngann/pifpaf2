@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -16,10 +17,10 @@ class ConversationDuskTest extends DuskTestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
+        $address = Address::factory()->create(['user_id' => $seller->id]);
         $item = Item::factory()->create([
             'user_id' => $seller->id,
-            'pickup_address_id' => $address->id,
+            'address_id' => $address->id,
             'pickup_available' => true,
         ]);
 
@@ -27,10 +28,11 @@ class ConversationDuskTest extends DuskTestCase
             $browser->loginAs($buyer)
                     ->visit(route('items.show', $item))
                     ->click('@contact-seller-button')
+                    ->waitForText($item->title)
                     ->assertPathIs('/conversations/*')
-                    ->assertSee($item->title)
                     ->type('content', 'Bonjour, cet article est-il toujours disponible ?')
                     ->press('Envoyer')
+                    ->waitForText('Bonjour, cet article est-il toujours disponible ?')
                     ->assertSee('Bonjour, cet article est-il toujours disponible ?');
         });
     }

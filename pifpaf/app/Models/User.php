@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AddressType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -71,14 +72,28 @@ class User extends Authenticatable
         return $this->hasMany(AiRequest::class);
     }
 
-    public function pickupAddresses()
+    /**
+     * Get all of the user's addresses.
+     */
+    public function addresses(): HasMany
     {
-        return $this->hasMany(PickupAddress::class);
+        return $this->hasMany(Address::class);
     }
 
-    public function shippingAddresses()
+    /**
+     * Get the user's pickup addresses.
+     */
+    public function pickupAddresses(): HasMany
     {
-        return $this->hasMany(ShippingAddress::class);
+        return $this->addresses()->where('type', AddressType::PICKUP);
+    }
+
+    /**
+     * Get the user's shipping addresses.
+     */
+    public function shippingAddresses(): HasMany
+    {
+        return $this->addresses()->where('type', AddressType::DELIVERY);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\ItemImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,7 +30,7 @@ class ItemFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'pickup_available' => true,
             'delivery_available' => true,
-            'pickup_address_id' => \App\Models\PickupAddress::factory(),
+            'address_id' => Address::factory(),
         ];
     }
 

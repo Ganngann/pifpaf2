@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Offer;
@@ -41,12 +42,12 @@ class AdminDashboardTest extends TestCase
         $this->assertEquals(6, User::count());
 
         // Crée une adresse de ramassage pour le premier utilisateur (le vendeur).
-        $pickupAddress = \App\Models\PickupAddress::factory()->create(['user_id' => $users->first()->id]);
+        $address = Address::factory()->create(['user_id' => $users->first()->id]);
 
         // Crée 10 annonces "simples" pour le premier utilisateur.
         Item::factory()->count(10)->create([
             'user_id' => $users->first()->id,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
         $this->assertEquals(10, Item::count());
         $this->assertEquals(6, User::count(), "Le nombre d'utilisateurs ne devrait pas changer après la création d'items simples.");
@@ -54,7 +55,7 @@ class AdminDashboardTest extends TestCase
         // Crée 3 annonces plus complexes avec des offres et transactions.
         Item::factory()->count(3)
             ->for($users->get(0), 'user') // Le vendeur
-            ->state(['pickup_address_id' => $pickupAddress->id]) // Réutilise l'adresse
+            ->state(['address_id' => $address->id]) // Réutilise l'adresse
             ->has(
                 Offer::factory()
                     ->for($users->get(1), 'user') // L'acheteur

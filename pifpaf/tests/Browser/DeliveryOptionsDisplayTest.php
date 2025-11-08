@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
+use App\Models\Address;
 use App\Models\Item;
-use App\Models\PickupAddress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
@@ -21,7 +21,7 @@ class DeliveryOptionsDisplayTest extends DuskTestCase
     public function testDeliveryOptionsAreDisplayedCorrectly()
     {
         $user = User::factory()->create();
-        $address = PickupAddress::factory()->create([
+        $address = Address::factory()->create([
             'user_id' => $user->id,
             'city' => 'Lille'
         ]);
@@ -31,7 +31,7 @@ class DeliveryOptionsDisplayTest extends DuskTestCase
             'user_id' => $user->id,
             'pickup_available' => true,
             'delivery_available' => false,
-            'pickup_address_id' => $address->id,
+            'address_id' => $address->id,
         ]);
 
         // 2. Article avec livraison uniquement
@@ -39,7 +39,7 @@ class DeliveryOptionsDisplayTest extends DuskTestCase
             'user_id' => $user->id,
             'pickup_available' => false,
             'delivery_available' => true,
-            'pickup_address_id' => null,
+            'address_id' => null,
         ]);
 
         // 3. Article avec les deux options
@@ -47,7 +47,7 @@ class DeliveryOptionsDisplayTest extends DuskTestCase
             'user_id' => $user->id,
             'pickup_available' => true,
             'delivery_available' => true,
-            'pickup_address_id' => $address->id,
+            'address_id' => $address->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($user, $itemWithPickup, $itemWithDelivery, $itemWithBoth, $address) {

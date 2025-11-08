@@ -10,7 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ItemImageController;
-use App\Http\Controllers\PickupAddressController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AiRequestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StyleguideController;
@@ -69,10 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/item-images/{itemImage}/set-primary', [ItemImageController::class, 'setPrimary'])->name('item-images.set-primary');
     Route::post('/item-images/reorder', [ItemImageController::class, 'reorder'])->name('item-images.reorder');
 
-    // Routes pour la gestion des adresses de retrait
-    Route::resource('profile/addresses', PickupAddressController::class)->names('profile.addresses');
-
-    // Routes pour la gestion des adresses de livraison
+    // Routes pour la gestion des adresses
+    Route::resource('profile/addresses', AddressController::class)->names('profile.addresses');
     Route::resource('profile/shipping-addresses', \App\Http\Controllers\ShippingAddressController::class)
         ->except(['index', 'show'])
         ->names('profile.shipping_addresses');
@@ -94,7 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
 
     // Route pour la création de l'envoi
-    Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'createShipment'])->name('transactions.ship');
+    Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'ship'])->name('transactions.ship');
 
     // Routes pour les litiges
     Route::get('/transactions/{transaction}/disputes/create', [\App\Http\Controllers\DisputeController::class, 'create'])->name('disputes.create');

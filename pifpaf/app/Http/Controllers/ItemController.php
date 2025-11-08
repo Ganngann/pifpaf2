@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AddressType;
 use App\Enums\ItemStatus;
+use App\Models\Address;
 use App\Models\AiRequest;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -70,12 +72,13 @@ class ItemController extends Controller
                 // 6371 est le rayon de la Terre en kilomètres.
                 $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
-                $addressIds = DB::table('pickup_addresses')
+                $addressIds = DB::table('addresses')
                     ->select('id')
+                    ->where('type', AddressType::PICKUP)
                     ->whereRaw("{$haversine} < ?", [$latitude, $longitude, $latitude, $radiusInKm])
                     ->pluck('id');
 
-                $query->whereIn('pickup_address_id', $addressIds)
+                $query->whereIn('address_id', $addressIds)
                       ->where('pickup_available', true);
             }
         }
@@ -269,14 +272,14 @@ class ItemController extends Controller
             'image_path' => 'sometimes|string',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
+            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
         ]);
 
         $item = new Item($validatedData);
         $item->delivery_available = $request->boolean('delivery_available');
         $item->pickup_available = $request->boolean('pickup_available');
-        // N'assigner pickup_address_id que si le retrait est activé
-        $item->pickup_address_id = $request->boolean('pickup_available') ? $validatedData['pickup_address_id'] : null;
+        // N'assigner address_id que si le retrait est activé
+        $item->address_id = $request->boolean('pickup_available') ? $validatedData['address_id'] : null;
 
         $item->user_id = Auth::id();
         $item->save();
@@ -345,13 +348,13 @@ class ItemController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
+            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
         ]);
 
         $validatedData['delivery_available'] = $request->boolean('delivery_available');
         $validatedData['pickup_available'] = $request->boolean('pickup_available');
-        // N'assigner pickup_address_id que si le retrait est activé
-        $validatedData['pickup_address_id'] = $request->boolean('pickup_available') ? $validatedData['pickup_address_id'] : null;
+        // N'assigner address_id que si le retrait est activé
+        $validatedData['address_id'] = $request->boolean('pickup_available') ? $validatedData['address_id'] : null;
 
         $item->update($validatedData);
 

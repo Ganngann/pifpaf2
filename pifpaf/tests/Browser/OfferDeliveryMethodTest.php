@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,14 +23,14 @@ class OfferDeliveryMethodTest extends DuskTestCase
         // 1. Créer un vendeur et un acheteur
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
+        $address = Address::factory()->create(['user_id' => $seller->id]);
 
         // 2. Créer un article avec les deux options de livraison
         $item = Item::factory()->create([
             'user_id' => $seller->id,
             'pickup_available' => true,
             'delivery_available' => true,
-            'pickup_address_id' => $address->id,
+            'address_id' => $address->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item) {
@@ -42,7 +43,6 @@ class OfferDeliveryMethodTest extends DuskTestCase
                     ->assertVisible('@delivery-method-delivery')
                     // 6. Sélectionner l'option "delivery"
                     ->radio('delivery_method_choice', 'delivery')
-                    ->pause(500) // Laisse le temps à AlpineJS de réagir
                     // 7. Remplir un montant et soumettre
                     ->type('#amount', '10')
                     ->press('@submit-offer-button')
