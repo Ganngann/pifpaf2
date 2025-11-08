@@ -14,6 +14,8 @@ class Transaction extends Model
         'amount',
         'status',
         'pickup_code',
+        'wallet_amount',
+        'card_amount',
     ];
 
     public function offer()
