@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Enums\AddressType;
+use App\Models\Address;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\PickupAddress;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,7 +20,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
+        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
 
         $response = $this->actingAs($user)->post(route('items.store'), [
             'title' => 'Test Item',
@@ -29,7 +30,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'images' => [UploadedFile::fake()->image('item.jpg')],
             'delivery_available' => true,
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -37,7 +38,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'title' => 'Test Item',
             'delivery_available' => true,
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
     }
 
@@ -45,7 +46,7 @@ class ItemDeliveryOptionsTest extends TestCase
     {
         $user = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $user->id]);
-        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
+        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
 
         $response = $this->actingAs($user)->put(route('items.update', $item), [
             'title' => 'Updated Title',
@@ -54,7 +55,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'price' => $item->price,
             'delivery_available' => false,
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -63,7 +64,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'title' => 'Updated Title',
             'delivery_available' => false,
             'pickup_available' => true,
-            'pickup_address_id' => $pickupAddress->id,
+            'address_id' => $address->id,
         ]);
     }
 
@@ -79,10 +80,10 @@ class ItemDeliveryOptionsTest extends TestCase
             'price' => 100,
             'images' => [UploadedFile::fake()->image('item.jpg')],
             'pickup_available' => true,
-            'pickup_address_id' => null,
+            'address_id' => null,
         ]);
 
-        $response->assertSessionHasErrors('pickup_address_id');
+        $response->assertSessionHasErrors('address_id');
     }
 
     public function test_item_is_created_without_pickup_address_if_pickup_is_unavailable(): void
@@ -98,7 +99,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'images' => [UploadedFile::fake()->image('item2.jpg')],
             'delivery_available' => true,
             'pickup_available' => false,
-            'pickup_address_id' => null, // Should be ignored
+            'address_id' => null, // Should be ignored
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -106,7 +107,7 @@ class ItemDeliveryOptionsTest extends TestCase
             'title' => 'Another Test Item',
             'delivery_available' => true,
             'pickup_available' => false,
-            'pickup_address_id' => null,
+            'address_id' => null,
         ]);
     }
 }

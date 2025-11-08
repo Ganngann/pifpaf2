@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PickupAddress;
+use App\Enums\AddressType;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class PickupAddressController extends Controller
+class AddressController extends Controller
 {
     use AuthorizesRequests;
     /**
@@ -42,21 +43,30 @@ class PickupAddressController extends Controller
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
+            'type' => 'required|string|in:pickup,delivery'
         ]);
 
-        // Geocoding
-        $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
-        $response = Http::get('https://geocode.maps.co/search', [
-            'q' => $addressString,
-        ]);
+        $validatedData['type'] = $validatedData['type'] === 'pickup' ? AddressType::PICKUP : AddressType::DELIVERY;
 
-        if ($response->successful() && count($response->json()) > 0) {
-            $geocodedData = $response->json()[0];
-            $validatedData['latitude'] = $geocodedData['lat'];
-            $validatedData['longitude'] = $geocodedData['lon'];
+        // Geocoding only for pickup addresses
+        if($validatedData['type'] === AddressType::PICKUP) {
+            $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
+            $response = Http::get('https://geocode.maps.co/search', [
+                'q' => $addressString,
+            ]);
+
+            if ($response->successful() && count($response->json()) > 0) {
+                $geocodedData = $response->json()[0];
+                $validatedData['latitude'] = $geocodedData['lat'];
+                $validatedData['longitude'] = $geocodedData['lon'];
+            }
         }
 
-        Auth::user()->pickupAddresses()->create($validatedData);
+        if ($validatedData['type'] === AddressType::DELIVERY) {
+            $validatedData['country'] = $request->input('country');
+        }
+
+        Auth::user()->addresses()->create($validatedData);
 
         return redirect()->route('profile.addresses.index')->with('success', 'Adresse ajoutée avec succès.');
     }
@@ -64,7 +74,7 @@ class PickupAddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PickupAddress $address)
+    public function show(Address $address)
     {
         //
     }
@@ -72,7 +82,7 @@ class PickupAddressController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PickupAddress $address)
+    public function edit(Address $address)
     {
         $this->authorize('update', $address);
         return view('profile.addresses.edit', ['address' => $address]);
@@ -81,7 +91,7 @@ class PickupAddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PickupAddress $address)
+    public function update(Request $request, Address $address)
     {
         $this->authorize('update', $address);
 
@@ -92,21 +102,27 @@ class PickupAddressController extends Controller
             'postal_code' => 'required|string|max:10',
         ]);
 
-        // Geocoding
-        $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
-        $response = Http::get('https://geocode.maps.co/search', [
-            'q' => $addressString,
-        ]);
+        // Geocoding only for pickup addresses
+        if($address->type === AddressType::PICKUP) {
+            $addressString = "{$validatedData['street']}, {$validatedData['postal_code']} {$validatedData['city']}, Belgium";
+            $response = Http::get('https://geocode.maps.co/search', [
+                'q' => $addressString,
+            ]);
 
-        if ($response->successful() && count($response->json()) > 0) {
-            $geocodedData = $response->json()[0];
-            $validatedData['latitude'] = $geocodedData['lat'];
-            $validatedData['longitude'] = $geocodedData['lon'];
-        } else {
-            // En cas d'échec du géocodage, on ne met pas à jour les coordonnées
-            // pour ne pas écraser d'anciennes valeurs correctes.
-            $validatedData['latitude'] = $address->latitude;
-            $validatedData['longitude'] = $address->longitude;
+            if ($response->successful() && count($response->json()) > 0) {
+                $geocodedData = $response->json()[0];
+                $validatedData['latitude'] = $geocodedData['lat'];
+                $validatedData['longitude'] = $geocodedData['lon'];
+            } else {
+                // En cas d'échec du géocodage, on ne met pas à jour les coordonnées
+                // pour ne pas écraser d'anciennes valeurs correctes.
+                $validatedData['latitude'] = $address->latitude;
+                $validatedData['longitude'] = $address->longitude;
+            }
+        }
+
+        if ($address->type === AddressType::DELIVERY) {
+            $validatedData['country'] = $request->input('country');
         }
 
 
@@ -118,7 +134,7 @@ class PickupAddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PickupAddress $address)
+    public function destroy(Address $address)
     {
         $this->authorize('delete', $address);
 

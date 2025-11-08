@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Address;
 use App\Models\Item;
+use App\Policies\AddressPolicy;
 use App\Policies\ItemPolicy;
-use App\Models\PickupAddress;
-use App\Policies\PickupAddressPolicy;
-use App\Models\ShippingAddress;
-use App\Policies\ShippingAddressPolicy;
 use App\Models\Transaction;
 use App\Policies\TransactionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -21,8 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Item::class => ItemPolicy::class,
-        PickupAddress::class => PickupAddressPolicy::class,
-        ShippingAddress::class => ShippingAddressPolicy::class,
+        Address::class => AddressPolicy::class,
         \App\Models\Conversation::class => \App\Policies\ConversationPolicy::class,
         Transaction::class => TransactionPolicy::class,
     ];

@@ -106,7 +106,7 @@ class TransactionController extends Controller
     {
         $this->authorize('view', $transaction);
 
-        $transaction->load('offer.item.user', 'offer.user', 'reviews', 'shippingAddress');
+        $transaction->load('offer.item.user', 'offer.user', 'reviews', 'address');
 
         return view('transactions.show', compact('transaction'));
     }
@@ -118,11 +118,11 @@ class TransactionController extends Controller
      * @param \App\Services\SendcloudService $sendcloudService
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createShipment(Transaction $transaction, SendcloudService $sendcloudService)
+    public function ship(Transaction $transaction, SendcloudService $sendcloudService)
     {
         $this->authorize('update', $transaction->offer->item);
 
-        if (!$transaction->shippingAddress) {
+        if (!$transaction->address) {
             return redirect()->back()->with('error', 'Cette transaction ne nécessite pas d\'expédition car elle n\'a pas d\'adresse de livraison.');
         }
 
@@ -132,7 +132,7 @@ class TransactionController extends Controller
 
         $response = $sendcloudService->createParcel(
             $transaction->offer->item,
-            $transaction->shippingAddress,
+            $transaction->address,
             $shippingMethodId
         );
 

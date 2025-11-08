@@ -17,7 +17,7 @@ class Transaction extends Model
         'card_amount',
         'status',
         'pickup_code',
-        'shipping_address_id',
+        'address_id',
         'sendcloud_parcel_id',
         'tracking_code',
         'label_url',
@@ -32,9 +32,9 @@ class Transaction extends Model
         return $this->belongsTo(Offer::class);
     }
 
-    public function shippingAddress()
+    public function address()
     {
-        return $this->belongsTo(ShippingAddress::class);
+        return $this->belongsTo(Address::class);
     }
 
     public function reviews()

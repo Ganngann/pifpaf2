@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -23,7 +24,7 @@ class OfferFlowTest extends DuskTestCase
         $buyer = User::factory()->create([
             'email' => 'buyer@example.com',
         ]);
-        $address = \App\Models\PickupAddress::factory()->create(['user_id' => $seller->id]);
+        $address = Address::factory()->create(['user_id' => $seller->id]);
 
         // 2. Le vendeur a un article en vente
         $item = Item::factory()->create([
@@ -32,7 +33,7 @@ class OfferFlowTest extends DuskTestCase
             'price' => 100,
             'delivery_available' => true,
             'pickup_available' => true,
-            'pickup_address_id' => $address->id,
+            'address_id' => $address->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item, $seller) {
@@ -41,7 +42,6 @@ class OfferFlowTest extends DuskTestCase
                     ->visit(route('items.show', $item))
                     ->assertSeeIn('@item-title', 'Super Article à Vendre')
                     ->radio('delivery_method_choice', 'delivery') // Sélectionner la livraison
-                    ->pause(500) // Laisse le temps à AlpineJS de réagir
                     ->type('#amount', '80')
                     ->press('@submit-offer-button')
                     ->waitForText('Votre offre a été envoyée avec succès.') // Wait for flash message
@@ -50,7 +50,7 @@ class OfferFlowTest extends DuskTestCase
             // 4. Le vendeur se connecte et voit l'offre sur son tableau de bord
             $browser->loginAs($seller)
                     ->visit('/dashboard')
-                    ->assertSee('Offres reçues')
+                    ->waitForText('Offres reçues')
                     ->assertSee($buyer->name)
                     ->assertSee('80,00 €')
                     ->assertSee('Livraison');

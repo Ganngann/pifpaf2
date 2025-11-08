@@ -91,12 +91,12 @@
 
         <!-- Sélection de l'adresse de retrait (conditionnelle) -->
         <div x-show="pickupAvailable" class="mb-4">
-            <label for="pickup_address_id" class="block text-gray-700 text-sm font-bold mb-2">Adresse de retrait</label>
-            <select name="pickup_address_id" id="pickup_address_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="address_id" class="block text-gray-700 text-sm font-bold mb-2">Adresse de retrait</label>
+            <select name="address_id" id="address_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <option value="">-- Choisir une adresse --</option>
                 @foreach($pickupAddresses as $address)
-                    <option value="{{ $address->id }}" @if(old('pickup_address_id', $item->pickup_address_id ?? null) == $address->id) selected @endif>
-                        {{ $address->name }} - {{ $address->address }}, {{ $address->city }}, {{ $address->zip_code }}
+                    <option value="{{ $address->id }}" @if(old('address_id', $item->address_id ?? null) == $address->id) selected @endif>
+                        {{ $address->name }} - {{ $address->street }}, {{ $address->city }}, {{ $address->postal_code }}
                     </option>
                 @endforeach
             </select>

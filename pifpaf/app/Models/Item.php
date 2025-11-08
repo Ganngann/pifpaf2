@@ -28,7 +28,7 @@ class Item extends Model
         'status',
         'pickup_available',
         'delivery_available',
-        'pickup_address_id',
+        'address_id',
         'user_id',
     ];
 
@@ -92,8 +92,8 @@ class Item extends Model
     /**
      * Obtenir l'adresse de retrait de l'annonce.
      */
-    public function pickupAddress()
+    public function address()
     {
-        return $this->belongsTo(PickupAddress::class);
+        return $this->belongsTo(Address::class);
     }
 }
