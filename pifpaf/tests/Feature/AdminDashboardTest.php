@@ -41,7 +41,7 @@ class AdminDashboardTest extends TestCase
         $this->assertEquals(6, User::count());
 
         // Crée une adresse de ramassage pour le premier utilisateur (le vendeur).
-        $pickupAddress = \App\Models\PickupAddress::factory()->create(['user_id' => $users->first()->id]);
+        $pickupAddress = \App\Models\Address::factory()->create(['user_id' => $users->first()->id, 'type' => 'pickup']);
 
         // Crée 10 annonces "simples" pour le premier utilisateur.
         Item::factory()->count(10)->create([
