@@ -120,11 +120,24 @@ class ItemController extends Controller
                 'offers' => function ($query) {
                     $query->with(['transaction', 'user']);
                 }
-            ])
-            ->when($status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->latest();
+            ]);
+
+        if ($status) {
+            $itemsQuery->where('status', $status);
+        } else {
+            // Si aucun filtre de statut n'est appliqué, trier par statut dans l'ordre souhaité
+            $itemsQuery->orderByRaw("
+                CASE
+                    WHEN status = 'available' THEN 1
+                    WHEN status = 'unpublished' THEN 2
+                    WHEN status = 'sold' THEN 3
+                    ELSE 4
+                END
+            ");
+        }
+
+        // Toujours trier par le plus récent au sein de chaque groupe
+        $itemsQuery->latest();
 
         $items = $itemsQuery->paginate(10)->appends($request->query());
 
