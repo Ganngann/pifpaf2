@@ -63,6 +63,7 @@ class TransactionController extends Controller
             'type' => 'credit',
             'amount' => $transaction->amount,
             'description' => 'Vente de l\'article : ' . $transaction->offer->item->title,
+            'transaction_id' => $transaction->id,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');

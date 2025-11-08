@@ -65,7 +65,13 @@
                                             {{ $history->created_at->format('d/m/Y H:i') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $history->description }}
+                                            @if ($history->transaction)
+                                                <a href="{{ route('transactions.show', $history->transaction) }}" class="text-indigo-600 hover:text-indigo-900 underline">
+                                                    {{ $history->description }}
+                                                </a>
+                                            @else
+                                                {{ $history->description }}
+                                            @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             @if ($history->type === 'credit')

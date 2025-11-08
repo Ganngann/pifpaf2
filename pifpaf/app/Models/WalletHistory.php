@@ -14,10 +14,16 @@ class WalletHistory extends Model
         'type',
         'amount',
         'description',
+        'transaction_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
     }
 }

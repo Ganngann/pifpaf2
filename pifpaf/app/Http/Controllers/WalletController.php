@@ -14,7 +14,7 @@ class WalletController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $walletHistories = WalletHistory::where('user_id', $user->id)->latest()->get();
+        $walletHistories = WalletHistory::where('user_id', $user->id)->with('transaction')->latest()->get();
 
         return view('wallet.show', [
             'user' => $user,
