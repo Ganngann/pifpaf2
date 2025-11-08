@@ -72,18 +72,20 @@ class PaymentController extends Controller
         }
 
         $user = Auth::user();
-        $walletBalance = $user->wallet;
+        $initialWalletBalance = $user->wallet;
         $offerAmount = $offer->amount;
         $useWallet = $request->boolean('use_wallet');
 
-        $walletAmountToUse = 0;
+        $walletAmountToUseFromInitialBalance = 0;
         $cardAmount = $offerAmount;
 
-        if ($useWallet && $walletBalance > 0) {
-            $walletAmountToUse = min($walletBalance, $offerAmount);
-            $cardAmount = $offerAmount - $walletAmountToUse;
+        // Calculer le montant à payer par carte en fonction de l'utilisation du portefeuille
+        if ($useWallet && $initialWalletBalance > 0) {
+            $walletAmountToUseFromInitialBalance = min($initialWalletBalance, $offerAmount);
+            $cardAmount = $offerAmount - $walletAmountToUseFromInitialBalance;
         }
 
+        $cardPaymentSuccessful = false;
         // Validation du paiement Stripe si un paiement par carte est nécessaire
         if ($cardAmount > 0) {
             $paymentIntentId = $request->input('payment_intent_id');
@@ -93,55 +95,74 @@ class PaymentController extends Controller
             }
 
             \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-            $intent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
+            try {
+                $intent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
 
-            if ($intent->status !== 'succeeded') {
-                return back()->withErrors(['payment' => 'Le paiement a échoué. Veuillez vérifier les informations de votre carte.']);
-            }
+                if ($intent->status !== 'succeeded') {
+                    return back()->withErrors(['payment' => 'Le paiement a échoué. Veuillez vérifier les informations de votre carte.']);
+                }
 
-            // Vérification de sécurité : le montant payé correspond-il au montant attendu ?
-            $expectedAmountInCents = (int) round($cardAmount * 100);
-            if ($intent->amount !== $expectedAmountInCents) {
-                // Potentielle fraude ou erreur, on ne finalise pas
-                // On pourrait aussi rembourser le paiement ici
-                return back()->withErrors(['payment' => 'Une erreur de montant est survenue. Le paiement a été annulé.']);
+                // Vérification de sécurité : le montant payé correspond-il au montant attendu ?
+                $expectedAmountInCents = (int) round($cardAmount * 100);
+                if ($intent->amount !== $expectedAmountInCents) {
+                    return back()->withErrors(['payment' => 'Une erreur de montant est survenue. Le paiement a été annulé.']);
+                }
+                $cardPaymentSuccessful = true;
+            } catch (\Exception $e) {
+                return back()->withErrors(['payment' => 'Erreur lors de la vérification du paiement: ' . $e->getMessage()]);
             }
         }
 
-        // Début de la transaction de base de données pour garantir l'intégrité
-        $transaction = DB::transaction(function () use ($user, $offer, $walletAmountToUse, $cardAmount, $offerAmount) {
-            // Préparer les données de la transaction
-            $transactionData = [
-                'offer_id' => $offer->id,
-                'amount' => $offerAmount,
-                'wallet_amount' => $walletAmountToUse,
-                'card_amount' => $cardAmount,
-                'status' => 'payment_received',
-            ];
+        // Vérifier si le solde total (portefeuille + carte) est suffisant
+        $totalAvailableAmount = $initialWalletBalance + ($cardPaymentSuccessful ? $cardAmount : 0);
+        if ($totalAvailableAmount < $offerAmount) {
+            return back()->withErrors(['payment' => 'Solde insuffisant pour finaliser la transaction.']);
+        }
 
-            if ($offer->item->pickup_available) {
-                $transactionData['pickup_code'] = Str::random(6);
+        // Début de la transaction de base de données pour garantir l'intégrité
+        $transaction = DB::transaction(function () use ($user, $offer, $cardAmount, $offerAmount, $cardPaymentSuccessful) {
+            // 1. Créditer le portefeuille si un paiement par carte a été effectué
+            if ($cardPaymentSuccessful && $cardAmount > 0) {
+                $user->wallet += $cardAmount;
+                // La sauvegarde finale se fera à la fin de la transaction
             }
 
-            // Création de la transaction
-            $newTransaction = Transaction::create($transactionData);
+            // 2. Créer la transaction Pifpaf
+            $newTransaction = Transaction::create([
+                'offer_id' => $offer->id,
+                'amount' => $offerAmount,
+                'wallet_amount' => $offerAmount, // Le montant total est payé via le portefeuille
+                'card_amount' => 0,             // Le paiement par carte est maintenant une transaction de portefeuille
+                'status' => 'payment_received',
+                'pickup_code' => $offer->item->pickup_available ? Str::random(6) : null,
+            ]);
 
-            // Mettre à jour le solde du portefeuille si utilisé
-            if ($walletAmountToUse > 0) {
-                $user->wallet -= $walletAmountToUse;
-                $user->save();
-
-                // Enregistrer l'historique du portefeuille pour le débit
+            // 3. Créer les entrées dans l'historique du portefeuille
+            if ($cardPaymentSuccessful && $cardAmount > 0) {
                 WalletHistory::create([
                     'user_id' => $user->id,
-                    'type' => 'debit',
-                    'amount' => $walletAmountToUse,
-                    'description' => 'Achat de l\'article : ' . $offer->item->title,
+                    'type' => 'credit',
+                    'amount' => $cardAmount,
+                    'description' => 'Crédit via carte pour l\'achat : ' . $offer->item->title,
                     'transaction_id' => $newTransaction->id,
                 ]);
             }
 
-            // Mise à jour des statuts
+            // Créer l'entrée de débit pour le montant total de l'offre
+            WalletHistory::create([
+                'user_id' => $user->id,
+                'type' => 'debit',
+                'amount' => $offerAmount,
+                'description' => 'Achat de l\'article : ' . $offer->item->title,
+                'transaction_id' => $newTransaction->id,
+            ]);
+
+
+            // 4. Débiter le montant total de l'offre du portefeuille
+            $user->wallet -= $offerAmount;
+            $user->save();
+
+            // 5. Mise à jour des statuts
             $offer->update(['status' => 'paid']);
             $offer->item->update(['status' => 'sold']);
 

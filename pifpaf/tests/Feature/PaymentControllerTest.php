@@ -139,7 +139,13 @@ class PaymentControllerTest extends TestCase
         $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 0, 'card_amount' => 50.00, 'status' => 'payment_received',
+            'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 50.00, 'card_amount' => 0, 'status' => 'payment_received',
+        ]);
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id, 'type' => 'credit', 'amount' => 50.00, 'transaction_id' => $transaction->id,
+        ]);
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id, 'type' => 'debit', 'amount' => 50.00, 'transaction_id' => $transaction->id,
         ]);
         $this->assertEquals(ItemStatus::SOLD, $item->fresh()->status);
         $this->assertEquals('paid', $offer->fresh()->status);
@@ -168,6 +174,9 @@ class PaymentControllerTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 50.00, 'card_amount' => 0,
+        ]);
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id, 'type' => 'debit', 'amount' => 50.00, 'transaction_id' => $transaction->id,
         ]);
         $this->assertEquals(50.00, $buyer->fresh()->wallet);
     }
@@ -204,7 +213,13 @@ class PaymentControllerTest extends TestCase
         $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $offer->id, 'amount' => 100.00, 'wallet_amount' => 30.00, 'card_amount' => 70.00,
+            'offer_id' => $offer->id, 'amount' => 100.00, 'wallet_amount' => 100.00, 'card_amount' => 0,
+        ]);
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id, 'type' => 'credit', 'amount' => 70.00, 'transaction_id' => $transaction->id,
+        ]);
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id, 'type' => 'debit', 'amount' => 100.00, 'transaction_id' => $transaction->id,
         ]);
         $this->assertEquals(0, $buyer->fresh()->wallet);
     }
