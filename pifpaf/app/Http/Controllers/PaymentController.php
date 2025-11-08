@@ -109,27 +109,38 @@ class PaymentController extends Controller
         }
 
         // Début de la transaction de base de données pour garantir l'intégrité
-        $transaction = DB::transaction(function () use ($user, $offer, $walletAmountToUse, $cardAmount, $offerAmount) {
-            // Mettre à jour le solde du portefeuille si utilisé
-            if ($walletAmountToUse > 0) {
-                $user->wallet -= $walletAmountToUse;
-                $user->save();
+        $transaction = DB::transaction(function () use ($user, $offer, $cardAmount, $offerAmount) {
+            // 1. Si un paiement par carte a été effectué, créditer le portefeuille
+            if ($cardAmount > 0) {
+                $user->wallet += $cardAmount;
 
-                // Enregistrer l'historique du portefeuille pour le débit
                 WalletHistory::create([
                     'user_id' => $user->id,
-                    'type' => 'debit',
-                    'amount' => $walletAmountToUse,
-                    'description' => 'Achat de l\'article : ' . $offer->item->title,
+                    'type' => 'credit',
+                    'amount' => $cardAmount,
+                    'description' => 'Crédit suite au paiement par carte pour l\'article : ' . $offer->item->title,
                 ]);
             }
+
+            // 2. Débiter le portefeuille du montant total de l'achat
+            $user->wallet -= $offerAmount;
+            $user->save();
+
+            // Enregistrer l'historique du portefeuille pour le débit de l'achat total
+            WalletHistory::create([
+                'user_id' => $user->id,
+                'type' => 'debit',
+                'amount' => $offerAmount,
+                'description' => 'Achat de l\'article : ' . $offer->item->title,
+            ]);
+
 
             // Préparer les données de la transaction
             $transactionData = [
                 'offer_id' => $offer->id,
                 'amount' => $offerAmount,
-                'wallet_amount' => $walletAmountToUse,
-                'card_amount' => $cardAmount,
+                'wallet_amount' => $offerAmount, // L'achat est entièrement réalisé via le portefeuille
+                'card_amount' => $cardAmount, // On garde la trace du montant payé par carte pour cette transaction
                 'status' => 'payment_received',
             ];
 

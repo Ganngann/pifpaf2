@@ -139,7 +139,11 @@ class PaymentControllerTest extends TestCase
         $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $offer->id, 'amount' => 50.00, 'wallet_amount' => 0, 'card_amount' => 50.00, 'status' => 'payment_received',
+            'offer_id' => $offer->id,
+            'amount' => 50.00,
+            'wallet_amount' => 50.00, // Now the full amount is paid from wallet
+            'card_amount' => 50.00,
+            'status' => 'payment_received',
         ]);
         $this->assertEquals(ItemStatus::SOLD, $item->fresh()->status);
         $this->assertEquals('paid', $offer->fresh()->status);
@@ -204,7 +208,10 @@ class PaymentControllerTest extends TestCase
         $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $offer->id, 'amount' => 100.00, 'wallet_amount' => 30.00, 'card_amount' => 70.00,
+            'offer_id' => $offer->id,
+            'amount' => 100.00,
+            'wallet_amount' => 100.00, // Now the full amount is paid from wallet
+            'card_amount' => 70.00,
         ]);
         $this->assertEquals(0, $buyer->fresh()->wallet);
     }
@@ -261,5 +268,49 @@ class PaymentControllerTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHasErrors('payment');
         $this->assertDatabaseMissing('transactions', ['offer_id' => $offer->id]);
+    }
+
+    #[Test]
+    public function a_card_payment_creates_credit_and_debit_in_wallet_history(): void
+    {
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create(['wallet' => 10.00]);
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'amount' => 50.00,
+            'status' => 'accepted',
+        ]);
+
+        Mockery::mock('alias:' . PaymentIntent::class)
+            ->shouldReceive('retrieve')
+            ->once()
+            ->with('pi_card_payment')
+            ->andReturn((object)[
+                'id' => 'pi_card_payment',
+                'status' => 'succeeded',
+                'amount' => 4000, // 50.00 (total) - 10.00 (wallet) = 40.00
+            ]);
+
+        $this->actingAs($buyer)->post(route('payment.store', $offer), [
+            'use_wallet' => true,
+            'payment_intent_id' => 'pi_card_payment',
+        ]);
+
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id,
+            'type' => 'credit',
+            'amount' => 40.00,
+        ]);
+
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id,
+            'type' => 'debit',
+            'amount' => 50.00,
+        ]);
+
+        // The final wallet balance should be 10 (initial) + 40 (card) - 50 (purchase) = 0
+        $this->assertEquals(0, $buyer->fresh()->wallet);
     }
 }

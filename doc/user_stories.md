@@ -399,7 +399,7 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Dans la table `wallet_histories`, une colonne `transaction_id` (nullable) est ajoutée.
     - Sur la page "Mon Portefeuille", chaque ligne de l'historique liée à un achat ou une vente contient un lien vers la page de détail de la transaction.
 
-- **US-WAL-2: Centraliser les paiements via le portefeuille**
+- **[TERMINÉ] US-WAL-2: Centraliser les paiements via le portefeuille**
   - **En tant que** développeur, **Je veux** refactoriser le flux de paiement pour que tous les achats par carte créditent d'abord le portefeuille avant de le débiter, **Afin de** simplifier la logique comptable et l'historique.
   - **Critères d'acceptation :**
     - Lors d'un paiement par carte, deux opérations sont enregistrées dans l'historique du portefeuille : un crédit du montant payé, suivi d'un débit pour l'achat.
