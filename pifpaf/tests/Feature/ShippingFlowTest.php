@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Address;
 use App\Models\Item;
 use App\Models\Offer;
+use App\Models\ShippingAddress;
 use App\Enums\TransactionStatus;
 use App\Models\Transaction;
 use App\Models\User;
@@ -22,7 +22,7 @@ class ShippingFlowTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id, 'weight' => 500, 'width' => 10, 'height' => 10, 'length' => 10]);
-        $shippingAddress = Address::factory()->create(['user_id' => $buyer->id, 'type' => 'shipping']);
+        $shippingAddress = ShippingAddress::factory()->create(['user_id' => $buyer->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id, 'status' => 'paid']);
         $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::COMPLETED, 'shipping_address_id' => $shippingAddress->id]);
 

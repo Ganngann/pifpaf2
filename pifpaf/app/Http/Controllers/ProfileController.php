@@ -86,7 +86,8 @@ class ProfileController extends Controller
             'profile' => $user->toArray(),
             'items' => $user->items->toArray(),
             'offers' => $user->offers->toArray(),
-            'addresses' => $user->addresses->toArray(),
+            'pickup_addresses' => $user->pickupAddresses->toArray(),
+            'shipping_addresses' => $user->shippingAddresses->toArray(),
             'reviews_written' => $user->reviewsWritten->toArray(),
             'reviews_received' => $user->reviewsReceived->toArray(),
         ];
