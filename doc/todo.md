@@ -18,3 +18,14 @@
 - [x] **US-BUG-4:** (Issue #173) Corriger l'affichage de l'image sur la page de checkout.
 - [ ] **US-BUG-5:** (Issue #136) Empêcher les paiements multiples sur un même article.
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
+
+---
+## 🚀 Nouvelles Fonctionnalités : Gestion Financière et Virements
+*Objectif : Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds en toute sécurité.*
+
+- [ ] **US-W1 :** Enregistrement des informations bancaires.
+- [ ] **US-W2 :** Demande de virement.
+- [ ] **US-W3 :** Suivi du statut d'une demande de virement.
+- [ ] **US-W4 :** Gestion et validation des demandes de virement (Admin).
+- [ ] **US-W5 :** Traitement automatisé du virement.
+- [ ] **US-W6 :** Notifications par email.

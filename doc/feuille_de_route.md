@@ -107,11 +107,21 @@ graph LR
         LOG10["US-LOG-10: #107 Vérif. adresse"]
     end
 
+    %% === Thème: Gestion Financière & Virements ===
+    subgraph "Thème: Gestion Financière & Virements"
+        direction TB
+        W1["US-W1: Enregistrer infos bancaires"] --> W2["US-W2: Demander virement"]
+        W2 --> W3["US-W3: Suivre statut"]
+        W4["US-W4: Admin valider"]
+        W5["US-W5: Traitement auto"]
+        W6["US-W6: Notifications"]
+    end
+
     %% === Dépendances Inter-Thèmes ===
     F_Annonces --> S3_ANN1 & S3_IA1 & S3_ANN5
     F_Auth --> S4_LOG1 & S4_LOG5
     F_Achat --> S4_LOG4 & S5_HIS1
-    F_Paiement --> S5_TRS1 & S5_HIS4
+    F_Paiement --> S5_TRS1 & S5_HIS4 & W1
     F_Logistique --> S5_LOG6
     S4_LOG1 --> S4_LOG8
     S5_HIS3 --> S6_COM1
@@ -190,3 +200,7 @@ graph LR
 ### 🗺️ Thème 10 : Améliorations & Corrections (Non commencé)
 - **Statut :** Ensemble de corrections et d'améliorations de l'expérience utilisateur.
 - **Restant :** `US-UX-1`, `US-UX-2`, `US-LOG-9`, `US-TRS-3`, `US-WAL-1`, `US-WAL-2`, `US-BUG-1`, `US-BUG-2`, `US-BUG-3`, `US-BUG-4`, `US-BUG-5`, `US-LOG-10`.
+
+### 🏦 Thème 11 : Gestion Financière & Virements (Non commencé)
+- **Statut :** Développement du cycle de vie complet pour le retrait des fonds par les vendeurs.
+- **Restant :** `US-W1`, `US-W2`, `US-W3`, `US-W4`, `US-W5`, `US-W6`.
