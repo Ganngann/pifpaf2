@@ -93,3 +93,51 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Lors de l'ajout ou de la modification d'une adresse, un appel est fait à une API de géocodage pour valider l'adresse.
     - Si l'adresse est valide, une petite carte (ex: OpenStreetMap, Google Maps) s'affiche avec un marqueur à l'emplacement trouvé.
     - Si l'adresse est invalide ou ambiguë, un message d'erreur est affiché à l'utilisateur.
+
+---
+### Epic 18: Amélioration du Cycle de Vie des Commandes
+*Rendre le processus de transaction post-paiement plus robuste, clair et sécurisé pour le vendeur et l'acheteur.*
+
+- **US-TRS-4: Saisie du code de retrait par le vendeur**
+  - **En tant que** vendeur, **Je veux** un champ pour saisir le code de retrait fourni par l'acheteur sur la page de la transaction, **Afin de** confirmer la remise en main propre de l'article.
+  - **Critères d'acceptation :**
+    - Sur la page de détail d'une transaction éligible à la remise en main propre (statut `payment_received`), un formulaire avec un champ de saisie pour le `pickup_code` et un bouton "Confirmer la remise" est visible pour le vendeur.
+    - L'acheteur ne voit pas ce formulaire.
+
+- **US-TRS-5: Finalisation de la transaction par code de retrait**
+  - **En tant que** système, **Je veux** vérifier le code de retrait soumis par le vendeur et, s'il est correct, finaliser la transaction, **Afin de** garantir un paiement immédiat et sécurisé au vendeur.
+  - **Critères d'acceptation :**
+    - La soumission du formulaire `US-TRS-4` déclenche une action backend.
+    - Le backend vérifie si le code fourni correspond au `pickup_code` de la transaction.
+    - Si le code est correct :
+        - Le statut de la transaction passe à `completed`.
+        - Les fonds sont immédiatement transférés du séquestre au portefeuille du vendeur.
+        - Un message de succès est affiché.
+    - Si le code est incorrect, un message d'erreur est affiché au vendeur.
+
+- **US-TRS-6: Affichage du code de retrait pour l'acheteur**
+  - **En tant qu'** acheteur, **Je veux** voir clairement mon "Code de Retrait" sur la page de détail de ma commande, **Afin de** pouvoir le présenter au vendeur.
+  - **Critères d'acceptation :**
+    - Sur la page de détail de la transaction, si la remise en main propre est choisie, une section bien visible affiche le `pickup_code`.
+    - Un texte explicatif indique à l'acheteur qu'il doit communiquer ce code au vendeur uniquement au moment de l'échange.
+    - Le vendeur ne voit pas ce code sur son interface.
+
+- **US-TRS-7: Introduire le statut de transaction "Livré"**
+  - **En tant que** système, **Je veux** un nouveau statut de transaction `delivered`, **Afin de** marquer qu'un colis a été physiquement livré et initier la fenêtre de confirmation.
+  - **Critères d'acceptation :**
+    - Une nouvelle valeur `delivered` est ajoutée à l'énumération `TransactionStatus`.
+    - Une action (potentiellement un webhook de Sendcloud ou une action manuelle "Marquer comme livré") permet de faire passer le statut d'une transaction de `in_transit` à `delivered`.
+    - Un champ `delivered_at` (timestamp) est ajouté à la table `transactions` pour enregistrer ce moment.
+
+- **US-TRS-8: Fenêtre de confirmation pour l'acheteur après livraison**
+  - **En tant qu'** acheteur, **Je veux** être notifié que mon colis est livré et avoir une période de 72h pour agir, **Afin de** pouvoir confirmer la réception ou signaler un problème.
+  - **Critères d'acceptation :**
+    - Lorsque le statut passe à `delivered`, l'interface utilisateur pour l'acheteur sur la page de la transaction affiche un message clair : "Votre colis a été livré. Veuillez confirmer la réception sous 72h. Passé ce délai, la transaction sera automatiquement finalisée."
+    - Les boutons "Confirmer la réception" et "Ouvrir un litige" sont mis en évidence.
+
+- **US-TRS-9: Finalisation automatique de la transaction après livraison**
+  - **En tant que** système, **Je veux** automatiquement finaliser les transactions et payer les vendeurs si 72h se sont écoulées depuis la livraison sans action de l'acheteur, **Afin de** ne pas bloquer indéfiniment le paiement du vendeur.
+  - **Critères d'acceptation :**
+    - Une tâche planifiée (scheduled job) s'exécute régulièrement (ex: toutes les heures).
+    - La tâche recherche les transactions dont le statut est `delivered` et dont le `delivered_at` date de plus de 72 heures.
+    - Pour chaque transaction trouvée, le statut est mis à jour à `completed`, et les fonds sont transférés au portefeuille du vendeur.
