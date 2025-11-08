@@ -59,7 +59,16 @@
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
+            @php $currentStatus = null; @endphp
             @foreach ($items as $item)
+                @if ($item->status->value !== $currentStatus && !request('status'))
+                    @php $currentStatus = $item->status->value; @endphp
+                    <tr>
+                        <td colspan="4" class="px-6 py-3 bg-gray-100">
+                            <h4 class="text-md font-bold text-gray-800">{{ \App\Enums\ItemStatus::getTextFor($item->status) }}</h4>
+                        </td>
+                    </tr>
+                @endif
                 <tr
                     x-data="{
                         isAvailable: {{ $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'true' : 'false' }},
@@ -151,7 +160,14 @@
 
 <!-- Vue Cartes pour Mobile -->
 <div class="sm:hidden space-y-4">
+    @php $currentStatus = null; @endphp
     @foreach ($items as $item)
+        @if ($item->status->value !== $currentStatus && !request('status'))
+            @php $currentStatus = $item->status->value; @endphp
+            <div class="pt-4">
+                <h4 class="text-md font-bold text-gray-800 px-4">{{ \App\Enums\ItemStatus::getTextFor($item->status) }}</h4>
+            </div>
+        @endif
         <div
             class="border rounded-lg shadow-lg overflow-hidden"
             x-data="{
