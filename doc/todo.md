@@ -21,3 +21,14 @@
 - [ ] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
 - [ ] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.
 - [ ] **US-TRS-12:** Envoyer une notification par e-mail à l'acheteur lors de la livraison.
+
+---
+## 🚀 Nouvelles Fonctionnalités : Gestion Financière et Virements
+*Objectif : Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds en toute sécurité.*
+
+- [ ] **US-W1 :** Enregistrement des informations bancaires.
+- [ ] **US-W2 :** Demande de virement.
+- [ ] **US-W3 :** Suivi du statut d'une demande de virement.
+- [ ] **US-W4 :** Gestion et validation des demandes de virement (Admin).
+- [ ] **US-W5 :** Traitement automatisé du virement.
+- [ ] **US-W6 :** Notifications par email.
