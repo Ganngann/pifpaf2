@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
-use App\Models\Address;
+use App\Models\PickupAddress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,7 +45,7 @@ class PickupAvailableTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $pickupAddress = Address::factory()->create(['user_id' => $user->id, 'type' => 'pickup']);
+        $pickupAddress = PickupAddress::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
 
         $itemData = [

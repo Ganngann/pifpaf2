@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\Address;
+use App\Models\PickupAddress;
 use Tests\TestCase;
 
 class DistanceFilterTest extends TestCase
@@ -22,9 +22,8 @@ class DistanceFilterTest extends TestCase
         $user = User::factory()->create();
 
         // Adresse proche (Paris, ~8km de "Paris Centre")
-        $addressNear = Address::factory()->create([
+        $addressNear = PickupAddress::factory()->create([
             'user_id' => $user->id,
-            'type' => 'pickup',
             'latitude' => 48.858844,
             'longitude' => 2.294351, // Tour Eiffel
         ]);
@@ -35,9 +34,8 @@ class DistanceFilterTest extends TestCase
         ]);
 
         // Adresse lointaine (Lyon, >300km de "Paris Centre")
-        $addressFar = Address::factory()->create([
+        $addressFar = PickupAddress::factory()->create([
             'user_id' => $user->id,
-            'type' => 'pickup',
             'latitude' => 45.757994,
             'longitude' => 4.832011, // Lyon
         ]);

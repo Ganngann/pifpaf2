@@ -70,8 +70,7 @@ class ItemController extends Controller
                 // 6371 est le rayon de la Terre en kilomètres.
                 $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
-                $addressIds = DB::table('addresses')
-                    ->where('type', 'pickup')
+                $addressIds = DB::table('pickup_addresses')
                     ->select('id')
                     ->whereRaw("{$haversine} < ?", [$latitude, $longitude, $latitude, $radiusInKm])
                     ->pluck('id');
@@ -270,7 +269,7 @@ class ItemController extends Controller
             'image_path' => 'sometimes|string',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
         ]);
 
         $item = new Item($validatedData);
@@ -346,7 +345,7 @@ class ItemController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            'pickup_address_id' => 'required_if:pickup_available,true|nullable|exists:pickup_addresses,id',
         ]);
 
         $validatedData['delivery_available'] = $request->boolean('delivery_available');
