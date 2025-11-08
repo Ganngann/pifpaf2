@@ -14,6 +14,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AiRequestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StyleguideController;
+use App\Http\Controllers\StripeConnectController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -94,6 +95,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour les litiges
     Route::get('/transactions/{transaction}/disputes/create', [\App\Http\Controllers\DisputeController::class, 'create'])->name('disputes.create');
     Route::post('/transactions/{transaction}/disputes', [\App\Http\Controllers\DisputeController::class, 'store'])->name('disputes.store');
+
+    // Stripe Connect
+    Route::get('/stripe/connect/account-session', [StripeConnectController::class, 'createAccountSession'])->name('stripe.connect.account_session');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
