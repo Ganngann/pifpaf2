@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\ItemImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,6 +28,9 @@ class ItemFactory extends Factory
             'description' => $this->faker->paragraph,
             'category' => $this->faker->randomElement(['Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs']),
             'price' => $this->faker->randomFloat(2, 10, 1000),
+            'pickup_available' => true,
+            'delivery_available' => true,
+            'address_id' => Address::factory(),
         ];
     }
 

@@ -22,11 +22,11 @@ class LoginTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
-                    ->type('email', $user->email)
-                    ->type('password', 'password') // Default factory password
-                    ->press('Log in')
-                    ->assertPathIs('/dashboard')
-                    ->assertSee("Tableau de bord");
+                    ->type('@email-input', $user->email)
+                    ->type('@password-input', 'password') // Default factory password
+                    ->press('@login-button')
+                    ->waitForText("Tableau de bord")
+                    ->assertPathIs('/dashboard');
         });
     }
 
@@ -37,10 +37,10 @@ class LoginTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
-                ->type('email', $user->email)
-                ->type('password', 'wrong-password')
-                ->press('Log in')
-                ->pause(500) // Add a small pause
+                ->type('@email-input', $user->email)
+                ->type('@password-input', 'wrong-password')
+                ->press('@login-button')
+                ->pause(500) // Attendre que la page se recharge
                 ->waitForText('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertSee('Ces identifiants ne correspondent pas à nos enregistrements.')
                 ->assertPathIs('/login');
@@ -56,10 +56,9 @@ class LoginTest extends DuskTestCase
             $browser->loginAs($user)
                 ->visit('/dashboard')
                 ->click('@nav-user-dropdown')
+                ->pause(500) // Attendre l'animation du dropdown
                 ->waitFor('@nav-logout')
-                // Directly execute the form submission with JavaScript for reliability
                 ->script('document.querySelector(\'[dusk="logout-form"]\').submit()');
-
             $browser->assertPathIs('/')
                     ->assertGuest();
         });

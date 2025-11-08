@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AddressType;
 use App\Enums\ItemStatus;
+use App\Models\Address;
+use App\Models\AiRequest;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ItemController extends Controller
 {
@@ -19,7 +26,7 @@ class ItemController extends Controller
      */
     public function welcome(Request $request)
     {
-        $query = Item::query()->available()->latest();
+        $query = Item::query()->with('primaryImage')->available()->latest();
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -45,7 +52,38 @@ class ItemController extends Controller
             $q->where('price', '<=', $request->input('max_price'));
         });
 
-        $items = $query->get();
+        // Filtre par distance
+        if ($request->filled('location') && $request->filled('distance')) {
+            $locationString = $request->input('location');
+            $distanceInKm = (int) $request->input('distance');
+
+            // 1. Géocoder l'adresse de recherche
+            $response = Http::get('https://geocode.maps.co/search', ['q' => $locationString]);
+
+            if ($response->successful() && count($response->json()) > 0) {
+                $geocodedLocation = $response->json()[0];
+                $latitude = $geocodedLocation['lat'];
+                $longitude = $geocodedLocation['lon'];
+
+                // 2. Filtrer les items en utilisant la formule Haversine (compatible SQLite)
+                $radiusInKm = $distanceInKm;
+
+                // Formule de Haversine pour calculer la distance
+                // 6371 est le rayon de la Terre en kilomètres.
+                $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+
+                $addressIds = DB::table('addresses')
+                    ->select('id')
+                    ->where('type', AddressType::PICKUP)
+                    ->whereRaw("{$haversine} < ?", [$latitude, $longitude, $latitude, $radiusInKm])
+                    ->pluck('id');
+
+                $query->whereIn('address_id', $addressIds)
+                      ->where('pickup_available', true);
+            }
+        }
+
+        $items = $query->paginate(12);
 
         return view('welcome', [
             'items' => $items,
@@ -63,55 +101,161 @@ class ItemController extends Controller
     /**
      * Affiche le tableau de bord avec les annonces de l'utilisateur.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        // Pour le vendeur, on charge les offres avec leurs transactions
-        $items = $user->items()->with('offers.transaction', 'offers.user')->latest()->get();
-        // Pour l'acheteur, on charge les offres avec la transaction
-        $offers = $user->offers()->with('item.user', 'transaction')->latest()->get();
+        $userId = $user->id;
+
+        $status = $request->query('status');
+        $validStatuses = [ItemStatus::AVAILABLE->value, ItemStatus::UNPUBLISHED->value, ItemStatus::SOLD->value];
+
+        if ($status && !in_array($status, $validStatuses)) {
+            abort(400, 'Invalid status filter.');
+        }
+
+        // Récupérer les articles du vendeur avec toutes les relations nécessaires
+        $itemsQuery = $user->items()
+            ->with([
+                'primaryImage',
+                'offers' => function ($query) {
+                    $query->with(['transaction', 'user']);
+                }
+            ])
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->latest();
+
+        $items = $itemsQuery->paginate(10)->appends($request->query());
+
+
+        // Récupérer les transactions ouvertes (achats et ventes)
+        $openTransactions = \App\Models\Transaction::where(function ($query) use ($userId) {
+            $query->whereHas('offer', function ($q) use ($userId) {
+                $q->where('user_id', $userId); // Achats
+            })->orWhereHas('offer.item', function ($q) use ($userId) {
+                $q->where('user_id', $userId); // Ventes
+            });
+        })
+        ->whereNotIn('status', ['completed', 'pickup_completed'])
+        ->with('offer.item.primaryImage', 'offer.item.user', 'offer.user')
+        ->latest('updated_at')
+        ->get();
+
+        // Filtrer les articles vendus en attente de retrait
+        $soldItemsForPickup = $items->filter(function ($item) {
+            if ($item->status !== \App\Enums\ItemStatus::SOLD || !$item->pickup_available) {
+                return false;
+            }
+            // Trouver l'offre qui a été payée
+            $paidOffer = $item->offers->firstWhere('status', 'paid');
+            // Vérifier si l'offre a une transaction et si cette transaction n'est pas encore complétée
+            return $paidOffer && $paidOffer->transaction && $paidOffer->transaction->status !== 'pickup_completed';
+        });
+
+        // Récupérer les dernières ventes terminées pour l'historique
+        $completedSales = $items->filter(function ($item) {
+            return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
+                return $offer->transaction && $offer->transaction->status === 'completed';
+            });
+        })->take(5);
 
         return view('dashboard', [
             'items' => $items,
-            'offers' => $offers,
+            'openTransactions' => $openTransactions,
+            'soldItemsForPickup' => $soldItemsForPickup,
+            'completedSales' => $completedSales,
         ]);
     }
+
 
     /**
      * Affiche le formulaire de création d'annonce.
      */
     public function create()
     {
-        return view('items.create');
+        $pickupAddresses = Auth::user()->pickupAddresses;
+        return view('items.create', compact('pickupAddresses'));
     }
+
 
     /**
-     * Analyse une image avec l'IA et redirige vers le formulaire de création.
+     * Crée une annonce non publiée à partir d'une sélection IA (AJAX).
      */
-    public function analyzeImage(Request $request, GoogleAiService $aiService)
+    public function createFromAi(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $validated = $request->validate([
+            'original_image_path' => 'required|string',
+            'item_data' => 'required|string',
+            'item_index' => 'required|integer',
         ]);
 
-        $imageFile = $request->file('image');
-        $imagePath = $imageFile->getRealPath();
+        $itemData = json_decode($validated['item_data'], true);
+        $originalPath = $validated['original_image_path'];
+        $itemIndex = $validated['item_index'];
+        $box = $itemData['box'];
 
-        $aiData = $aiService->analyzeImage($imagePath);
+        $aiRequest = AiRequest::where('image_path', $originalPath)->first();
 
-        if (!$aiData) {
-            return back()->with('error', 'L\'analyse de l\'image a échoué. Veuillez réessayer.');
+        if (!$aiRequest) {
+            return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
         }
 
-        // Stocker l'image temporairement
-        $storedImagePath = $imageFile->store('temp_images', 'public');
+        if ($aiRequest->status !== 'completed') {
+            return response()->json(['success' => false, 'message' => 'L\'analyse IA n\'est pas terminée.']);
+        }
 
-        // Rediriger vers le formulaire de création avec les données pré-remplies
-        return redirect()->route('items.create')->with([
-            'ai_data' => $aiData,
-            'image_path' => $storedImagePath
+        $createdItemIds = $aiRequest->created_item_ids ?? [];
+        if (isset($createdItemIds[$itemIndex])) {
+            return response()->json(['success' => false, 'message' => 'Cet objet a déjà été créé.']);
+        }
+
+
+        if (!Storage::disk('public')->exists($originalPath)) {
+            return response()->json(['success' => false, 'message' => 'Image originale non trouvée.']);
+        }
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read(Storage::disk('public')->path($originalPath));
+
+        $x1 = $box['x1'] / 1000.0;
+        $y1 = $box['y1'] / 1000.0;
+        $x2 = $box['x2'] / 1000.0;
+        $y2 = $box['y2'] / 1000.0;
+
+        $width = ($x2 - $x1) * $image->width();
+        $height = ($y2 - $y1) * $image->height();
+        $x = $x1 * $image->width();
+        $y = $y1 * $image->height();
+
+        $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
+        $croppedImageName = 'cropped_' . uniqid() . '.jpg';
+
+        $item = Item::create([
+            'user_id' => Auth::id(),
+            'title' => $itemData['title'],
+            'description' => $itemData['description'],
+            'price' => $itemData['price'],
+            'category' => $itemData['category'],
+            'status' => ItemStatus::UNPUBLISHED,
         ]);
+
+        $croppedImagePath = "item_images/{$item->id}/" . $croppedImageName;
+        Storage::disk('public')->put($croppedImagePath, (string) $croppedImage->encode());
+
+        $item->images()->create([
+            'path' => $croppedImagePath,
+            'is_primary' => true,
+            'order' => 0,
+        ]);
+
+        $createdItemIds[$itemIndex] = $item->id;
+        $aiRequest->update(['created_item_ids' => $createdItemIds]);
+
+
+        return response()->json(['success' => true, 'item_url' => route('items.show', $item)]);
     }
+
 
     /**
      * Enregistre une nouvelle annonce dans la base de données.
@@ -126,11 +270,17 @@ class ItemController extends Controller
             'images' => 'required_without:image_path|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'image_path' => 'sometimes|string',
+            'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
+            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
         ]);
 
         $item = new Item($validatedData);
-        $item->pickup_available = $request->has('pickup_available');
+        $item->delivery_available = $request->boolean('delivery_available');
+        $item->pickup_available = $request->boolean('pickup_available');
+        // N'assigner address_id que si le retrait est activé
+        $item->address_id = $request->boolean('pickup_available') ? $validatedData['address_id'] : null;
+
         $item->user_id = Auth::id();
         $item->save();
 
@@ -174,9 +324,11 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $this->authorize('update', $item);
+        $pickupAddresses = Auth::user()->pickupAddresses;
 
         return view('items.edit', [
             'item' => $item,
+            'pickupAddresses' => $pickupAddresses,
         ]);
     }
 
@@ -194,10 +346,16 @@ class ItemController extends Controller
             'price' => 'required|numeric',
             'images' => 'sometimes|array|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
+            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
         ]);
 
-        $validatedData['pickup_available'] = $request->has('pickup_available');
+        $validatedData['delivery_available'] = $request->boolean('delivery_available');
+        $validatedData['pickup_available'] = $request->boolean('pickup_available');
+        // N'assigner address_id que si le retrait est activé
+        $validatedData['address_id'] = $request->boolean('pickup_available') ? $validatedData['address_id'] : null;
+
         $item->update($validatedData);
 
         // Ajout de nouvelles images
@@ -237,6 +395,19 @@ class ItemController extends Controller
     }
 
     /**
+     * Republie une annonce.
+     */
+    public function publish(Item $item)
+    {
+        $this->authorize('update', $item);
+
+        $item->status = ItemStatus::AVAILABLE;
+        $item->save();
+
+        return redirect()->route('dashboard')->with('success', 'Annonce publiée avec succès.');
+    }
+
+    /**
      * Supprime une annonce de la base de données.
      */
     public function destroy(Item $item)
@@ -256,8 +427,28 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
+        $item->load('offers.transaction');
         return view('items.show', [
             'item' => $item,
+        ]);
+    }
+
+    public function toggleStatus(Item $item)
+    {
+        $this->authorize('update', $item);
+
+        if ($item->status === \App\Enums\ItemStatus::AVAILABLE) {
+            $item->status = \App\Enums\ItemStatus::UNPUBLISHED;
+        } else {
+            $item->status = \App\Enums\ItemStatus::AVAILABLE;
+        }
+
+        $item->save();
+
+        return response()->json([
+            'newStatus' => $item->status,
+            'newStatusText' => $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'En ligne' : 'Hors ligne',
+            'isAvailable' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
         ]);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\AddressType;
+use App\Models\Address;
+use App\Models\Offer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +20,20 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'offer_id' => \App\Models\Offer::factory(),
+            'offer_id' => Offer::factory(),
             'amount' => $this->faker->randomFloat(2, 1, 1000),
             'status' => 'completed',
+            'address_id' => function (array $attributes) {
+                // Ensure the address belongs to the user who made the offer (the buyer).
+                $offer = Offer::find($attributes['offer_id']);
+                return Address::factory()->create([
+                    'user_id' => $offer->user_id,
+                    'type' => AddressType::DELIVERY
+                ]);
+            },
+            'sendcloud_parcel_id' => null,
+            'tracking_code' => null,
+            'label_url' => null,
         ];
     }
 }

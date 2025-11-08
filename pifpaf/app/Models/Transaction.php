@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,12 +13,37 @@ class Transaction extends Model
     protected $fillable = [
         'offer_id',
         'amount',
+        'wallet_amount',
+        'card_amount',
         'status',
         'pickup_code',
+        'address_id',
+        'sendcloud_parcel_id',
+        'tracking_code',
+        'label_url',
+    ];
+
+    protected $casts = [
+        'status' => TransactionStatus::class,
     ];
 
     public function offer()
     {
         return $this->belongsTo(Offer::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function dispute()
+    {
+        return $this->hasOne(Dispute::class);
     }
 }

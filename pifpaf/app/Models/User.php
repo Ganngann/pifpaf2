@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AddressType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -22,6 +23,8 @@ class User extends Authenticatable
         'email',
         'password',
         'wallet',
+        'role',
+        'banned_at',
     ];
 
     /**
@@ -44,6 +47,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'banned_at' => 'datetime',
         ];
     }
 
@@ -61,5 +65,64 @@ class User extends Authenticatable
     public function offers()
     {
         return $this->hasMany(Offer::class);
+    }
+
+    public function aiRequests()
+    {
+        return $this->hasMany(AiRequest::class);
+    }
+
+    /**
+     * Get all of the user's addresses.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * Get the user's pickup addresses.
+     */
+    public function pickupAddresses(): HasMany
+    {
+        return $this->addresses()->where('type', AddressType::PICKUP);
+    }
+
+    /**
+     * Get the user's shipping addresses.
+     */
+    public function shippingAddresses(): HasMany
+    {
+        return $this->addresses()->where('type', AddressType::DELIVERY);
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un administrateur.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function reviewsWritten()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
+
+    /**
+     * Vérifie si l'utilisateur est banni.
+     *
+     * @return bool
+     */
+    public function isBanned(): bool
+    {
+        return !is_null($this->banned_at);
     }
 }

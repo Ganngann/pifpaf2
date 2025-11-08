@@ -37,6 +37,12 @@ return [
 
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
+        'timeout' => env('GEMINI_TIMEOUT', 120),
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
     ],
 
 ];

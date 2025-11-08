@@ -1,5 +1,10 @@
 # Pifpaf - Marketplace de Seconde Main Assistée par IA
 
+> [!IMPORTANT]
+> **Directive pour l'Agent IA (Jules)**
+> Toute intervention sur ce projet doit **impérativement** suivre la procédure définie dans le fichier `AGENTS.md`. C'est une règle non-négociable.
+> **[Consulter la directive](./AGENTS.md)**
+
 ## 1. Vue d'ensemble du Projet
 
 Pifpaf est un Proof of Concept (PoC) pour une marketplace de seconde main qui se distingue par une intégration poussée de l'Intelligence Artificielle (IA) via **Gemini 2.5 Flash**. L'objectif est de simplifier radicalement l'expérience de mise en vente en automatisant la création d'annonces à partir d'une simple photo.
@@ -7,7 +12,7 @@ Pifpaf est un Proof of Concept (PoC) pour une marketplace de seconde main qui se
 - **Stack Technique :** Laravel (Back-End), MySQL (Base de Données), SQLite (Tests).
 - **Hébergement PoC :** o2switch.
 
-Pour une description détaillée des fonctionnalités, veuillez consulter le dossier `/doc`.
+Pour une description détaillée des fonctionnalités, veuillez consulter le **[Dossier de Présentation Fonctionnel](./doc/functional_specification.md)**.
 
 ---
 

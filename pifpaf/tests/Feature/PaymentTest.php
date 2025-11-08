@@ -8,10 +8,18 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Mockery;
+use Stripe\PaymentIntent;
 
 class PaymentTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
 
     #[Test]
     public function an_authenticated_user_can_pay_for_an_accepted_offer(): void
@@ -26,12 +34,26 @@ class PaymentTest extends TestCase
             'status' => 'accepted',
         ]);
 
+        // Simuler l'API Stripe
+        Mockery::mock('alias:' . PaymentIntent::class)
+            ->shouldReceive('retrieve')
+            ->once()
+            ->with('pi_mock_id')
+            ->andReturn((object)[
+                'id' => 'pi_mock_id',
+                'status' => 'succeeded',
+                'amount' => (int) round($offer->amount * 100),
+            ]);
+
         // 2. Act
-        $response = $this->actingAs($buyer)->post(route('payment.store', $offer));
+        $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
+            'payment_intent_id' => 'pi_mock_id',
+            'use_wallet' => false,
+        ]);
 
         // 3. Assert
-        $response->assertRedirect(route('dashboard'));
-        $response->assertSessionHas('success', 'Paiement effectué avec succès ! Votre commande est en attente de confirmation de réception.');
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
 
         $this->assertDatabaseHas('transactions', [
             'offer_id' => $offer->id,
@@ -48,5 +70,49 @@ class PaymentTest extends TestCase
             'id' => $item->id,
             'status' => 'sold',
         ]);
+    }
+
+    #[Test]
+    public function an_authenticated_user_can_pay_using_their_wallet_and_it_creates_a_history_entry(): void
+    {
+        // 1. Arrange
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create(['wallet' => 100.00]);
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'status' => 'accepted',
+            'amount' => 50.00,
+        ]);
+
+        // Simuler l'API Stripe
+        Mockery::mock('alias:' . PaymentIntent::class);
+
+        // 2. Act
+        $response = $this->actingAs($buyer)->post(route('payment.store', $offer), [
+            'use_wallet' => true,
+        ]);
+
+        // 3. Assert
+        $transaction = $offer->refresh()->transaction;
+        $response->assertRedirect(route('checkout.success', $transaction));
+
+        $this->assertDatabaseHas('transactions', [
+            'offer_id' => $offer->id,
+            'amount' => 50.00,
+            'wallet_amount' => 50.00,
+            'card_amount' => 0,
+            'status' => 'payment_received',
+        ]);
+
+        $this->assertDatabaseHas('wallet_histories', [
+            'user_id' => $buyer->id,
+            'type' => 'debit',
+            'amount' => 50.00,
+            'description' => 'Achat de l\'article : ' . $item->title,
+        ]);
+
+        $this->assertEquals(50.00, $buyer->fresh()->wallet);
     }
 }

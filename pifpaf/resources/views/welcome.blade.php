@@ -43,36 +43,27 @@
                         Filtrer
                     </button>
                 </div>
+
+                <!-- Nouveaux filtres de distance -->
+                <div class="grid grid-cols-1 gap-2">
+                    <input type="text" name="location" placeholder="Autour de... (ex: Paris)" class="w-full px-4 py-2 border rounded-lg" value="{{ request('location') }}">
+                    <select name="distance" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">Distance</option>
+                        <option value="10" @if(request('distance') == '10') selected @endif>10 km</option>
+                        <option value="25" @if(request('distance') == '25') selected @endif>25 km</option>
+                        <option value="50" @if(request('distance') == '50') selected @endif>50 km</option>
+                        <option value="100" @if(request('distance') == '100') selected @endif>100 km</option>
+                    </select>
+                </div>
             </form>
+            <!-- Bouton de soumission sur une nouvelle ligne pour un meilleur affichage -->
+            <div class="mt-4 text-center">
+                <button type="submit" form="search-form" class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Rechercher
+                </button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            @forelse ($items->where('status', 'available') as $item)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <a href="{{ route('items.show', $item) }}">
-                        @php
-                            $imageUrl = $item->images->first() ? asset('storage/' . $item->images->first()->path) : asset('images/placeholder.jpg');
-                        @endphp
-                        <img src="{{ $imageUrl }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                    </a>
-                    <div class="p-4">
-                        <a href="{{ route('items.show', $item) }}">
-                            <h2 class="font-bold text-lg mb-2">{{ $item->title }}</h2>
-                        </a>
-                        <p class="text-gray-600 text-sm mb-4">{{ Str::limit($item->description, 100) }}</p>
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-lg">{{ $item->price }} €</span>
-                            <a href="{{ route('items.show', $item) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Voir
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center text-gray-500">
-                    <p>Aucun article trouvé. Essayez d'ajuster vos filtres de recherche.</p>
-                </div>
-            @endforelse
-        </div>
+        <x-item-list :items="$items" />
     </div>
 </x-main-layout>

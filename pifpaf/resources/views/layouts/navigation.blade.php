@@ -19,9 +19,6 @@
                     <a href="{{ route('items.create') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                         Vendre un article
                     </a>
-                    <a href="{{ route('wallet.show') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                        Mon Portefeuille
-                    </a>
                 </div>
                 @endauth
             </div>
@@ -50,6 +47,50 @@
                              @click.away="open = false"
                              class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
                              x-transition>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Profil
+                            </a>
+                            <a href="{{ route('ai-requests.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Analyses IA
+                            </a>
+                            <a href="{{ route('wallet.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mon Portefeuille
+                            </a>
+                            <a href="{{ route('profile.addresses.index') }}" dusk="nav-addresses-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Adresses
+                            </a>
+                            <a href="{{ route('conversations.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Messagerie
+                            </a>
+                            <a href="{{ route('transactions.purchases') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Achats
+                            </a>
+                            <a href="{{ route('transactions.sales') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Mes Ventes
+                            </a>
+
+                            @if(Auth::user()->isAdmin())
+                                <div class="border-t border-gray-200"></div>
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Administration') }}
+                                </div>
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Tableau de bord Admin
+                                </a>
+                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Utilisateurs
+                                </a>
+                                <a href="{{ route('admin.items.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Annonces
+                                </a>
+                                <a href="{{ route('admin.disputes.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Litiges
+                                </a>
+                                <a href="{{ route('styleguide') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Styleguide
+                                </a>
+                                <div class="border-t border-gray-200"></div>
+                            @endif
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" dusk="logout-form">
                                 @csrf
@@ -70,7 +111,7 @@
 
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button @click="open = ! open" dusk="hamburger-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -90,9 +131,6 @@
                 <a href="{{ route('items.create') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('items.create') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     Vendre un article
                 </a>
-                <a href="{{ route('wallet.show') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('items.create') ? 'border-indigo-400 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                    Mon Portefeuille
-                </a>
             </div>
 
             <!-- Responsive Settings Options -->
@@ -103,6 +141,51 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
+                    <a href="{{ route('profile.edit') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Profil
+                    </a>
+                    <a href="{{ route('ai-requests.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Analyses IA
+                    </a>
+                    <a href="{{ route('wallet.show') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mon Portefeuille
+                    </a>
+                    <a href="{{ route('profile.addresses.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Adresses
+                    </a>
+                    <a href="{{ route('conversations.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Messagerie
+                    </a>
+                    <a href="{{ route('transactions.purchases') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Achats
+                    </a>
+                    <a href="{{ route('transactions.sales') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Mes Ventes
+                    </a>
+
+                    @if(Auth::user()->isAdmin())
+                        <div class="border-t border-gray-200"></div>
+                        <div class="block px-4 py-2 text-xs text-gray-400">
+                            {{ __('Administration') }}
+                        </div>
+                        <a href="{{ route('admin.dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Tableau de bord Admin
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Utilisateurs
+                        </a>
+                        <a href="{{ route('admin.items.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Annonces
+                        </a>
+                        <a href="{{ route('admin.disputes.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Litiges
+                        </a>
+                        <a href="{{ route('styleguide') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Styleguide
+                        </a>
+                        <div class="border-t border-gray-200"></div>
+                    @endif
+
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

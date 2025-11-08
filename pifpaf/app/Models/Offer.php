@@ -19,6 +19,7 @@ class Offer extends Model
         'item_id',
         'amount',
         'status',
+        'delivery_method',
     ];
 
     /**

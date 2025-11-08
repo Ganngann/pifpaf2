@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Item;
 
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
@@ -20,6 +21,7 @@ class ItemCreationDuskTest extends DuskTestCase
     public function testItemCreationFlow()
     {
         $user = User::factory()->create();
+        $address = Address::factory()->create(['user_id' => $user->id]);
 
         // Créer un fichier image réel pour le test
         $imageName = 'test-image.jpg';
@@ -29,7 +31,7 @@ class ItemCreationDuskTest extends DuskTestCase
         }
         UploadedFile::fake()->image($imageName)->move(dirname($filePath), $imageName);
 
-        $this->browse(function (Browser $browser) use ($user, $filePath) {
+        $this->browse(function (Browser $browser) use ($user, $filePath, $address) {
             $browser->loginAs($user)
                     ->visit(route('items.create'))
                     ->assertSee('Créer une nouvelle annonce');
@@ -46,12 +48,14 @@ class ItemCreationDuskTest extends DuskTestCase
                     ->type('description', 'Un vase rare du 18ème siècle, en parfait état.')
                     ->select('category', 'Maison') // Ajout de la catégorie
                     ->type('price', '150.75')
-                    ->attach('image', $filePath) // Utiliser le fichier image factice
+                    ->check('pickup_available')
+                    ->select('address_id', $address->id)
+                    ->attach('images[]', $filePath) // Utiliser le fichier image factice
                     ->press('Créer l\'annonce');
 
             // Vérification de la redirection et du message
-            $browser->assertPathIs('/dashboard')
-                    ->assertSee('Annonce créée avec succès.');
+            $browser->waitForText('Annonce créée avec succès.')
+                    ->assertPathIs('/dashboard');
         });
 
         // Nettoyer le fichier image après le test

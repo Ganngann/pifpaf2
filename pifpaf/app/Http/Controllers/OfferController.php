@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ItemStatus;
 use App\Models\Item;
 use App\Models\Offer;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -19,6 +20,7 @@ class OfferController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric|min:0.01',
+            'delivery_method' => 'required|in:pickup,delivery',
         ]);
 
         // Vérifier que l'utilisateur ne fait pas une offre sur son propre article
@@ -31,9 +33,41 @@ class OfferController extends Controller
             'item_id' => $item->id,
             'amount' => $request->amount,
             'status' => 'pending',
+            'delivery_method' => $request->delivery_method,
         ]);
 
         return redirect()->route('items.show', $item)->with('success', 'Votre offre a été envoyée avec succès.');
+    }
+
+    public function buyNow(Request $request, Item $item)
+    {
+        $request->validate([
+            'delivery_method' => 'required|in:delivery,pickup',
+        ]);
+
+        if (Auth::id() === $item->user_id) {
+            return back()->with('error', 'Vous ne pouvez pas acheter votre propre article.');
+        }
+
+        // Créer l'offre pour le prix de l'article
+        $offer = new Offer();
+        $offer->item_id = $item->id;
+        $offer->user_id = Auth::id();
+        $offer->amount = $item->price;
+        $offer->status = 'accepted'; // Accepter automatiquement l'offre
+        $offer->delivery_method = $request->delivery_method;
+        $offer->save();
+
+        // Mettre à jour le statut de l'article
+        $item->status = ItemStatus::SOLD;
+        $item->save();
+
+        // Rejeter les autres offres en attente pour cet article
+        Offer::where('item_id', $item->id)
+             ->where('status', 'pending')
+             ->update(['status' => 'rejected']);
+
+        return redirect()->route('checkout.summary', $offer);
     }
 
     /**

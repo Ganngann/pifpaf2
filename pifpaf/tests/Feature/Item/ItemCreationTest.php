@@ -36,18 +36,17 @@ class ItemCreationTest extends TestCase
     public function it_creates_an_item_successfully_with_valid_data()
     {
         Storage::fake('public');
-
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $imageData = UploadedFile::fake()->image('test-image.jpg');
+        $images = [UploadedFile::fake()->image('test-image.jpg')];
 
         $itemData = [
             'title' => 'Mon Super Article',
             'description' => 'Ceci est une description de l\'article.',
             'category' => 'Électronique',
             'price' => 99.99,
-            'image' => $imageData,
+            'images' => $images,
         ];
 
         $response = $this->post(route('items.store'), $itemData);
@@ -60,8 +59,9 @@ class ItemCreationTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $imagePath = 'images/' . $imageData->hashName();
-        Storage::disk('public')->assertExists($imagePath);
+        $item = \App\Models\Item::first();
+        $this->assertCount(1, $item->images);
+        Storage::disk('public')->assertExists($item->images->first()->path);
     }
 
     #[Test]
@@ -69,25 +69,26 @@ class ItemCreationTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
+        $fakeImage = [UploadedFile::fake()->image('test.jpg')];
 
         // Test sans le titre
-        $response = $this->post(route('items.store'), ['description' => 'test', 'price' => 10, 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response = $this->post(route('items.store'), ['description' => 'test', 'price' => 10, 'images' => $fakeImage]);
         $response->assertSessionHasErrors('title');
 
         // Test sans la description
-        $response = $this->post(route('items.store'), ['title' => 'test', 'price' => 10, 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response = $this->post(route('items.store'), ['title' => 'test', 'price' => 10, 'images' => $fakeImage]);
         $response->assertSessionHasErrors('description');
 
         // Test sans le prix
-        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'images' => $fakeImage]);
         $response->assertSessionHasErrors('price');
 
         // Test sans l'image
         $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10]);
-        $response->assertSessionHasErrors('image');
+        $response->assertSessionHasErrors('images');
 
         // Test sans la catégorie
-        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10, 'image' => UploadedFile::fake()->image('test.jpg')]);
+        $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10, 'images' => $fakeImage]);
         $response->assertSessionHasErrors('category');
     }
 }
