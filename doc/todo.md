@@ -14,10 +14,13 @@
 - [ ] **US-LOG-9:** Ajouter la possibilité de définir une adresse par défaut.
 - [x] **US-UX-2:** Organiser les annonces du tableau de bord vendeur par statut.
 - [ ] **US-TRS-3:** S'assurer que seul l'acheteur peut confirmer la réception d'un article.
-- [ ] **US-BUG-3:** (Issue #189) Corriger la disparition du sélecteur de statut sur le dashboard.
+- [x] **US-BUG-3:** (Issue #189) Corriger la disparition du sélecteur de statut sur le dashboard.
 - [x] **US-BUG-4:** (Issue #173) Corriger l'affichage de l'image sur la page de checkout.
 - [ ] **US-BUG-5:** (Issue #136) Empêcher les paiements multiples sur un même article.
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
+- [ ] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
+- [ ] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.
+- [ ] **US-TRS-12:** Envoyer une notification par e-mail à l'acheteur lors de la livraison.
 
 ---
 ## 🚀 Nouvelles Fonctionnalités : Gestion Financière et Virements
