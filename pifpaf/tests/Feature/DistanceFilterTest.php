@@ -31,6 +31,7 @@ class DistanceFilterTest extends TestCase
             'user_id' => $user->id,
             'address_id' => $addressNear->id,
             'pickup_available' => true,
+            'status' => 'available',
         ]);
 
         // Adresse lointaine (Lyon, >300km de "Paris Centre")
