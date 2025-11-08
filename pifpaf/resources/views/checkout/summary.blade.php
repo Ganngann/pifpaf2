@@ -34,11 +34,18 @@
                             <div class="mt-2">
                                 @if($offer->delivery_method == 'pickup')
                                     <p><strong>Remise en main propre</strong></p>
-                                    <p class="text-sm text-gray-600 mt-1">
-                                        <strong>Adresse de retrait :</strong><br>
-                                        {{ $offer->item->pickupAddress->street }},<br>
-                                        {{ $offer->item->pickupAddress->postal_code }} {{ $offer->item->pickupAddress->city }}
-                                    </p>
+                                    @if($offer->item->address)
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            <strong>Adresse de retrait :</strong><br>
+                                            {{ $offer->item->address->street }},<br>
+                                            {{ $offer->item->address->postal_code }} {{ $offer->item->address->city }}
+                                        </p>
+                                    @else
+                                        <div class="text-sm text-orange-600 mt-1 p-4 border border-orange-300 rounded-md bg-orange-50">
+                                            <p><strong>Adresse de retrait non spécifiée.</strong></p>
+                                            <p>Le vendeur n'a pas encore défini d'adresse de retrait pour cet article.</p>
+                                        </div>
+                                    @endif
                                 @else
                                     <p>Livraison standard</p>
                                     @if($shippingAddress)
