@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AddressType;
 use App\Enums\ItemStatus;
 use App\Models\Address;
 use App\Models\AiRequest;
@@ -74,7 +73,7 @@ class ItemController extends Controller
 
                 $addressIds = DB::table('addresses')
                     ->select('id')
-                    ->where('type', AddressType::PICKUP)
+                    ->where('is_for_pickup', true)
                     ->whereRaw("{$haversine} < ?", [$latitude, $longitude, $latitude, $radiusInKm])
                     ->pluck('id');
 
