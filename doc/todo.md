@@ -6,7 +6,7 @@
 ## 🎯 À Faire : Améliorations & Corrections
 *Objectif : Traiter les bugs, les améliorations d'UX et les refactorings nécessaires pour polir l'application.*
 
-- [ ] **US-WAL-1:** Lier chaque transaction de l'historique du portefeuille avec la transaction correspondante.
+- [x] **US-WAL-1:** Lier chaque transaction de l'historique du portefeuille avec la transaction correspondante.
 - [ ] **US-WAL-2:** Refactoriser le flux de paiement pour que tous les achats transitent par le portefeuille.
 - [ ] **US-BUG-1:** Réparer le bouton "Créer l'envoi" sur le tableau de bord vendeur.
 - [ ] **US-UX-1:** Corriger le design des filtres sur la page boutique.
