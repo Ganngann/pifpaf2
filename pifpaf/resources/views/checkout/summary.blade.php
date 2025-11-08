@@ -19,7 +19,7 @@
                         <div>
                             <h4 class="font-semibold text-gray-800">Article</h4>
                             <div class="mt-2 flex">
-                                <img src="{{ optional($offer->item->primaryImage)->image_path ? asset('storage/' . $offer->item->primaryImage->image_path) : asset('images/placeholder.jpg') }}" alt="{{ $offer->item->title }}" class="w-24 h-24 object-cover rounded-md">
+                                <img src="{{ optional($offer->item->primary_image)->path ? asset('storage/' . $offer->item->primary_image->path) : asset('images/placeholder.jpg') }}" alt="{{ $offer->item->title }}" class="w-24 h-24 object-cover rounded-md">
                                 <div class="ml-4">
                                     <p class="font-bold">{{ $offer->item->title }}</p>
                                     <p class="text-sm text-gray-600">Vendu par : {{ $offer->item->user->name }}</p>

@@ -28,7 +28,7 @@ class CheckoutController extends Controller
         }
 
         // Eager load relationships for efficiency and to prevent N+1 issues
-        $offer->load('item.address', 'item.user', 'item.primaryImage');
+        $offer->load('item.address', 'item.user', 'item.designatedPrimaryImage', 'item.images');
 
         $shippingAddress = Auth::user()->shippingAddresses()->first();
 

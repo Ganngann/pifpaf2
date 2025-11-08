@@ -94,8 +94,8 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10">
-                                @if ($item->primaryImage && $item->primaryImage->path)
-                                    <img class="h-10 w-10 object-cover" src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}">
+                                @if ($item->primary_image && $item->primary_image->path)
+                                    <img class="h-10 w-10 object-cover" src="{{ asset('storage/' . $item->primary_image->path) }}" alt="{{ $item->title }}">
                                 @else
                                     <div class="h-10 w-10 bg-gray-200 flex items-center justify-center">
                                         <span class="text-xs text-gray-500">?</span>
@@ -193,8 +193,8 @@
             <a href="{{ route('items.edit', $item) }}" class="block p-4">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-16 w-16">
-                        @if ($item->primaryImage && $item->primaryImage->path)
-                            <img class="h-16 w-16 object-cover" src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title }}">
+                        @if ($item->primary_image && $item->primary_image->path)
+                            <img class="h-16 w-16 object-cover" src="{{ asset('storage/' . $item->primary_image->path) }}" alt="{{ $item->title }}">
                         @else
                              <div class="h-16 w-16 bg-gray-200 flex items-center justify-center">
                                 <span class="text-xs text-gray-500">?</span>

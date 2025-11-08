@@ -3,8 +3,8 @@
 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4 flex flex-col sm:flex-row">
     <!-- Image -->
     <a href="{{ route('items.show', $transaction->offer->item) }}" class="sm:w-32 md:w-48 flex-shrink-0">
-        @if ($transaction->offer->item->primaryImage)
-            <img class="w-full h-32 sm:h-full object-cover" src="{{ asset('storage/' . $transaction->offer->item->primaryImage->path) }}" alt="{{ $transaction->offer->item->title }}">
+        @if ($transaction->offer->item->primary_image)
+            <img class="w-full h-32 sm:h-full object-cover" src="{{ asset('storage/' . $transaction->offer->item->primary_image->path) }}" alt="{{ $transaction->offer->item->title }}">
         @else
             <div class="w-full h-32 sm:h-full bg-gray-200 flex items-center justify-center">
                 <span class="text-gray-500 text-xs text-center">Aucune image</span>

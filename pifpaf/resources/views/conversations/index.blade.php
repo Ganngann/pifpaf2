@@ -24,8 +24,8 @@
                                     <div class="flex items-start space-x-4">
                                         <!-- Image de l'article -->
                                         <div class="flex-shrink-0">
-                                            @if($conversation->item && $conversation->item->primaryImage)
-                                                <img class="w-20 h-20 rounded-md object-cover" src="{{ asset('storage/' . $conversation->item->primaryImage->path) }}" alt="{{ $conversation->item->title }}">
+                                            @if($conversation->item && $conversation->item->primary_image)
+                                                <img class="w-20 h-20 rounded-md object-cover" src="{{ asset('storage/' . $conversation->item->primary_image->path) }}" alt="{{ $conversation->item->title }}">
                                             @else
                                                 <div class="w-20 h-20 rounded-md bg-gray-200 flex items-center justify-center">
                                                     <span class="text-xs text-gray-500">Aucune image</span>

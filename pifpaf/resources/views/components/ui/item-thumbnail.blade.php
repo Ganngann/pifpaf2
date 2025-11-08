@@ -1,7 +1,7 @@
 @props(['item'])
 
-@if ($item && optional($item->primaryImage)->path)
-    <img {{ $attributes->merge(['class' => 'object-cover']) }} src="{{ asset('storage/' . $item->primaryImage->path) }}" alt="{{ $item->title ?? 'Image de l\'article' }}">
+@if ($item && optional($item->primary_image)->path)
+    <img {{ $attributes->merge(['class' => 'object-cover']) }} src="{{ asset('storage/' . $item->primary_image->path) }}" alt="{{ $item->title ?? 'Image de l\'article' }}">
 @else
     <div {{ $attributes->merge(['class' => 'bg-gray-200 flex items-center justify-center rounded']) }}>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-1/2 w-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
