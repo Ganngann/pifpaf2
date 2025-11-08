@@ -104,10 +104,6 @@ Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPrevie
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
-Route::get('/test-ai', function (App\Services\GoogleAiService $aiService) {
-    $imagePath = storage_path('app/public/images/placeholder.jpg');
-    return $aiService->analyzeImage($imagePath);
-});
 
 // Routes pour l'administration
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
