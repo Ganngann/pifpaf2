@@ -14,7 +14,7 @@
 - [ ] **US-LOG-9:** Ajouter la possibilité de définir une adresse par défaut.
 - [x] **US-UX-2:** Organiser les annonces du tableau de bord vendeur par statut.
 - [ ] **US-TRS-3:** S'assurer que seul l'acheteur peut confirmer la réception d'un article.
-- [ ] **US-BUG-3:** (Issue #189) Corriger la disparition du sélecteur de statut sur le dashboard.
+- [x] **US-BUG-3:** (Issue #189) Corriger la disparition du sélecteur de statut sur le dashboard.
 - [x] **US-BUG-4:** (Issue #173) Corriger l'affichage de l'image sur la page de checkout.
 - [ ] **US-BUG-5:** (Issue #136) Empêcher les paiements multiples sur un même article.
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
