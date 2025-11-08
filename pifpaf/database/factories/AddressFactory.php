@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\AddressType;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
@@ -28,7 +27,6 @@ class AddressFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'type' => AddressType::PICKUP,
             'name' => $this->faker->word,
             'street' => $this->faker->streetAddress,
             'city' => $this->faker->city,
@@ -36,6 +34,38 @@ class AddressFactory extends Factory
             'country' => $this->faker->country(),
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
+            'is_for_pickup' => true,
+            'is_for_delivery' => false,
         ];
+    }
+
+    /**
+     * Indicate that the address is for delivery.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function delivery(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_for_pickup' => false,
+                'is_for_delivery' => true,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the address is for both pickup and delivery.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function pickupAndDelivery(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_for_pickup' => true,
+                'is_for_delivery' => true,
+            ];
+        });
     }
 }

@@ -46,7 +46,7 @@ class PickupAvailableTest extends TestCase
     {
         Storage::fake('public');
         $user = User::factory()->create();
-        $address = Address::factory()->create(['user_id' => $user->id, 'type' => AddressType::PICKUP]);
+        $address = Address::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
 
         $itemData = [

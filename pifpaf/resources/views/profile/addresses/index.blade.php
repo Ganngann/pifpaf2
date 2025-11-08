@@ -5,88 +5,50 @@
         </h2>
     </x-slot>
 
-    <div x-data="{ tab: 'pickup' }" class="py-12">
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <!-- Tabs -->
-            <div class="mb-4 border-b border-gray-200">
-                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                    <li class="mr-2" role="presentation">
-                        <button @click="tab = 'pickup'"
-                                :class="{ 'border-indigo-500 text-indigo-600': tab === 'pickup', 'border-transparent hover:text-gray-600 hover:border-gray-300': tab !== 'pickup' }"
-                                class="inline-block p-4 border-b-2 rounded-t-lg"
-                                type="button">Adresses de retrait</button>
-                    </li>
-                    <li class="mr-2" role="presentation">
-                        <button @click="tab = 'shipping'"
-                                :class="{ 'border-indigo-500 text-indigo-600': tab === 'shipping', 'border-transparent hover:text-gray-600 hover:border-gray-300': tab !== 'shipping' }"
-                                class="inline-block p-4 border-b-2 rounded-t-lg"
-                                type="button">Adresses de livraison</button>
-                    </li>
-                </ul>
-            </div>
-
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-
-                    <!-- Contenu de l'onglet Adresses de retrait -->
-                    <div x-show="tab === 'pickup'" id="pickup-addresses">
-                        <div class="flex justify-end mb-4">
-                            <a href="{{ route('profile.addresses.create', ['type' => 'pickup']) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Ajouter une adresse de retrait
-                            </a>
-                        </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Toutes mes adresses</h3>
+                        <a href="{{ route('profile.addresses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            Ajouter une adresse
+                        </a>
+                    </div>
+                    @if($addresses->isEmpty())
+                        <p>Vous n'avez pas encore d'adresse enregistrée.</p>
+                    @else
                         <div class="space-y-4">
-                            @forelse ($pickupAddresses as $address)
+                            @foreach($addresses as $address)
                                 <div class="p-4 border rounded-lg flex justify-between items-center">
                                     <div>
-                                        <p class="font-bold">{{ $address->name }}</p>
-                                        <p>{{ $address->street }}, {{ $address->city }}, {{ $address->postal_code }}</p>
+                                        <p class="font-semibold">{{ $address->name }}</p>
+                                        <p class="text-sm text-gray-600">{{ $address->street }}, {{ $address->postal_code }} {{ $address->city }}, {{ $address->country }}</p>
+                                        <div class="mt-2 flex space-x-2">
+                                            @if($address->is_for_pickup)
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Retrait
+                                                </span>
+                                            @endif
+                                            @if($address->is_for_delivery)
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Livraison
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div class="flex items-center">
-                                        <a href="{{ route('profile.addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
-                                        <form action="{{ route('profile.addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+                                    <div class="flex space-x-2">
+                                        <a href="{{ route('profile.addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                                        <form action="{{ route('profile.addresses.destroy', $address) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
                                         </form>
                                     </div>
                                 </div>
-                            @empty
-                                <p>Vous n'avez aucune adresse de retrait pour le moment.</p>
-                            @endforelse
+                            @endforeach
                         </div>
-                    </div>
-
-                    <!-- Contenu de l'onglet Adresses de livraison -->
-                    <div x-show="tab === 'shipping'" id="shipping-addresses" style="display: none;">
-                        <div class="flex justify-end mb-4">
-                            <a href="{{ route('profile.addresses.create', ['type' => 'delivery']) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Ajouter une adresse de livraison
-                            </a>
-                        </div>
-                        <div class="space-y-4">
-                            @forelse ($shippingAddresses as $address)
-                                <div class="p-4 border rounded-lg flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold">{{ $address->name }}</p>
-                                        <p>{{ $address->street }}, {{ $address->postal_code }} {{ $address->city }}, {{ $address->country }}</p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <a href="{{ route('profile.addresses.edit', $address) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
-                                        <form action="{{ route('profile.addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            @empty
-                                <p>Vous n'avez aucune adresse de livraison pour le moment.</p>
-                            @endforelse
-                        </div>
-                    </div>
-
+                    @endif
                 </div>
             </div>
         </div>

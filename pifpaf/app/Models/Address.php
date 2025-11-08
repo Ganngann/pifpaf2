@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\AddressType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +11,6 @@ class Address extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
         'name',
         'street',
         'city',
@@ -20,10 +18,13 @@ class Address extends Model
         'country',
         'latitude',
         'longitude',
+        'is_for_pickup',
+        'is_for_delivery',
     ];
 
     protected $casts = [
-        'type' => AddressType::class,
+        'is_for_pickup' => 'boolean',
+        'is_for_delivery' => 'boolean',
     ];
 
     public function user()
