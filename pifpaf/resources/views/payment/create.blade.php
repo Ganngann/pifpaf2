@@ -11,11 +11,15 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-2xl font-bold mb-6">Récapitulatif de la commande</h3>
 
-                    <div class="mb-6">
-                        <p><span class="font-semibold">Article :</span> {{ $offer->item->title }}</p>
-                        <p><span class="font-semibold">Montant de l'offre :</span> {{ number_format($offer->amount, 2, ',', ' ') }} €</p>
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-16 h-16 bg-gray-300 rounded-lg overflow-hidden">
+                            <img src="{{ asset('storage/' . optional($offer->item->primaryImage)->image_path) }}" alt="{{ $offer->item->title }}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p class="font-semibold text-lg">{{ $offer->item->title }}</p>
+                            <p class="text-gray-600">Offre : {{ number_format($offer->amount, 2, ',', ' ') }} €</p>
+                        </div>
                     </div>
-
                     {{-- Simulation d'un formulaire de paiement --}}
                     <form action="{{ route('payment.store', $offer) }}" method="POST">
                         @csrf

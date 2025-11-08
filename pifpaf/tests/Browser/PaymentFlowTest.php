@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\Item;
+use App\Models\ItemImage;
 use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -32,15 +33,39 @@ class PaymentFlowTest extends DuskTestCase
                 ->assertSee('Mes offres')
                 ->assertSee($offer->item->title)
                 ->clickLink('Payer')
-                ->assertPathIs('/offers/' . $offer->id . '/payment')
+                ->assertPathIs('/payment/' . $offer->id)
                 ->assertSee('Récapitulatif de la commande')
                 ->waitFor('#card_number')
-                ->value('#card_number', '1234567812345678')
-                ->value('#expiry_date', '12/25')
-                ->value('#cvc', '123')
+                ->type('#card_number', '1234567812345678')
+                ->type('#expiry_date', '12/25')
+                ->type('#cvc', '123')
                 ->press('Payer ' . number_format($offer->amount, 2, ',', ' ') . ' €')
                 ->assertPathIs('/dashboard')
                 ->assertSee('Paiement effectué avec succès !');
+        });
+    }
+
+    #[Test]
+    public function item_image_is_visible_on_payment_page()
+    {
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $itemImage = ItemImage::factory()->create([
+            'item_id' => $item->id,
+            'is_primary' => true,
+        ]);
+        $offer = Offer::factory()->create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'status' => 'accepted'
+        ]);
+
+        $this->browse(function (Browser $browser) use ($buyer, $offer, $itemImage) {
+            $browser->loginAs($buyer)
+                ->visit(route('payment.create', $offer))
+                ->assertVisible('img[src="' . asset('storage/' . $itemImage->image_path) . '"]')
+                ->assertSee($offer->item->title);
         });
     }
 }
