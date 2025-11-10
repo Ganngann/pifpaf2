@@ -1,0 +1,12 @@
+- generer une photo propre sur base des photos existantes, grace a l'ia
+- enrichir la foncion catégories avec plus de catégories imbriquées suggerées par l'ia
+- ajouter une fonctionalitée de tag
+- ajouter des atributs dynamiquement par catégories d'objets grace a l'ia (par exemple, pour une un jeu de sociétés, le nombre de joueur et le temps de jeu et l'age, mais pour un vetement, la taille)
+- ajoutert la possibilitée de filtrer les artcicles par atribut
+- pouvoir donner plusieures photos des memes objets pour l'analise ia
+- ajouter des articles liés
+- ajouter les gaestion des frais de la plateforme
+- ajouter la gestion des frais d'envois
+- ajouter la possibilitée de metre plusieures articles d'un meme vendeur dans la meme commande
+- ajouter la détection des dimentions et du poids par l'ia
+  
