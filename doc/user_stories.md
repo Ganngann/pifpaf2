@@ -138,38 +138,38 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 ## 🔔 Epic: Notifications
 *Mettre en place un système de notifications complet et configurable.*
 
-- **US-NOTIF-10: Centre de Notifications**
+- **[TERMINÉ] US-NOTIF-10: Centre de Notifications**
   - **En tant qu'** utilisateur, **Je veux** un centre de notifications, **Afin de** consulter l'historique de mes notifications.
 
-- **US-NOTIF-11: Marquer les notifications comme lues**
+- **[TERMINÉ] US-NOTIF-11: Marquer les notifications comme lues**
   - **En tant qu'** utilisateur, **Je veux** pouvoir marquer mes notifications comme "lues", **Afin de** gérer les nouvelles informations.
 
-- **US-NOTIF-12: Paramètres de Notifications**
+- **[TERMINÉ] US-NOTIF-12: Paramètres de Notifications**
   - **En tant qu'** utilisateur, **Je veux** pouvoir configurer mes préférences de notification, **Afin de** choisir les alertes que je souhaite recevoir.
 
-- **US-NOTIF-01: Notification de Nouvelle Offre (Vendeur)**
+- **[TERMINÉ] US-NOTIF-01: Notification de Nouvelle Offre (Vendeur)**
   - **En tant que** vendeur, **Je veux** recevoir une notification pour chaque nouvelle offre, **Afin de** répondre rapidement.
 
-- **US-NOTIF-05: Notification d'Offre Acceptée (Acheteur)**
+- **[TERMINÉ] US-NOTIF-05: Notification d'Offre Acceptée (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** être notifié quand mon offre est acceptée, **Afin de** procéder au paiement.
 
-- **US-NOTIF-06: Notification d'Offre Refusée (Acheteur)**
+- **[TERMINÉ] US-NOTIF-06: Notification d'Offre Refusée (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** être notifié quand mon offre est refusée, **Afin de** faire une nouvelle offre ou chercher un autre article.
 
-- **US-NOTIF-02: Notification de Paiement Reçu (Vendeur)**
+- **[TERMINÉ] US-NOTIF-02: Notification de Paiement Reçu (Vendeur)**
   - **En tant que** vendeur, **Je veux** être notifié quand le paiement est reçu, **Afin de** préparer la commande.
 
-- **US-NOTIF-07: Notification de Confirmation d'Envoi (Acheteur)**
+- **[TERMINÉ] US-NOTIF-07: Notification de Confirmation d'Envoi (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** être notifié quand mon colis est envoyé, **Afin de** suivre ma commande.
 
-- **US-NOTIF-03: Notification de Confirmation de Réception (Vendeur)**
+- **[TERMINÉ] US-NOTIF-03: Notification de Confirmation de Réception (Vendeur)**
   - **En tant que** vendeur, **Je veux** être notifié quand l'acheteur confirme la réception, **Afin de** savoir que la transaction est terminée.
 
-- **US-NOTIF-08: Notification de Rappel de Confirmation (Acheteur)**
+- **[TERMINÉ] US-NOTIF-08: Notification de Rappel de Confirmation (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** un rappel si je n'ai pas confirmé la réception, **Afin de** ne pas oublier de finaliser la transaction.
 
-- **US-NOTIF-04: Notification de Nouveau Message (Vendeur)**
+- **[TERMINÉ] US-NOTIF-04: Notification de Nouveau Message (Vendeur)**
   - **En tant que** vendeur, **Je veux** être notifié d'un nouveau message, **Afin de** répondre rapidement.
 
-- **US-NOTIF-09: Notification de Nouveau Message (Acheteur)**
+- **[TERMINÉ] US-NOTIF-09: Notification de Nouveau Message (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** être notifié d'un nouveau message, **Afin de** ne pas manquer une réponse.

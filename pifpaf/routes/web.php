@@ -14,6 +14,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AiRequestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StyleguideController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', [ItemController::class, 'welcome'])->name('welcome');
 
@@ -94,6 +95,10 @@ Route::middleware('auth')->group(function () {
     // Routes pour les litiges
     Route::get('/transactions/{transaction}/disputes/create', [\App\Http\Controllers\DisputeController::class, 'create'])->name('disputes.create');
     Route::post('/transactions/{transaction}/disputes', [\App\Http\Controllers\DisputeController::class, 'store'])->name('disputes.store');
+
+    // Routes pour les notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');

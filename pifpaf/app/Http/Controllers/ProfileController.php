@@ -29,13 +29,27 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Mettre à jour les préférences de notification
+        $preferences = $request->input('notification_preferences', []);
+        $user->notification_preferences = [
+            'new_offer' => isset($preferences['new_offer']),
+            'offer_accepted' => isset($preferences['offer_accepted']),
+            'offer_rejected' => isset($preferences['offer_rejected']),
+            'payment_received' => isset($preferences['payment_received']),
+            'shipment' => isset($preferences['shipment']),
+            'reception_confirmed' => isset($preferences['reception_confirmed']),
+            'new_message' => isset($preferences['new_message']),
+            'confirmation_reminder' => isset($preferences['confirmation_reminder']),
+        ];
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

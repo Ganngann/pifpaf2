@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Offer;
 use App\Models\Transaction;
 use App\Models\WalletHistory;
+use App\Notifications\PaymentReceivedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -174,6 +175,11 @@ class PaymentController extends Controller
 
             return $newTransaction;
         });
+
+        // Notifier le vendeur
+        if ($offer->item->user->wantsNotification('payment_received')) {
+            $offer->item->user->notify(new PaymentReceivedNotification($transaction));
+        }
 
         return redirect()->route('checkout.success', ['transaction' => $transaction]);
     }

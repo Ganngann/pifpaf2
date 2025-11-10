@@ -18,6 +18,14 @@
             <x-ui.card>
                 <div class="p-4 sm:p-8">
                     <div class="max-w-xl">
+                        @include('profile.partials.update-notification-preferences-form')
+                    </div>
+                </div>
+            </x-ui.card>
+
+            <x-ui.card>
+                <div class="p-4 sm:p-8">
+                    <div class="max-w-xl">
                         @include('profile.partials.export-user-data-form')
                     </div>
                 </div>
