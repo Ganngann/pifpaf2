@@ -95,22 +95,25 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 *Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds.*
 
 - **US-W1: Enregistrement des informations bancaires**
-  - **En tant que** vendeur, **Je veux** enregistrer mes coordonnées bancaires (IBAN), **Afin de** recevoir mes paiements.
+  - **En tant que** vendeur, **Je veux** pouvoir enregistrer et gérer mes informations de paiement (coordonnées bancaires) de manière sécurisée.
 
 - **US-W2: Demande de virement**
-  - **En tant que** vendeur, **Je veux** pouvoir demander un virement de mon solde disponible vers mon compte bancaire.
+  - **En tant que** vendeur, **Je veux** pouvoir initier une demande de virement depuis la page de mon portefeuille.
 
 - **US-W3: Suivi du statut d'une demande de virement**
-  - **En tant que** vendeur, **Je veux** voir le statut de mes demandes de virement (en attente, approuvé, en cours, terminé, refusé).
+  - **En tant que** vendeur, **Je veux** voir l'historique de mes demandes de virement et leur statut (ex: En attente, Approuvé, Payé, Rejeté, Échoué).
 
 - **US-W4: Gestion et validation des demandes de virement (Admin)**
-  - **En tant qu'** administrateur, **Je veux** un tableau de bord pour voir, approuver ou refuser les demandes de virement.
+  - **En tant qu'** administrateur, **Je veux** accéder à un tableau de bord pour valider ou rejeter les demandes de virement en attente.
 
-- **US-W5: Traitement automatisé du virement**
-  - **En tant que** système, **Je veux** initier le transfert d'argent via une API bancaire lorsque l'admin approuve une demande.
+- **US-W5: Traitement manuel du virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** avoir une vue claire des virements approuvés à effectuer manuellement.
 
-- **US-W6: Notifications par email**
-  - **En tant que** vendeur, **Je veux** recevoir des notifications par email à chaque étape clé du processus de virement.
+- **US-W6: Confirmation de paiement du virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** pouvoir marquer un virement comme "Payé" ou "Échoué" après l'avoir traité.
+
+- **US-W7: Notifications par email**
+  - **En tant que** vendeur, **Je veux** recevoir des notifications par email m'informant des étapes importantes de ma demande de virement.
 
 ---
 ## 💬 Epic: Messagerie
