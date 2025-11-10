@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\ItemStatus;
 use App\Models\Item;
 use App\Models\Offer;
+use App\Notifications\NewOfferNotification;
+use App\Notifications\OfferAcceptedNotification;
+use App\Notifications\OfferRejectedNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,13 +31,18 @@ class OfferController extends Controller
             return back()->withErrors(['amount' => 'Vous ne pouvez pas faire d\'offre sur votre propre article.']);
         }
 
-        Offer::create([
+        $offer = Offer::create([
             'user_id' => Auth::id(),
             'item_id' => $item->id,
             'amount' => $request->amount,
             'status' => 'pending',
             'delivery_method' => $request->delivery_method,
         ]);
+
+        // Notifier le vendeur
+        if ($item->user->wantsNotification('new_offer')) {
+            $item->user->notify(new NewOfferNotification($offer));
+        }
 
         return redirect()->route('items.show', $item)->with('success', 'Votre offre a été envoyée avec succès.');
     }
@@ -73,6 +81,10 @@ class OfferController extends Controller
         // Mettre à jour le statut de l'offre
         $offer->update(['status' => 'accepted']);
 
+        // Notifier l'acheteur
+        if ($offer->user->wantsNotification('offer_accepted')) {
+            $offer->user->notify(new OfferAcceptedNotification($offer));
+        }
 
         return redirect()->route('dashboard')->with('success', 'Offre acceptée ! L\'acheteur doit maintenant procéder au paiement.');
     }
@@ -86,6 +98,11 @@ class OfferController extends Controller
         $this->authorize('update', $offer->item);
 
         $offer->update(['status' => 'rejected']);
+
+        // Notifier l'acheteur
+        if ($offer->user->wantsNotification('offer_rejected')) {
+            $offer->user->notify(new OfferRejectedNotification($offer));
+        }
 
         return redirect()->route('dashboard')->with('success', 'Offre refusée.');
     }

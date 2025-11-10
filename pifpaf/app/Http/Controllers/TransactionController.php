@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\WalletHistory;
+use App\Notifications\ReceptionConfirmedNotification;
+use App\Notifications\ShipmentNotification;
 use App\Services\SendcloudService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Enums\TransactionStatus;
@@ -45,7 +47,7 @@ class TransactionController extends Controller
         }
 
         // On vérifie que la transaction est bien en attente de confirmation
-        if ($transaction->status !== TransactionStatus::PAYMENT_RECEIVED) {
+        if ($transaction->status !== TransactionStatus::PAYMENT_RECEIVED && $transaction->status !== TransactionStatus::IN_TRANSIT) {
             return redirect()->route('dashboard')->with('error', 'Cette transaction n\'est pas en attente de confirmation.');
         }
 
@@ -65,6 +67,11 @@ class TransactionController extends Controller
             'description' => 'Vente de l\'article : ' . $transaction->offer->item->title,
             'transaction_id' => $transaction->id,
         ]);
+
+        // Notifier le vendeur
+        if ($seller->wantsNotification('reception_confirmed')) {
+            $seller->notify(new ReceptionConfirmedNotification($transaction));
+        }
 
         return redirect()->route('dashboard')->with('success', 'Réception confirmée. Le vendeur a été payé.');
     }
@@ -169,11 +176,20 @@ class TransactionController extends Controller
             'tracking_code' => 'required|string|max:255',
         ]);
 
+        $wasInTransit = $transaction->status === TransactionStatus::IN_TRANSIT;
+
         // Mettre à jour la transaction avec le numéro de suivi et le nouveau statut
         $transaction->update([
             'tracking_code' => $request->tracking_code,
             'status' => TransactionStatus::IN_TRANSIT,
         ]);
+
+        // Notifier l'acheteur si le statut vient de changer
+        if (!$wasInTransit) {
+            if ($transaction->offer->user->wantsNotification('shipment')) {
+                $transaction->offer->user->notify(new ShipmentNotification($transaction));
+            }
+        }
 
         return redirect()->route('transactions.sales')->with('success', 'Numéro de suivi ajouté avec succès.');
     }

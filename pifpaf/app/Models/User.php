@@ -25,6 +25,7 @@ class User extends Authenticatable
         'wallet',
         'role',
         'banned_at',
+        'notification_preferences',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'banned_at' => 'datetime',
+            'notification_preferences' => 'array',
         ];
     }
 
@@ -124,5 +126,16 @@ class User extends Authenticatable
     public function isBanned(): bool
     {
         return !is_null($this->banned_at);
+    }
+
+    /**
+     * Vérifie si l'utilisateur souhaite recevoir un type de notification.
+     *
+     * @param string $notificationType
+     * @return bool
+     */
+    public function wantsNotification(string $notificationType): bool
+    {
+        return $this->notification_preferences[$notificationType] ?? true;
     }
 }
