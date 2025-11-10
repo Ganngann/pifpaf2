@@ -52,6 +52,7 @@ class NewMessageNotification extends Notification
             'conversation_id' => $this->message->conversation_id,
             'sender_name' => $this->message->user->name,
             'message' => "Vous avez reçu un nouveau message de {$this->message->user->name}.",
+            'link' => route('conversations.show', $this->message->conversation_id),
         ];
     }
 }

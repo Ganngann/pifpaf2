@@ -53,6 +53,7 @@ class ReceptionConfirmedNotification extends Notification
             'item_title' => $this->transaction->offer->item->title,
             'amount' => $this->transaction->amount,
             'message' => "L'acheteur a confirmé la réception de \"{$this->transaction->offer->item->title}\". La somme de {$this->transaction->amount} € a été ajoutée à votre portefeuille.",
+            'link' => route('transactions.show', $this->transaction->id),
         ];
     }
 }
