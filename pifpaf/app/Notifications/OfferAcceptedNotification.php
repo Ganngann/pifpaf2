@@ -53,7 +53,7 @@ class OfferAcceptedNotification extends Notification
             'item_title' => $this->offer->item->title,
             'amount' => $this->offer->amount,
             'message' => "Bonne nouvelle ! Votre offre de {$this->offer->amount} € pour \"{$this->offer->item->title}\" a été acceptée.",
-            'link' => route('transactions.show', $this->offer->transaction->id),
+            'url' => route('items.show', ['item' => $this->offer->item->id]),
         ];
     }
 }

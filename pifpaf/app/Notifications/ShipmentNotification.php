@@ -52,7 +52,7 @@ class ShipmentNotification extends Notification
             'transaction_id' => $this->transaction->id,
             'item_title' => $this->transaction->offer->item->title,
             'message' => "Votre article \"{$this->transaction->offer->item->title}\" a été expédié.",
-            'link' => route('transactions.show', $this->transaction->id),
+            'url' => route('transactions.show', ['transaction' => $this->transaction->id]),
         ];
     }
 }

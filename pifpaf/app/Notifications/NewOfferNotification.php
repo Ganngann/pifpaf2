@@ -53,7 +53,7 @@ class NewOfferNotification extends Notification
             'item_title' => $this->offer->item->title,
             'amount' => $this->offer->amount,
             'message' => "Vous avez reçu une nouvelle offre de {$this->offer->amount} € pour votre article \"{$this->offer->item->title}\".",
-            'link' => route('items.show', $this->offer->item->id),
+            'url' => route('items.show', ['item' => $this->offer->item->id]),
         ];
     }
 }

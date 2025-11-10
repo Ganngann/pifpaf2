@@ -26,15 +26,4 @@ class NotificationController extends Controller
 
         return redirect()->back();
     }
-
-    /**
-     * Redirige vers le lien de la notification et la marque comme lue.
-     */
-    public function readAndRedirect(string $id)
-    {
-        $notification = Auth::user()->notifications()->findOrFail($id);
-        $notification->markAsRead();
-
-        return redirect($notification->data['link'] ?? route('notifications.index'));
-    }
 }

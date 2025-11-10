@@ -52,7 +52,7 @@ class ConfirmationReminderNotification extends Notification
             'transaction_id' => $this->transaction->id,
             'item_title' => $this->transaction->offer->item->title,
             'message' => "N'oubliez pas de confirmer la réception de votre article \"{$this->transaction->offer->item->title}\".",
-            'link' => route('transactions.show', $this->transaction->id),
+            'url' => route('transactions.show', ['transaction' => $this->transaction->id]),
         ];
     }
 }

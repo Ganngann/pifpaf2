@@ -99,7 +99,6 @@ Route::middleware('auth')->group(function () {
     // Routes pour les notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::get('/notifications/{id}/read-and-redirect', [NotificationController::class, 'readAndRedirect'])->name('notifications.read-and-redirect');
 });
 
 Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
