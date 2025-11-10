@@ -14,9 +14,9 @@ Cette épopée couvre la capacité d'un utilisateur (vendeur) à retirer les fon
 
 **Critères d'acceptation :**
 - Un formulaire dédié permet de saisir les informations bancaires (IBAN, etc.).
-- Les informations sont stockées de manière sécurisée (probablement via un service tiers comme Stripe Connect pour éviter de stocker des données sensibles).
+- Les informations sont stockées de manière sécurisée (chiffrées en base de données).
 - Je peux modifier ou supprimer mes informations bancaires.
-- Le système valide le format des informations saisies.
+- Le système valide le format des informations saisies (ex: format IBAN).
 
 ---
 
@@ -39,46 +39,61 @@ Cette épopée couvre la capacité d'un utilisateur (vendeur) à retirer les fon
 ### US-W3 : Suivi du statut d'une demande de virement
 
 **En tant que** vendeur,
-**Je veux** voir l'historique de mes demandes de virement et leur statut (ex: En attente, En cours, Complété, Échoué),
+**Je veux** voir l'historique de mes demandes de virement et leur statut (ex: En attente, Approuvé, Payé, Rejeté, Échoué),
 **Afin de** suivre l'avancement de mes transferts de fonds.
 
 **Critères d'acceptation :**
 - Une section dans mon portefeuille liste toutes mes demandes de virement passées et présentes.
 - Pour chaque demande, je peux voir le montant, la date et le statut actuel.
-- Si une demande échoue, je peux voir la raison de l'échec (si disponible).
+- Les statuts sont clairs pour l'utilisateur : "En attente", "Approuvé" (en attente de paiement), "Payé", "Rejeté", "Échoué".
+- Si une demande échoue ou est rejetée, je peux voir la raison (si disponible).
 
 ---
 
 ### US-W4 : Gestion et validation des demandes de virement (Admin)
 
 **En tant qu'** administrateur,
-**Je veux** accéder à un tableau de bord listant toutes les demandes de virement en attente,
-**Afin de** pouvoir les valider ou les rejeter.
+**Je veux** accéder à un tableau de bord listant toutes les demandes de virement,
+**Afin de** pouvoir les valider, les rejeter et suivre leur état.
 
 **Critères d'acceptation :**
-- Une interface d'administration affiche la liste des demandes de virement avec le statut "En attente".
-- Je peux consulter les détails de chaque demande (utilisateur, montant, date).
-- Je dispose de boutons pour "Approuver" ou "Rejeter" une demande.
+- Une interface d'administration affiche la liste des demandes de virement, filtrable par statut (`pending`, `approved`, `paid`, etc.).
+- La vue par défaut montre les demandes `pending` qui nécessitent une action.
+- Je peux consulter les détails de chaque demande (utilisateur, montant, informations bancaires).
+- Je dispose de boutons pour "Approuver" ou "Rejeter" une demande `pending`.
 - Si je rejette une demande, je peux fournir une raison. Les fonds gelés sont alors restitués au portefeuille de l'utilisateur.
-- Si j'approuve une demande, le statut passe à "En cours de traitement" et le processus de virement est initié.
+- Si j'approuve une demande, le statut passe à `approved` et la demande apparaît dans la liste des virements à exécuter.
 
 ---
 
-### US-W5 : Traitement automatisé du virement
+### US-W5 : Traitement manuel du virement (Admin)
 
-**En tant que** système,
-**Je veux** interagir avec le service de paiement (Stripe) pour exécuter un virement approuvé,
-**Afin de** transférer les fonds vers le compte bancaire de l'utilisateur.
+**En tant qu'** administrateur,
+**Je veux** avoir une vue claire des virements approuvés à effectuer,
+**Afin de** les exécuter manuellement depuis le compte bancaire de l'entreprise.
 
 **Critères d'acceptation :**
-- Lorsqu'une demande est approuvée, un appel API est fait au service de paiement pour initier le transfert.
-- Le système écoute les retours (webhooks) du service de paiement pour connaître le statut du transfert.
-- Si le transfert réussit, le statut de la demande passe à "Complété", et le montant est définitivement débité du portefeuille de l'utilisateur.
-- Si le transfert échoue, le statut de la demande passe à "Échoué", la raison est enregistrée, et les fonds sont restitués au portefeuille de l'utilisateur.
+- Une section du tableau de bord liste spécifiquement les demandes avec le statut `approved`.
+- Cette vue affiche toutes les informations nécessaires pour effectuer le virement (Nom, IBAN, Montant).
+- L'interface est conçue pour éviter les erreurs (par exemple, copier facilement les informations).
 
 ---
 
-### US-W6 : Notifications par email
+### US-W6 : Confirmation de paiement du virement (Admin)
+
+**En tant qu'** administrateur,
+**Je veux** pouvoir marquer un virement comme "Payé" ou "Échoué" après avoir tenté de l'exécuter,
+**Afin de** finaliser le cycle de vie de la demande et de maintenir un historique précis.
+
+**Critères d'acceptation :**
+- Sur une demande `approved`, des boutons "Marquer comme Payé" et "Marquer comme Échoué" sont disponibles.
+- Si je clique sur "Marquer comme Payé", le statut passe à `paid`, et les fonds sont définitivement débités du portefeuille et du solde gelé du vendeur.
+- Si je clique sur "Marquer comme Échoué", je peux indiquer une raison, le statut passe à `failed`, et les fonds sont restitués au portefeuille du vendeur.
+- L'utilisateur est notifié du changement de statut.
+
+---
+
+### US-W7 : Notifications par email
 
 **En tant que** vendeur,
 **Je veux** recevoir des notifications par email concernant mes demandes de virement,
@@ -86,5 +101,5 @@ Cette épopée couvre la capacité d'un utilisateur (vendeur) à retirer les fon
 
 **Critères d'acceptation :**
 - Je reçois un email de confirmation lorsque je soumets une demande.
-- Je reçois un email lorsque ma demande est approuvée et en cours de traitement.
-- Je reçois un email pour m'informer du succès ou de l'échec du virement.
+- Je reçois un email lorsque ma demande est approuvée par un administrateur.
+- Je reçois un email final pour m'informer si le virement a été payé avec succès ou s'il a échoué.

@@ -114,9 +114,10 @@ graph LR
         direction TB
         W1["US-W1: Enregistrer infos bancaires"] --> W2["US-W2: Demander virement"]
         W2 --> W3["US-W3: Suivre statut"]
-        W4["US-W4: Admin valider"]
-        W5["US-W5: Traitement auto"]
-        W6["US-W6: Notifications"]
+        W3 --> W4["US-W4: Admin valider"]
+        W4 --> W5["US-W5: Traitement manuel"]
+        W5 --> W6["US-W6: Admin confirme paiement"]
+        W6 --> W7["US-W7: Notifications"]
     end
 
     %% === Thème: Messagerie ===
@@ -242,7 +243,7 @@ graph LR
 
 ### 🏦 Thème 11 : Gestion Financière & Virements (Non commencé)
 - **Statut :** Développement du cycle de vie complet pour le retrait des fonds par les vendeurs.
-- **Restant :** `US-W1`, `US-W2`, `US-W3`, `US-W4`, `US-W5`, `US-W6`.
+- **Restant :** `US-W1`, `US-W2`, `US-W3`, `US-W4`, `US-W5`, `US-W6`, `US-W7`.
 
 ### 💬 Thème 12 : Messagerie (Non commencé)
 - **Statut :** Améliorations de l'expérience de communication.

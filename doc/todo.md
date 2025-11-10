@@ -26,8 +26,9 @@
 - [ ] **US-W2 :** Demande de virement.
 - [ ] **US-W3 :** Suivi du statut d'une demande de virement.
 - [ ] **US-W4 :** Gestion et validation des demandes de virement (Admin).
-- [ ] **US-W5 :** Traitement automatisé du virement.
-- [ ] **US-W6 :** Notifications par email.
+- [ ] **US-W5 :** Traitement manuel du virement (Admin).
+- [ ] **US-W6 :** Confirmation de paiement du virement (Admin).
+- [ ] **US-W7 :** Notifications par email.
 
 ---
 ## 💬 Thème : Messagerie
