@@ -7,6 +7,8 @@ Initialement organisé en **Sprints thématiques** séquentiels, le développeme
 
 La priorisation et l'organisation des tâches sont basées sur un **arbre de dépendances technologiques** qui garantit que les fonctionnalités sont développées dans un ordre logique.
 
+> **Décision Stratégique (Novembre 2025) :** Le prochain cycle de développement sera entièrement consacré à la mise en place du **Thème 13 : Notifications**. Un système de notification robuste est considéré comme un prérequis fondamental pour améliorer l'expérience utilisateur sur l'ensemble des autres thèmes (transactions, messagerie, etc.).
+
 ## 2. L'Arbre Technologique & Les Lignes de Développement
 Notre stratégie est visualisée par l'arbre ci-dessous. Il montre les dépendances entre les fonctionnalités et leur état d'avancement. **Les fonctionnalités terminées sont sur fond vert.**
 
@@ -117,6 +119,33 @@ graph LR
         W6["US-W6: Notifications"]
     end
 
+    %% === Thème: Messagerie ===
+    subgraph "Thème: Messagerie"
+        direction TB
+        MSG5["US-MSG-005: Notif. nouveau message"]
+        MSG6["US-MSG-006: Compteur non lus"]
+        MSG7["US-MSG-007: Archiver conversation"]
+        MSG8["US-MSG-008: Supprimer conversation"]
+        MSG9["US-MSG-009: Rechercher"]
+        MSG10["US-MSG-010: Statut en ligne"]
+    end
+
+    %% === Thème: Notifications ===
+    subgraph "Thème: Notifications"
+        direction TB
+        NOTIF10["US-NOTIF-10: Centre de notifs"] --> NOTIF11["US-NOTIF-11: Marquer comme lues"]
+        NOTIF10 --> NOTIF12["US-NOTIF-12: Paramètres"]
+        NOTIF1["US-NOTIF-01: Nouvelle offre"]
+        NOTIF5["US-NOTIF-05: Offre acceptée"]
+        NOTIF6["US-NOTIF-06: Offre refusée"]
+        NOTIF2["US-NOTIF-02: Paiement reçu"]
+        NOTIF7["US-NOTIF-07: Colis envoyé"]
+        NOTIF3["US-NOTIF-03: Réception confirmée"]
+        NOTIF8["US-NOTIF-08: Rappel confirmation"]
+        NOTIF4["US-NOTIF-04: Nouveau message (Vendeur)"]
+        NOTIF9["US-NOTIF-09: Nouveau message (Acheteur)"]
+    end
+
     %% === Dépendances Inter-Thèmes ===
     F_Annonces --> S3_ANN1 & S3_IA1 & S3_ANN5
     F_Auth --> S4_LOG1 & S4_LOG5
@@ -128,6 +157,15 @@ graph LR
     S6_COM5 --> S8_ADM14
 
     %% === Styles des noeuds terminés ===
+    style UX1 fill:#d4edda,stroke:#c3e6cb
+    style UX2 fill:#d4edda,stroke:#c3e6cb
+    style WAL1 fill:#d4edda,stroke:#c3e6cb
+    style WAL2 fill:#d4edda,stroke:#c3e6cb
+    style BUG2 fill:#d4edda,stroke:#c3e6cb
+    style BUG3 fill:#d4edda,stroke:#c3e6cb
+    style BUG4 fill:#d4edda,stroke:#c3e6cb
+    style TRS3 fill:#d4edda,stroke:#c3e6cb
+    style BUG5 fill:#d4edda,stroke:#c3e6cb
     style S3_ANN1 fill:#d4edda,stroke:#c3e6cb
     style S3_ANN2 fill:#d4edda,stroke:#c3e6cb
     style S3_ANN3 fill:#d4edda,stroke:#c3e6cb
@@ -197,10 +235,19 @@ graph LR
 ### ✔️ Thème 9 : Qualité & Stabilité (Terminé)
 - **Statut :** La couverture de test a été améliorée sur les composants critiques.
 
-### 🗺️ Thème 10 : Améliorations & Corrections (Non commencé)
+### 🟡 Thème 10 : Améliorations & Corrections (En cours)
 - **Statut :** Ensemble de corrections et d'améliorations de l'expérience utilisateur.
-- **Restant :** `US-UX-1`, `US-UX-2`, `US-LOG-9`, `US-TRS-3`, `US-WAL-1`, `US-WAL-2`, `US-BUG-1`, `US-BUG-2`, `US-BUG-3`, `US-BUG-4`, `US-BUG-5`, `US-LOG-10`.
+- **Terminé :** `US-UX-1`, `US-UX-2`, `US-WAL-1`, `US-WAL-2`, `US-BUG-2`, `US-BUG-3`, `US-BUG-4`, `US-TRS-3`, `US-BUG-5`.
+- **Restant :** `US-LOG-9`, `US-BUG-1`, `US-LOG-10`.
 
 ### 🏦 Thème 11 : Gestion Financière & Virements (Non commencé)
 - **Statut :** Développement du cycle de vie complet pour le retrait des fonds par les vendeurs.
 - **Restant :** `US-W1`, `US-W2`, `US-W3`, `US-W4`, `US-W5`, `US-W6`.
+
+### 💬 Thème 12 : Messagerie (Non commencé)
+- **Statut :** Améliorations de l'expérience de communication.
+- **Restant :** `US-MSG-005` à `US-MSG-010`.
+
+### 🔔 Thème 13 : Notifications (Non commencé)
+- **Statut :** Construction d'un système de notifications complet.
+- **Restant :** `US-NOTIF-01` à `US-NOTIF-12`.

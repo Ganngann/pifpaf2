@@ -1,166 +1,175 @@
 # User Stories for Pifpaf
 
 ## Introduction
-Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User Stories (US), organisées en "Epics" (grandes fonctionnalités) et décomposées en stories atomiques. Chaque story inclut des Critères d'Acceptation (CA) pour guider le développement par les agents IA.
+Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User Stories (US), organisées par thèmes fonctionnels. Chaque story inclut des Critères d'Acceptation (CA) pour guider le développement.
 
 ---
-## 🚀 Sprint 10: Améliorations & Corrections
-
-### Epic 14: Améliorations UX/UI
-*Polir l'interface utilisateur pour une expérience plus intuitive et agréable.*
-
-- **US-UX-1: Corriger le design des filtres**
-  - **En tant que** utilisateur, **Je veux** que les filtres sur la page boutique soient bien alignés et esthétiques, **Afin de** pouvoir les utiliser facilement.
-  - **Critères d'acceptation :**
-    - Les éléments du formulaire de filtre (labels, champs) sont correctement alignés.
-    - Le design est responsive et s'affiche correctement sur mobile.
-
-- **US-UX-2: Organiser le tableau de bord vendeur**
-  - **En tant que** vendeur, **Je veux** que mes annonces soient triées par statut sur mon tableau de bord, **Afin de** visualiser rapidement les articles pertinents.
-  - **Critères d'acceptation :**
-    - Par défaut, les annonces "En ligne" sont affichées en premier.
-    - Ensuite, les annonces "Hors ligne", puis "Vendu".
-    - Des options de filtre permettent de n'afficher qu'un seul statut.
-
-- **US-LOG-9: Définir une adresse par défaut**
-  - **En tant que** utilisateur, **Je veux** pouvoir marquer une de mes adresses (livraison ou retrait) comme étant "par défaut", **Afin de** ne pas avoir à la sélectionner à chaque fois.
-  - **Critères d'acceptation :**
-    - Dans les formulaires de gestion d'adresses, une case à cocher "Définir par défaut" est présente.
-    - Lors du processus de commande, l'adresse par défaut est pré-sélectionnée.
-
-### Epic 15: Fiabilisation des Flux
-*Améliorer la logique métier pour la rendre plus robuste et cohérente.*
-
-- **US-TRS-3: Sécuriser la confirmation de réception**
-  - **En tant que** vendeur, **Je veux** être certain que seul l'acheteur peut confirmer la réception d'un article, **Afin de** prévenir les abus et les erreurs.
-  - **Critères d'acceptation :**
-    - Le bouton "Confirmer la réception" n'est visible et actif que pour l'utilisateur qui est l'acheteur de la transaction.
-    - Une policy (`TransactionPolicy`) est en place pour bloquer toute tentative non autorisée côté serveur.
-
-- **US-WAL-1: Lier l'historique du portefeuille**
-  - **En tant que** utilisateur, **Je veux** voir un lien vers la transaction correspondante depuis chaque entrée de mon historique de portefeuille, **Afin de** comprendre facilement l'origine de chaque mouvement.
-  - **Critères d'acceptation :**
-    - Dans la table `wallet_histories`, une colonne `transaction_id` (nullable) est ajoutée.
-    - Sur la page "Mon Portefeuille", chaque ligne de l'historique liée à un achat ou une vente contient un lien vers la page de détail de la transaction.
-
-- **US-WAL-2: Centraliser les paiements via le portefeuille**
-  - **En tant que** développeur, **Je veux** refactoriser le flux de paiement pour que tous les achats par carte créditent d'abord le portefeuille avant de le débiter, **Afin de** simplifier la logique comptable et l'historique.
-  - **Critères d'acceptation :**
-    - Lors d'un paiement par carte, deux opérations sont enregistrées dans l'historique du portefeuille : un crédit du montant payé, suivi d'un débit pour l'achat.
-    - La transaction finale enregistre bien que le paiement a été fait via le portefeuille.
-
-### Epic 16: Corrections de Bugs
-*Éliminer les bugs pour assurer le bon fonctionnement de la plateforme.*
-
-- **US-BUG-1: Réparer la création d'envoi**
-  - **En tant que** vendeur, **Je veux** que le bouton "Créer l'envoi" sur mon tableau de bord fonctionne, **Afin de** pouvoir expédier mes commandes.
-  - **Critères d'acceptation :**
-    - Le clic sur le bouton déclenche l'action attendue (par exemple, appel à l'API Sendcloud, affichage d'une modale, etc.).
-    - Le problème (JavaScript, route, etc.) qui empêche le fonctionnement est identifié et corrigé.
-
-- **US-BUG-2: Corriger l'affichage du menu déroulant (Issue #188)**
-  - **En tant que** utilisateur, **Je veux** que le menu déroulant sur la page produit s'affiche au-dessus des autres éléments, **Afin de** pouvoir interagir avec son contenu.
-  - **Critères d'acceptation :**
-    - Le problème de `z-index` ou de positionnement CSS est corrigé.
-    - Le menu apparaît correctement sur toutes les tailles d'écran.
-
-- **US-BUG-3: Persistance du sélecteur de statut (Issue #189)**
-  - **En tant que** vendeur, **Je veux** que les options de filtrage de statut restent visibles sur mon tableau de bord même si une liste est vide, **Afin de** pouvoir naviguer entre les statuts sans être bloqué.
-  - **Critères d'acceptation :**
-    - Sur la page du tableau de bord (`/dashboard`), les onglets de statut ("En ligne", "Hors ligne", "Vendu") sont toujours affichés.
-    - Si une catégorie est vide, un message "Aucun article trouvé pour ce statut" s'affiche sous les onglets.
-    - L'utilisateur peut cliquer sur n'importe quel onglet de statut à tout moment.
-
-- **US-BUG-4: Image manquante au checkout (Issue #173)**
-  - **En tant qu'** acheteur, **Je veux** voir l'image de l'article que je m'apprête à acheter sur la page de récapitulatif de commande, **Afin d'**être certain de mon achat.
-  - **Critères d'acceptation :**
-    - Sur la page `/checkout/{offer}/summary`, l'image principale de l'article est correctement affichée.
-    - La requête pour charger l'image ne produit pas d'erreur 404.
-
-- **US-BUG-5: Empêcher les paiements multiples (Issue #136)**
-  - **En tant qu'** acheteur, **Je veux** que le bouton de paiement soit désactivé après l'avoir cliqué une première fois, **Afin d'**éviter d'être débité plusieurs fois par erreur.
-  - **Critères d'acceptation :**
-    - Lors de la soumission du formulaire de paiement Stripe, le bouton "Payer" est immédiatement désactivé.
-    - Un indicateur visuel (ex: spinner) montre que le paiement est en cours de traitement.
-    - L'utilisateur ne peut pas soumettre le formulaire une seconde fois.
-
-### Epic 17: Amélioration de la gestion des adresses
-*Fournir une expérience plus fiable et visuelle lors de la gestion des adresses.*
-
-- **US-LOG-10: Vérification et visualisation des adresses (Issue #107)**
-  - **En tant que** utilisateur, **Je veux** que l'adresse que je saisis soit validée et affichée sur une carte, **Afin de** m'assurer de son exactitude.
-  - **Critères d'acceptation :**
-    - Lors de l'ajout ou de la modification d'une adresse, un appel est fait à une API de géocodage pour valider l'adresse.
-    - Si l'adresse est valide, une petite carte (ex: OpenStreetMap, Google Maps) s'affiche avec un marqueur à l'emplacement trouvé.
-    - Si l'adresse est invalide ou ambiguë, un message d'erreur est affiché à l'utilisateur.
-
----
-### Epic 18: Amélioration du Cycle de Vie des Commandes
-*Rendre le processus de transaction post-paiement plus robuste, clair et sécurisé pour le vendeur et l'acheteur.*
+## 🔐 Epic: Gestion des Transactions et Sécurité
+*Rendre le processus de transaction robuste, clair et sécurisé pour le vendeur et l'acheteur.*
 
 - **US-TRS-4: Saisie du code de retrait par le vendeur**
-  - **En tant que** vendeur, **Je veux** un champ pour saisir le code de retrait fourni par l'acheteur sur la page de la transaction, **Afin de** confirmer la remise en main propre de l'article.
+  - **En tant que** vendeur, **Je veux** un champ pour saisir le code de retrait fourni par l'acheteur, **Afin de** confirmer la remise en main propre.
   - **Critères d'acceptation :**
-    - Sur la page de détail d'une transaction éligible à la remise en main propre (statut `payment_received`), un formulaire avec un champ de saisie pour le `pickup_code` et un bouton "Confirmer la remise" est visible pour le vendeur.
+    - Sur la page de détail d'une transaction éligible (`status = payment_received`), un formulaire de saisie du `pickup_code` est visible pour le vendeur.
     - L'acheteur ne voit pas ce formulaire.
 
 - **US-TRS-5: Finalisation de la transaction par code de retrait**
-  - **En tant que** système, **Je veux** vérifier le code de retrait soumis par le vendeur et, s'il est correct, finaliser la transaction, **Afin de** garantir un paiement immédiat et sécurisé au vendeur.
+  - **En tant que** système, **Je veux** vérifier le code de retrait et, s'il est correct, finaliser la transaction, **Afin de** garantir un paiement sécurisé.
   - **Critères d'acceptation :**
-    - La soumission du formulaire `US-TRS-4` déclenche une action backend.
-    - Le backend vérifie si le code fourni correspond au `pickup_code` de la transaction.
-    - Si le code est correct :
-        - Le statut de la transaction passe à `completed`.
-        - Les fonds sont immédiatement transférés du séquestre au portefeuille du vendeur.
-        - Un message de succès est affiché.
-    - Si le code est incorrect, un message d'erreur est affiché au vendeur.
+    - Le backend vérifie la correspondance du code.
+    - Si correct, le statut de la transaction passe à `completed` et les fonds sont transférés au portefeuille du vendeur.
+    - Si incorrect, un message d'erreur est affiché.
 
 - **US-TRS-6: Affichage du code de retrait pour l'acheteur**
-  - **En tant qu'** acheteur, **Je veux** voir clairement mon "Code de Retrait" sur la page de détail de ma commande, **Afin de** pouvoir le présenter au vendeur.
+  - **En tant qu'** acheteur, **Je veux** voir clairement mon "Code de Retrait" sur la page de la commande, **Afin de** pouvoir le présenter au vendeur.
   - **Critères d'acceptation :**
-    - Sur la page de détail de la transaction, si la remise en main propre est choisie, une section bien visible affiche le `pickup_code`.
-    - Un texte explicatif indique à l'acheteur qu'il doit communiquer ce code au vendeur uniquement au moment de l'échange.
+    - Le `pickup_code` est affiché de manière visible pour l'acheteur sur la page de la transaction.
     - Le vendeur ne voit pas ce code sur son interface.
 
-- **US-TRS-7: Introduire le statut de transaction "Livré"**
-  - **En tant que** système, **Je veux** un nouveau statut de transaction `delivered`, **Afin de** marquer qu'un colis a été physiquement livré et initier la fenêtre de confirmation.
+- **US-TRS-7: Introduire le statut "Livré"**
+  - **En tant que** système, **Je veux** un statut `delivered`, **Afin de** marquer la livraison physique et initier la fenêtre de confirmation.
   - **Critères d'acceptation :**
-    - Une nouvelle valeur `delivered` est ajoutée à l'énumération `TransactionStatus`.
-    - Une action (potentiellement un webhook de Sendcloud ou une action manuelle "Marquer comme livré") permet de faire passer le statut d'une transaction de `in_transit` à `delivered`.
-    - Un champ `delivered_at` (timestamp) est ajouté à la table `transactions` pour enregistrer ce moment.
+    - `TransactionStatus` est enrichi avec la valeur `delivered`.
+    - Un champ `delivered_at` (timestamp) est ajouté à la table `transactions`.
 
-- **US-TRS-8: Fenêtre de confirmation pour l'acheteur après livraison**
-  - **En tant qu'** acheteur, **Je veux** être notifié que mon colis est livré et avoir une période de 72h pour agir, **Afin de** pouvoir confirmer la réception ou signaler un problème.
+- **US-TRS-8: Fenêtre de confirmation de 72h pour l'acheteur**
+  - **En tant qu'** acheteur, **Je veux** être notifié de la livraison et avoir 72h pour agir, **Afin de** confirmer la réception ou signaler un problème.
   - **Critères d'acceptation :**
-    - Lorsque le statut passe à `delivered`, l'interface utilisateur pour l'acheteur sur la page de la transaction affiche un message clair : "Votre colis a été livré. Veuillez confirmer la réception sous 72h. Passé ce délai, la transaction sera automatiquement finalisée."
+    - L'interface affiche un message clair sur la fenêtre de 72h.
     - Les boutons "Confirmer la réception" et "Ouvrir un litige" sont mis en évidence.
 
-- **US-TRS-9: Finalisation automatique de la transaction après livraison**
-  - **En tant que** système, **Je veux** automatiquement finaliser les transactions et payer les vendeurs si 72h se sont écoulées depuis la livraison sans action de l'acheteur, **Afin de** ne pas bloquer indéfiniment le paiement du vendeur.
+- **US-TRS-9: Finalisation automatique après 72h**
+  - **En tant que** système, **Je veux** automatiquement finaliser les transactions après 72h, **Afin de** ne pas bloquer indéfiniment le paiement du vendeur.
   - **Critères d'acceptation :**
-    - Une tâche planifiée (scheduled job) s'exécute régulièrement (ex: toutes les heures).
-    - La tâche recherche les transactions dont le statut est `delivered` et dont le `delivered_at` date de plus de 72 heures.
-    - Pour chaque transaction trouvée, le statut est mis à jour à `completed`, et les fonds sont transférés au portefeuille du vendeur.
+    - Un job planifié recherche les transactions `delivered` depuis plus de 72h.
+    - Pour celles-ci, le statut passe à `completed` et les fonds sont transférés.
 
-- **US-TRS-10: Génération de l'étiquette d'expédition via Sendcloud**
-  - **En tant que** vendeur, **Je veux** pouvoir générer et télécharger une étiquette d'expédition depuis la page de la transaction, **Afin de** pouvoir envoyer mes articles facilement.
-  - **Critères d'acceptation :**
-    - Sur une transaction payée (`payment_received`) nécessitant une livraison, un bouton "Générer l'étiquette" est visible.
-    - Le clic sur ce bouton appelle le `SendcloudService` pour créer un colis via l'API.
-    - En cas de succès, la transaction est mise à jour avec l'ID du colis Sendcloud, le numéro de suivi, et le statut passe à `shipping_initiated`.
-    - L'interface affiche un lien "Télécharger l'étiquette" qui pointe vers l'URL fournie par Sendcloud.
+---
+## 🗺️ Epic: Logistique et Adresses
+*Fournir une expérience fiable et visuelle lors de la gestion des adresses et de la logistique.*
 
-- **US-TRS-11: Traitement des webhooks Sendcloud pour le suivi automatique**
-  - **En tant que** système, **Je veux** recevoir et traiter les webhooks de Sendcloud pour mettre à jour le statut des livraisons, **Afin d'**informer en temps réel le vendeur et l'acheteur.
+- **US-LOG-9: Définir une adresse par défaut**
+  - **En tant que** utilisateur, **Je veux** pouvoir marquer une adresse comme "par défaut", **Afin de** pré-remplir les formulaires.
   - **Critères d'acceptation :**
-    - Un endpoint `POST /webhooks/sendcloud` est configuré et sécurisé par la vérification de la signature HMAC.
-    - Le webhook `parcel_status_changed` est traité.
-    - Le statut du colis reçu de Sendcloud est mappé à un statut interne de la transaction (ex: `shipped`, `in_transit`, `delivered`).
-    - La transaction correspondante est mise à jour en base de données avec le nouveau statut.
+    - Une case à cocher "Définir par défaut" est présente dans le formulaire de gestion d'adresses.
+    - L'adresse par défaut est pré-sélectionnée lors de la commande.
+
+- **US-LOG-10: Vérification et visualisation des adresses (Issue #107)**
+  - **En tant que** utilisateur, **Je veux** que mon adresse soit validée et affichée sur une carte, **Afin de** m'assurer de son exactitude.
+  - **Critères d'acceptation :**
+    - Appel à une API de géocodage lors de la saisie.
+    - Affichage d'une carte avec un marqueur si l'adresse est valide.
+    - Message d'erreur si l'adresse est invalide.
+
+---
+## 🚚 Epic: Intégration Sendcloud
+*Automatiser et simplifier le processus d'expédition pour les vendeurs.*
+
+- **US-BUG-1: Réparer la création d'envoi**
+  - **En tant que** vendeur, **Je veux** que le bouton "Créer l'envoi" fonctionne, **Afin de** pouvoir expédier mes commandes.
+  - **Critères d'acceptation :**
+    - Le clic sur le bouton déclenche l'appel à l'API Sendcloud.
+    - Le problème (JS, route, etc.) est corrigé.
+
+- **US-TRS-10: Génération de l'étiquette d'expédition**
+  - **En tant que** vendeur, **Je veux** générer et télécharger une étiquette d'expédition, **Afin de** faciliter l'envoi.
+  - **Critères d'acceptation :**
+    - Un bouton "Générer l'étiquette" appelle le `SendcloudService`.
+    - La transaction est mise à jour avec l'ID du colis et le numéro de suivi.
+    - Un lien de téléchargement pour l'étiquette est affiché.
+
+- **US-TRS-11: Traitement des webhooks Sendcloud**
+  - **En tant que** système, **Je veux** recevoir et traiter les webhooks Sendcloud, **Afin d'**automatiser le suivi.
+  - **Critères d'acceptation :**
+    - Un endpoint `POST /webhooks/sendcloud` est sécurisé et fonctionnel.
+    - Le statut de la transaction est mis à jour en fonction des événements reçus (`shipped`, `in_transit`, `delivered`).
 
 - **US-TRS-12: Notification de livraison à l'acheteur**
-  - **En tant qu'** acheteur, **Je veux** recevoir une notification (e-mail) lorsque mon colis est marqué comme "Livré", **Afin d'**être informé rapidement et de pouvoir confirmer la réception.
+  - **En tant qu'** acheteur, **Je veux** recevoir un e-mail lorsque mon colis est "Livré", **Afin d'**être informé rapidement.
   - **Critères d'acceptation :**
-    - Quand le statut d'une transaction passe à `delivered` (via le webhook Sendcloud), un événement est déclenché.
-    - Cet événement met en file d'attente l'envoi d'un e-mail à l'acheteur de la transaction.
-    - L'e-mail informe l'acheteur de la livraison et contient un lien direct vers la page de la transaction pour "Confirmer la réception" ou "Signaler un problème".
+    - Le passage au statut `delivered` déclenche l'envoi d'un e-mail à l'acheteur.
+    - L'e-mail contient un lien vers la page de la transaction.
+
+---
+## 🏦 Epic: Gestion Financière et Virements
+*Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds.*
+
+- **US-W1: Enregistrement des informations bancaires**
+  - **En tant que** vendeur, **Je veux** enregistrer mes coordonnées bancaires (IBAN), **Afin de** recevoir mes paiements.
+
+- **US-W2: Demande de virement**
+  - **En tant que** vendeur, **Je veux** pouvoir demander un virement de mon solde disponible vers mon compte bancaire.
+
+- **US-W3: Suivi du statut d'une demande de virement**
+  - **En tant que** vendeur, **Je veux** voir le statut de mes demandes de virement (en attente, approuvé, en cours, terminé, refusé).
+
+- **US-W4: Gestion et validation des demandes de virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** un tableau de bord pour voir, approuver ou refuser les demandes de virement.
+
+- **US-W5: Traitement automatisé du virement**
+  - **En tant que** système, **Je veux** initier le transfert d'argent via une API bancaire lorsque l'admin approuve une demande.
+
+- **US-W6: Notifications par email**
+  - **En tant que** vendeur, **Je veux** recevoir des notifications par email à chaque étape clé du processus de virement.
+
+---
+## 💬 Epic: Messagerie
+*Améliorer l'expérience de communication entre les utilisateurs.*
+
+- **US-MSG-005: Notification de nouveau message**
+  - **En tant que** utilisateur, **Je veux** recevoir une notification lorsque je reçois un nouveau message, **Afin d'**être informé rapidement.
+
+- **US-MSG-006: Compteur de messages non lus**
+  - **En tant que** utilisateur, **Je veux** voir un compteur de messages non lus sur l'icône de messagerie, **Afin de** savoir combien de messages je n'ai pas encore lus.
+
+- **US-MSG-007: Archiver une conversation**
+  - **En tant que** utilisateur, **Je veux** pouvoir archiver une conversation, **Afin de** nettoyer ma boîte de réception.
+
+- **US-MSG-008: Supprimer une conversation**
+  - **En tant que** utilisateur, **Je veux** pouvoir supprimer une conversation, **Afin de** retirer définitivement les discussions non pertinentes.
+
+- **US-MSG-009: Rechercher dans les conversations**
+  - **En tant que** utilisateur, **Je veux** pouvoir rechercher un mot-clé dans mes conversations, **Afin de** retrouver facilement une information.
+
+- **US-MSG-010: Statut en ligne**
+  - **En tant que** utilisateur, **Je veux** pouvoir voir si un autre utilisateur est en ligne, **Afin de** savoir si je peux attendre une réponse rapide.
+
+---
+## 🔔 Epic: Notifications
+*Mettre en place un système de notifications complet et configurable.*
+
+- **US-NOTIF-10: Centre de Notifications**
+  - **En tant qu'** utilisateur, **Je veux** un centre de notifications, **Afin de** consulter l'historique de mes notifications.
+
+- **US-NOTIF-11: Marquer les notifications comme lues**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir marquer mes notifications comme "lues", **Afin de** gérer les nouvelles informations.
+
+- **US-NOTIF-12: Paramètres de Notifications**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir configurer mes préférences de notification, **Afin de** choisir les alertes que je souhaite recevoir.
+
+- **US-NOTIF-01: Notification de Nouvelle Offre (Vendeur)**
+  - **En tant que** vendeur, **Je veux** recevoir une notification pour chaque nouvelle offre, **Afin de** répondre rapidement.
+
+- **US-NOTIF-05: Notification d'Offre Acceptée (Acheteur)**
+  - **En tant qu'** acheteur, **Je veux** être notifié quand mon offre est acceptée, **Afin de** procéder au paiement.
+
+- **US-NOTIF-06: Notification d'Offre Refusée (Acheteur)**
+  - **En tant qu'** acheteur, **Je veux** être notifié quand mon offre est refusée, **Afin de** faire une nouvelle offre ou chercher un autre article.
+
+- **US-NOTIF-02: Notification de Paiement Reçu (Vendeur)**
+  - **En tant que** vendeur, **Je veux** être notifié quand le paiement est reçu, **Afin de** préparer la commande.
+
+- **US-NOTIF-07: Notification de Confirmation d'Envoi (Acheteur)**
+  - **En tant qu'** acheteur, **Je veux** être notifié quand mon colis est envoyé, **Afin de** suivre ma commande.
+
+- **US-NOTIF-03: Notification de Confirmation de Réception (Vendeur)**
+  - **En tant que** vendeur, **Je veux** être notifié quand l'acheteur confirme la réception, **Afin de** savoir que la transaction est terminée.
+
+- **US-NOTIF-08: Notification de Rappel de Confirmation (Acheteur)**
+  - **En tant qu'** acheteur, **Je veux** un rappel si je n'ai pas confirmé la réception, **Afin de** ne pas oublier de finaliser la transaction.
+
+- **US-NOTIF-04: Notification de Nouveau Message (Vendeur)**
+  - **En tant que** vendeur, **Je veux** être notifié d'un nouveau message, **Afin de** répondre rapidement.
+
+- **US-NOTIF-09: Notification de Nouveau Message (Acheteur)**
+  - **En tant qu'** acheteur, **Je veux** être notifié d'un nouveau message, **Afin de** ne pas manquer une réponse.

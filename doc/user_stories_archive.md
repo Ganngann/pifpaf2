@@ -358,3 +358,24 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - La couverture de la méthode `store` de `RegisteredUserController` est améliorée.
     - La couverture des méthodes CRUD de `ItemImageController` est améliorée.
     - La couverture des lignes pour ces contrôleurs doit atteindre un minimum de 90%.
+
+---
+## 🚀 Sprint 10: Améliorations & Corrections
+
+- **[TERMINÉ] US-WAL-1: Lier l'historique du portefeuille**
+- **[TERMINÉ] US-WAL-2: Centraliser les paiements via le portefeuille**
+- **[TERMINÉ] US-UX-1: Corriger le design des filtres**
+- **[TERMINÉ] US-BUG-2: Corriger l'affichage du menu déroulant (Issue #188)**
+- **[TERMINÉ] US-UX-2: Organiser le tableau de bord vendeur**
+- **[TERMINÉ] US-BUG-3: Persistance du sélecteur de statut (Issue #189)**
+- **[TERMINÉ] US-BUG-4: Image manquante au checkout (Issue #173)**
+- **[TERMINÉ] US-TRS-3: Sécuriser la confirmation de réception**
+- **[TERMINÉ] US-BUG-5: Empêcher les paiements multiples (Issue #136)**
+
+---
+## 💬 Messagerie (Fonctionnalités de base)
+
+- **[TERMINÉ] US-MSG-001: Démarrer une conversation**
+- **[TERMINÉ] US-MSG-002: Envoyer un message**
+- **[TERMINÉ] US-MSG-003: Voir les messages**
+- **[TERMINÉ] US-MSG-004: Voir mes conversations**
