@@ -23,11 +23,9 @@ Ton but est de comprendre parfaitement ta mission et son écosystème. Une analy
     *   `doc/feuille_de_route.md` : Pour comprendre où se situe ta tâche dans la stratégie globale.
     *   `doc/todo.md` : Pour connaître les priorités actuelles.
     *   `doc/known_issues.md` : Pour être conscient des problèmes et des tests défaillants existants. Ne perds pas de temps sur un problème déjà identifié.
+    *   Tout autre doccument qui pourait etre utile dans le cadre de la tache.
 
-2.  **Vérifie les Discussions en Cours :**
-    *   Consulte les issues sur GitHub : [https://github.com/Ganngann/pifpaf2/issues](https://github.com/Ganngann/pifpaf2/issues). Il y a peut-être des informations contextuelles importantes liées à ta mission.
-
-3.  **Analyse les Spécifications de la Tâche (si applicable) :**
+2.  **Analyse les Spécifications de la Tâche (si applicable) :**
     *   Si ta mission est liée à une **User Story**, trouve-la dans `doc/user_stories.md` et étudie ses critères d'acceptation.
     *   Si une **Fiche Technique** existe dans `doc/technical_sheets/`, lis-la attentivement. **Considère-la comme une suggestion, pas comme une vérité absolue.**
 
@@ -59,7 +57,7 @@ Avant d'écrire la moindre ligne de code, valide ta compréhension.
     *   S'il y a la moindre ambiguïté, la moindre incertitude, **demande des clarifications**. Mieux vaut une question maintenant qu'une réécriture complète plus tard.
 
 2.  **Formalise ton Plan d'Action Final :**
-    *   Sur la base de ton analyse approfondie, rédige un plan d'action clair et concis (3 à 5 points).
+    *   Sur la base de ton analyse approfondie, rédige un plan d'action clair (autant points de points que nécéssaire).
     *   Ce plan doit mentionner les fichiers que tu comptes créer ou modifier. Si tu dévies d'une fiche technique, justifie-le.
 
 ---
@@ -84,4 +82,4 @@ Tu peux maintenant commencer à coder.
 Ton travail n'est terminé que lorsque la documentation est à jour.
 
 1.  **Mets à jour la Documentation :** Si ta tâche était liée à une User Story, coche la case correspondante dans `doc/todo.md`.
-2.  **Soumets ton travail :** Rédige un message de commit clair et soumets ta Pull Request. Ton rapport doit inclure ton plan d'action final (de la phase 3).
+2.  **Soumets ton travail :** Rédige un message de commit clair et soumets ta Pull Request. Ton rapport doit inclure ton plan d'action final (de la phase 3). Si ta tache concerne un issue, mentionne le de facon a ce que il se ferme automatiquement a la prochaine pr.
