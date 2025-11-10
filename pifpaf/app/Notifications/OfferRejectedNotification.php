@@ -53,6 +53,7 @@ class OfferRejectedNotification extends Notification
             'item_title' => $this->offer->item->title,
             'amount' => $this->offer->amount,
             'message' => "Votre offre de {$this->offer->amount} € pour \"{$this->offer->item->title}\" a été refusée.",
+            'url' => route('items.show', ['item' => $this->offer->item->id]),
         ];
     }
 }

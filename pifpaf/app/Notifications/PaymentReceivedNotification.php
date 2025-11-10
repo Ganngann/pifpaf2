@@ -53,6 +53,7 @@ class PaymentReceivedNotification extends Notification
             'item_title' => $this->transaction->offer->item->title,
             'amount' => $this->transaction->amount,
             'message' => "Paiement de {$this->transaction->amount} € reçu pour votre article \"{$this->transaction->offer->item->title}\". Vous pouvez maintenant préparer la commande.",
+            'url' => route('transactions.show', ['transaction' => $this->transaction->id]),
         ];
     }
 }
