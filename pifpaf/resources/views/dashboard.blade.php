@@ -10,6 +10,13 @@
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('success')" />
 
+            <!-- Session Error -->
+            @if (session('error'))
+                <div class="mb-4 font-medium text-sm text-red-600 bg-red-100 border border-red-400 rounded-md p-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="space-y-6">
                 <x-ui.card>
                     <div class="p-6 border-b border-gray-200">

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Enums\TransactionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -150,13 +151,19 @@ class TransactionController extends Controller
                 'sendcloud_parcel_id' => data_get($parcelData, 'id'),
                 'tracking_code' => data_get($parcelData, 'tracking_number'),
                 'label_url' => data_get($parcelData, 'label.label_printer'),
-                'status' => TransactionStatus::SHIPPING_INITIATED,
+                'status' => TransactionStatus::SHIPPED,
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
         }
 
-        return redirect()->route('dashboard')->with('error', 'Erreur lors de la création de l\'envoi.');
+        // Log the error for debugging purposes
+        Log::error("Erreur lors de la création de l'envoi Sendcloud pour la transaction #{$transaction->id}", [
+            'status' => $response->status(),
+            'body' => $response->json()
+        ]);
+
+        return redirect()->back()->with('error', 'Erreur lors de la création de l\'envoi. Veuillez vérifier les logs pour plus de détails.');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Notifications\DeliveryNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -33,6 +34,12 @@ class SendcloudWebhookController extends Controller
                 if ($newStatus) {
                     $transaction->update(['status' => $newStatus]);
                     Log::info("Transaction {$transaction->id} status updated to {$newStatus} by Sendcloud webhook.");
+
+                    // If the item is delivered, notify the buyer
+                    if ($newStatus === 'delivered') {
+                        $buyer = $transaction->offer->user;
+                        $buyer->notify(new DeliveryNotification($transaction));
+                    }
                 }
             } else {
                 Log::warning("Received webhook for unknown parcel ID: {$parcel['id']}");
@@ -50,12 +57,11 @@ class SendcloudWebhookController extends Controller
      */
     private function mapStatus(int $sendcloudStatusId): ?string
     {
-        // This is a simplified mapping. A real application would need a more comprehensive list.
-        // See https://docs.sendcloud.com/api/v2/docs/parcels-statuses-events
+        // See https://docs.sendcloud.com/api/v2/docs/parcels-statuses-events for all statuses
         return match ($sendcloudStatusId) {
             11 => 'in_transit',       // En route
-            12 => 'completed',     // Delivered, we'll consider it completed for now
-            default => null,      // For other statuses, do nothing for now
+            12 => 'delivered',        // Delivered
+            default => null,          // For other statuses, do nothing
         };
     }
 }

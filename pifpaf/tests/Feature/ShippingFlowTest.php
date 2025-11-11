@@ -49,7 +49,7 @@ class ShippingFlowTest extends TestCase
             'sendcloud_parcel_id' => 12345,
             'tracking_code' => 'TRACK123',
             'label_url' => 'http://example.com/label.pdf',
-            'status' => TransactionStatus::SHIPPING_INITIATED->value,
+            'status' => TransactionStatus::SHIPPED->value,
         ]);
 
         Http::assertSent(function ($request) {

@@ -12,6 +12,16 @@
 
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="mb-4">
+                <!-- Session Status -->
+                <x-auth-session-status class="mb-4" :status="session('success')" />
+                <!-- Session Error -->
+                @if (session('error'))
+                    <div class="font-medium text-sm text-red-600 bg-red-100 border border-red-400 rounded-md p-4">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
@@ -84,28 +94,18 @@
                     </div>
 
                     <!-- Informations de livraison -->
-                    @if($transaction->shippingAddress)
+                    @if($transaction->address)
                         <div class="border-t pt-4 mt-6">
                              <h4 class="font-semibold text-lg mb-2">Informations de livraison</h4>
                              <div class="text-gray-700">
-                                 <p>{{ $transaction->shippingAddress->name }}</p>
-                                 <p>{{ $transaction->shippingAddress->address_line_1 }}</p>
-                                 @if($transaction->shippingAddress->address_line_2)
-                                     <p>{{ $transaction->shippingAddress->address_line_2 }}</p>
-                                 @endif
-                                 <p>{{ $transaction->shippingAddress->postal_code }} {{ $transaction->shippingAddress->city }}</p>
-                                 <p>{{ $transaction->shippingAddress->country }}</p>
+                                 <p>{{ $transaction->address->name }}</p>
+                                 <p>{{ $transaction->address->street }}</p>
+                                 <p>{{ $transaction->address->postal_code }} {{ $transaction->address->city }}</p>
+                                 <p>{{ $transaction->address->country }}</p>
                              </div>
                              @if($transaction->tracking_code)
                                 <div class="mt-4">
                                     <p><strong>Code de suivi :</strong> {{ $transaction->tracking_code }}</p>
-                                </div>
-                             @endif
-                              @if($transaction->label_url)
-                                <div class="mt-4">
-                                    <a href="{{ $transaction->label_url }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                                        Voir l'étiquette d'envoi
-                                    </a>
                                 </div>
                              @endif
                         </div>
@@ -114,13 +114,19 @@
                     <!-- Actions -->
                     <div class="border-t pt-4 mt-6 flex justify-end gap-2">
                         @if(Auth::id() === $transaction->offer->item->user_id) <!-- L'utilisateur est le vendeur -->
-                            @if(is_null($transaction->tracking_code) && $transaction->shippingAddress)
-                                <form action="{{ route('transactions.ship', $transaction) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-                                        Créer l'étiquette d'envoi
-                                    </button>
-                                </form>
+                            @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED && $transaction->address)
+                                @if ($transaction->label_url)
+                                    <a href="{{ $transaction->label_url }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                        Voir l'étiquette d'envoi
+                                    </a>
+                                @else
+                                    <form action="{{ route('transactions.ship', $transaction) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                                            Créer l'envoi
+                                        </button>
+                                    </form>
+                                @endif
                             @endif
                         @else <!-- L'utilisateur est l'acheteur -->
                             @if ($transaction->status === \App\Enums\TransactionStatus::PAYMENT_RECEIVED)

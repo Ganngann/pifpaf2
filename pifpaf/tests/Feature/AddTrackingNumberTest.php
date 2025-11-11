@@ -22,7 +22,7 @@ class AddTrackingNumberTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPED]);
 
         $trackingNumber = '123456789';
 
@@ -49,7 +49,7 @@ class AddTrackingNumberTest extends TestCase
         $unauthorizedUser = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPED]);
 
         $trackingNumber = '123456789';
 
@@ -63,7 +63,7 @@ class AddTrackingNumberTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'tracking_code' => null,
-            'status' => TransactionStatus::SHIPPING_INITIATED->value,
+            'status' => TransactionStatus::SHIPPED->value,
         ]);
     }
 
@@ -74,7 +74,7 @@ class AddTrackingNumberTest extends TestCase
         $buyer = User::factory()->create();
         $item = Item::factory()->create(['user_id' => $seller->id]);
         $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
-        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPING_INITIATED]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::SHIPPED]);
 
         $response = $this->actingAs($seller)
             ->patch(route('transactions.addTracking', $transaction), [
@@ -86,7 +86,7 @@ class AddTrackingNumberTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'tracking_code' => null,
-            'status' => TransactionStatus::SHIPPING_INITIATED->value,
+            'status' => TransactionStatus::SHIPPED->value,
         ]);
     }
 }
