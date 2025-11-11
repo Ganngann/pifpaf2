@@ -13,10 +13,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            // Drop the old foreign key constraint that points to shipping_addresses
-            // We need to check if the constraint exists before dropping it to avoid errors on fresh installs
-            if (DB::getSchemaBuilder()->hasForeignKey('transactions', ['address_id'])) {
-                $table->dropForeign('transactions_shipping_address_id_foreign');
+            // MySQL-compatible way to check for foreign key existence
+            $schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
+            $foreignKeys = $schemaManager->listTableForeignKeys('transactions');
+
+            foreach ($foreignKeys as $foreignKey) {
+                if ($foreignKey->getName() === 'transactions_shipping_address_id_foreign') {
+                    $table->dropForeign('transactions_shipping_address_id_foreign');
+                    break;
+                }
             }
         });
 
@@ -39,8 +44,7 @@ return new class extends Migration
             $table->dropForeign(['address_id']);
 
             // Re-add the old foreign key constraint for rollback safety
-            // Note: This assumes the old 'shipping_addresses' table still exists.
-            // If it was deleted, this rollback would fail.
+            // This assumes the old 'shipping_addresses' table still exists.
             $table->foreign('address_id', 'transactions_shipping_address_id_foreign')->references('id')->on('shipping_addresses')->onDelete('set null');
         });
     }
