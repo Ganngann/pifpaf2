@@ -159,7 +159,7 @@ class TransactionController extends Controller
             }
 
             // Si la réponse n'est pas réussie, on log l'erreur et on affiche un message à l'utilisateur
-            $errorDetails = $response->json();
+            $errorDetails = $response->json() ?? ['raw_response' => $response->body()];
             $errorMessage = data_get($errorDetails, 'error.message', 'Une erreur inconnue est survenue.');
 
             Log::error('Erreur API Sendcloud lors de la création d\'un envoi', [

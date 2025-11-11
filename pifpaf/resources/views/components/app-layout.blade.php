@@ -34,6 +34,7 @@
             <main>
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <x-auth-session-status class="mb-4" :status="session('success')" />
+                    <x-auth-session-error class="mb-4" :error="session('error')" />
                 </div>
                 {{ $slot }}
             </main>
