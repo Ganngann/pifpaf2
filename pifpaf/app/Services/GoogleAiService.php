@@ -37,7 +37,7 @@ class GoogleAiService
             - "description": A detailed description of the item in French, including its condition, features, and potential use cases.
             - "category": Suggest a category from this list: 'Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs', 'Autre'.
             - "price": A suggested price in EUR (float).
-            - "weight": The estimated weight of the item in kilograms (float). If you cannot determine the weight, return null.
+            - "weight": The estimated weight of the item in grams (integer). If you cannot determine the weight, return null.
             - "length": The estimated length of the item in centimeters (integer). If you cannot determine the length, return null.
             - "width": The estimated width of the item in centimeters (integer). If you cannot determine the width, return null.
             - "height": The estimated height of the item in centimeters (integer). If you cannot determine the height, return null.
