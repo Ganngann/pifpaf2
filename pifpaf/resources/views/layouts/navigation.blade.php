@@ -94,6 +94,9 @@
                                 <a href="{{ route('admin.disputes.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Gestion des Litiges
                                 </a>
+                                <a href="{{ route('admin.withdrawal-requests.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Gestion des Virements
+                                </a>
                                 <a href="{{ route('styleguide') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Styleguide
                                 </a>
@@ -187,6 +190,9 @@
                         </a>
                         <a href="{{ route('admin.disputes.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                             Gestion des Litiges
+                        </a>
+                        <a href="{{ route('admin.withdrawal-requests.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            Gestion des Virements
                         </a>
                         <a href="{{ route('styleguide') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                             Styleguide

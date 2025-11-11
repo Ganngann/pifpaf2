@@ -138,4 +138,20 @@ class User extends Authenticatable
     {
         return $this->notification_preferences[$notificationType] ?? true;
     }
+
+    /**
+     * Get the bank accounts for the user.
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class);
+    }
+
+    /**
+     * Get the withdrawal requests for the user.
+     */
+    public function withdrawalRequests()
+    {
+        return $this->hasMany(WithdrawalRequest::class);
+    }
 }

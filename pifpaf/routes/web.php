@@ -73,6 +73,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour la gestion des adresses
     Route::resource('profile/addresses', AddressController::class)->names('profile.addresses');
 
+    // Routes pour la gestion des comptes bancaires
+    Route::resource('profile/bank-accounts', \App\Http\Controllers\BankAccountController::class)->names('profile.bank-accounts');
+
     // Routes pour la file d'attente IA
     Route::get('/ai-requests', [AiRequestController::class, 'index'])->name('ai-requests.index');
     Route::post('/ai-requests', [AiRequestController::class, 'store'])->name('ai-requests.store');
@@ -126,6 +129,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/disputes/{dispute}/resolve-for-buyer', [\App\Http\Controllers\AdminController::class, 'resolveForBuyer'])->name('disputes.resolveForBuyer');
     Route::post('/disputes/{dispute}/resolve-for-seller', [\App\Http\Controllers\AdminController::class, 'resolveForSeller'])->name('disputes.resolveForSeller');
     Route::post('/disputes/{dispute}/close', [\App\Http\Controllers\AdminController::class, 'closeDispute'])->name('disputes.close');
+
+    // Gestion des demandes de virement
+    Route::get('/withdrawal-requests', [\App\Http\Controllers\Admin\WithdrawalRequestController::class, 'index'])->name('withdrawal-requests.index');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/approve', [\App\Http\Controllers\Admin\WithdrawalRequestController::class, 'approve'])->name('withdrawal-requests.approve');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/reject', [\App\Http\Controllers\Admin\WithdrawalRequestController::class, 'reject'])->name('withdrawal-requests.reject');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/pay', [\App\Http\Controllers\Admin\WithdrawalRequestController::class, 'pay'])->name('withdrawal-requests.pay');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/fail', [\App\Http\Controllers\Admin\WithdrawalRequestController::class, 'fail'])->name('withdrawal-requests.fail');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
