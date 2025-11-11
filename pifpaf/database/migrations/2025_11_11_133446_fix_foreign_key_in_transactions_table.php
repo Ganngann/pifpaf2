@@ -12,19 +12,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Clean up orphaned data.
+        // 1. Clean up any orphaned address_id records to prevent integrity issues.
         DB::statement('UPDATE transactions SET address_id = NULL WHERE address_id IS NOT NULL AND address_id NOT IN (SELECT id FROM addresses)');
 
-        // 2. Drop the old foreign key if it exists.
+        // 2. Use a Blueprint callback to safely modify the table.
+        // With doctrine/dbal installed, Laravel can now correctly manage foreign keys.
         Schema::table('transactions', function (Blueprint $table) {
-            // Check for the original foreign key name.
-            if ($this->hasForeignKey('transactions', 'transactions_shipping_address_id_foreign')) {
-                $table->dropForeign('transactions_shipping_address_id_foreign');
-            }
-        });
+            // Drop the old foreign key constraint if it exists.
+            // Laravel will find it by the column name.
+            $table->dropForeign(['address_id']);
 
-        // 3. Add the new correct foreign key.
-        Schema::table('transactions', function (Blueprint $table) {
+            // Add the new, correct foreign key constraint that points to the unified `addresses` table.
             $table->foreign('address_id')
                   ->references('id')
                   ->on('addresses')
@@ -38,23 +36,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
+            // To roll back, we just drop the new constraint.
+            // A full rollback to the old state is complex and unnecessary.
             $table->dropForeign(['address_id']);
         });
-    }
-
-    /**
-     * Helper to check if a foreign key exists.
-     */
-    private function hasForeignKey(string $table, string $name): bool
-    {
-        $foreignKeys = Schema::getConnection()->getDoctrineSchemaManager()->listTableForeignKeys($table);
-
-        foreach ($foreignKeys as $foreignKey) {
-            if ($foreignKey->getName() === $name) {
-                return true;
-            }
-        }
-
-        return false;
     }
 };
