@@ -283,13 +283,17 @@ class ItemController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
             'images' => 'required_without:image_path|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'image_path' => 'sometimes|string',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
             'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            'weight' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'length' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'width' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'height' => 'required_if:delivery_available,true|nullable|numeric|min:1',
         ]);
 
         $item = new Item($validatedData);
@@ -361,12 +365,16 @@ class ItemController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'category' => 'required|string|in:Vêtements,Électronique,Maison,Sport,Loisirs,Autre',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
             'images' => 'sometimes|array|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
             'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            'weight' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'length' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'width' => 'required_if:delivery_available,true|nullable|numeric|min:1',
+            'height' => 'required_if:delivery_available,true|nullable|numeric|min:1',
         ]);
 
         $validatedData['delivery_available'] = $request->boolean('delivery_available');

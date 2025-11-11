@@ -40,7 +40,7 @@ class AddressController extends Controller
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
-            'country' => 'nullable|string|max:255',
+            'country' => 'required|string|max:255',
         ]);
 
         $isForPickup = $request->boolean('is_for_pickup');
@@ -99,7 +99,7 @@ class AddressController extends Controller
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
-            'country' => 'nullable|string|max:255',
+            'country' => 'required|string|max:255',
         ]);
 
         $isForPickup = $request->boolean('is_for_pickup');

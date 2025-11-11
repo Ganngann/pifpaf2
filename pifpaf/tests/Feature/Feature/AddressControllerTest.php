@@ -92,6 +92,7 @@ class AddressControllerTest extends TestCase
             'street' => 'Rue de l\'Erreur 1',
             'city' => 'Testville',
             'postal_code' => '1234',
+            'country' => 'Neverland',
             'is_for_pickup' => false,
             'is_for_delivery' => false,
         ];
@@ -118,6 +119,7 @@ class AddressControllerTest extends TestCase
             'street' => 'Meir 1',
             'city' => 'Anvers',
             'postal_code' => '2000',
+            'country' => 'Belgique',
             'is_for_pickup' => true,
             'is_for_delivery' => true,
         ];
