@@ -65,7 +65,7 @@ class AddressControllerTest extends TestCase
             'street' => 'Grand Place 1',
             'city' => 'Bruxelles',
             'postal_code' => '1000',
-            'country' => 'Belgique',
+            'country' => 'BE',
             'is_for_pickup' => true,
             'is_for_delivery' => true,
         ];
@@ -92,7 +92,7 @@ class AddressControllerTest extends TestCase
             'street' => 'Rue de l\'Erreur 1',
             'city' => 'Testville',
             'postal_code' => '1234',
-            'country' => 'Neverland',
+            'country' => 'FR', // Valid country
             'is_for_pickup' => false,
             'is_for_delivery' => false,
         ];
@@ -119,7 +119,7 @@ class AddressControllerTest extends TestCase
             'street' => 'Meir 1',
             'city' => 'Anvers',
             'postal_code' => '2000',
-            'country' => 'Belgique',
+            'country' => 'BE',
             'is_for_pickup' => true,
             'is_for_delivery' => true,
         ];

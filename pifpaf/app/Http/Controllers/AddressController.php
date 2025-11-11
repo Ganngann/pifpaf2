@@ -8,10 +8,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\Rule;
 
 class AddressController extends Controller
 {
     use AuthorizesRequests;
+
+    private function getCountryList(): array
+    {
+        return [
+            'FR' => 'France',
+            'BE' => 'Belgique',
+            'LU' => 'Luxembourg',
+            'DE' => 'Allemagne',
+            'NL' => 'Pays-Bas',
+            'ES' => 'Espagne',
+            'IT' => 'Italie',
+            'CH' => 'Suisse',
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -35,12 +50,13 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
+        $countries = $this->getCountryList();
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
-            'country' => 'required|string|max:255',
+            'country' => ['required', Rule::in(array_keys($countries))],
         ]);
 
         $isForPickup = $request->boolean('is_for_pickup');
@@ -94,12 +110,13 @@ class AddressController extends Controller
     {
         $this->authorize('update', $address);
 
+        $countries = $this->getCountryList();
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10',
-            'country' => 'required|string|max:255',
+            'country' => ['required', Rule::in(array_keys($countries))],
         ]);
 
         $isForPickup = $request->boolean('is_for_pickup');

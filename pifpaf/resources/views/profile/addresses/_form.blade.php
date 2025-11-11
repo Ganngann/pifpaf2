@@ -19,9 +19,28 @@
     </div>
 </div>
 
+@php
+$countries = [
+    'FR' => 'France',
+    'BE' => 'Belgique',
+    'LU' => 'Luxembourg',
+    'DE' => 'Allemagne',
+    'NL' => 'Pays-Bas',
+    'ES' => 'Espagne',
+    'IT' => 'Italie',
+    'CH' => 'Suisse',
+];
+@endphp
 <div class="mb-4">
     <label for="country" class="block text-sm font-medium text-gray-700">Pays</label>
-    <input type="text" name="country" id="country" value="{{ old('country', $address->country ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+    <select name="country" id="country" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        <option value="">Sélectionnez un pays</option>
+        @foreach($countries as $code => $name)
+            <option value="{{ $code }}" {{ old('country', $address->country ?? '') == $code ? 'selected' : '' }}>
+                {{ $name }}
+            </option>
+        @endforeach
+    </select>
 </div>
 
 <div class="mb-4">
