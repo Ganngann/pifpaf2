@@ -30,6 +30,10 @@ class ItemDeliveryOptionsTest extends TestCase
             'delivery_available' => true,
             'pickup_available' => true,
             'address_id' => $address->id,
+            'weight' => 100,
+            'length' => 10,
+            'width' => 10,
+            'height' => 10,
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -99,6 +103,10 @@ class ItemDeliveryOptionsTest extends TestCase
             'delivery_available' => true,
             'pickup_available' => false,
             'address_id' => null, // Should be ignored
+            'weight' => 100,
+            'length' => 10,
+            'width' => 10,
+            'height' => 10,
         ]);
 
         $response->assertRedirect(route('dashboard'));

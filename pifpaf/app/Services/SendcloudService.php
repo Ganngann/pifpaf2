@@ -38,15 +38,25 @@ class SendcloudService
      */
     public function createParcel($item, $shippingAddress, $shippingMethodId)
     {
+        // Defensive coding: Ensure country and weight have default values.
+        $country = !empty($shippingAddress->country) ? $shippingAddress->country : 'FR'; // Default to France
+        $weightInGrams = $item->weight ?: 1; // Default to 1 gram if weight is not set
+        $weightInKg = $weightInGrams / 1000;
+
+        // Ensure weight is at least the minimum required by Sendcloud (0.001 kg)
+        if ($weightInKg < 0.001) {
+            $weightInKg = 0.001;
+        }
+
         $payload = [
             'parcel' => [
                 'name' => $shippingAddress->name,
                 'address' => $shippingAddress->street,
                 'city' => $shippingAddress->city,
                 'postal_code' => $shippingAddress->postal_code,
-                'country' => $shippingAddress->country,
+                'country' => $country,
                 'email' => $shippingAddress->user->email, // Assuming the user relationship is loaded
-                'weight' => $item->weight / 1000, // Convert grams to kg for the API
+                'weight' => $weightInKg,
                 'length' => $item->length,
                 'width' => $item->width,
                 'height' => $item->height,
