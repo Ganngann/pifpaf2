@@ -55,6 +55,7 @@ class GoogleAiService
             }
 
             Log::info('Received response from Gemini API for multi-object analysis.');
+            Log::info('Raw Gemini Response:', ['raw_response' => $response['data']]);
 
             $jsonResponse = trim(str_replace(['```json', '```'], '', $response['data']));
             $data = json_decode($jsonResponse, true);
