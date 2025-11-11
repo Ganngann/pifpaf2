@@ -33,6 +33,9 @@
                     <form id="payment-form" action="{{ route('payment.store', $offer) }}" method="POST" x-data="paymentForm" @submit.prevent="handleSubmit">
                         @csrf
                         <input type="hidden" name="payment_intent_id" x-ref="payment_intent_id">
+                        @if(isset($address_id))
+                            <input type="hidden" name="address_id" value="{{ $address_id }}">
+                        @endif
 
                         @if ($walletBalance > 0)
                         <div class="mb-6">

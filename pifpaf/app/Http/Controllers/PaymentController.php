@@ -16,7 +16,7 @@ class PaymentController extends Controller
     /**
      * Affiche le formulaire de paiement.
      */
-    public function create(Offer $offer)
+    public function create(Request $request, Offer $offer)
     {
         // On s'assure que l'utilisateur connecté est bien l'acheteur
         if (Auth::id() !== $offer->user_id) {
@@ -56,6 +56,7 @@ class PaymentController extends Controller
             'offer' => $offer,
             'walletBalance' => $walletBalance,
             'intent' => $intent,
+            'address_id' => $request->query('address_id'),
         ]);
     }
 
