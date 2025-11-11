@@ -121,7 +121,7 @@ class PaymentController extends Controller
         }
 
         // Début de la transaction de base de données pour garantir l'intégrité
-        $transaction = DB::transaction(function () use ($user, $offer, $cardAmount, $offerAmount, $cardPaymentSuccessful) {
+        $transaction = DB::transaction(function () use ($user, $offer, $cardAmount, $offerAmount, $cardPaymentSuccessful, $request) {
             // 1. Créditer le portefeuille si un paiement par carte a été effectué
             if ($cardPaymentSuccessful && $cardAmount > 0) {
                 $user->wallet += $cardAmount;
@@ -136,6 +136,7 @@ class PaymentController extends Controller
                 'card_amount' => 0,             // Le paiement par carte est maintenant une transaction de portefeuille
                 'status' => 'payment_received',
                 'pickup_code' => $offer->item->pickup_available ? Str::random(6) : null,
+                'address_id' => $offer->delivery_method === 'delivery' ? $request->input('address_id') : null,
             ]);
 
             // 3. Créer les entrées dans l'historique du portefeuille

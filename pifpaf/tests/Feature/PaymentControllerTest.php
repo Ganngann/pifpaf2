@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\ItemStatus;
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\User;
@@ -113,6 +114,7 @@ class PaymentControllerTest extends TestCase
         // Arrange
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 0]);
+        $address = Address::factory()->create(['user_id' => $buyer->id, 'is_for_delivery' => true]);
         $item = Item::factory()->create(['user_id' => $seller->id]);
 
         $acceptedOffer = Offer::factory()->create([
@@ -120,6 +122,7 @@ class PaymentControllerTest extends TestCase
             'item_id' => $item->id,
             'amount' => 50.00,
             'status' => 'accepted',
+            'delivery_method' => 'delivery',
         ]);
 
         $pendingOffer = Offer::factory()->create([
@@ -142,13 +145,16 @@ class PaymentControllerTest extends TestCase
         $response = $this->actingAs($buyer)->post(route('payment.store', $acceptedOffer), [
             'use_wallet' => false,
             'payment_intent_id' => 'pi_123',
+            'address_id' => $address->id,
         ]);
 
         // Assert
         $transaction = $acceptedOffer->refresh()->transaction;
         $response->assertRedirect(route('checkout.success', $transaction));
         $this->assertDatabaseHas('transactions', [
-            'offer_id' => $acceptedOffer->id, 'amount' => 50.00,
+            'offer_id' => $acceptedOffer->id,
+            'amount' => 50.00,
+            'address_id' => $address->id,
         ]);
         $this->assertEquals(ItemStatus::SOLD, $item->fresh()->status);
         $this->assertEquals('paid', $acceptedOffer->fresh()->status);
