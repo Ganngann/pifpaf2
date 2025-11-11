@@ -36,6 +36,10 @@ class GoogleAiService
             - "description": A detailed description of the item in French, including its condition, features, and potential use cases.
             - "category": Suggest a category from this list: 'Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs', 'Autre'.
             - "price": A suggested price in EUR (float).
+            - "weight": The estimated weight of the item in kilograms (float).
+            - "length": The estimated length of the item in centimeters (integer).
+            - "width": The estimated width of the item in centimeters (integer).
+            - "height": The estimated height of the item in centimeters (integer).
             - "box": A bounding box object with coordinates from 0 to 1000 for the item's location in the image, defined by four points: {"x1": top-left-x, "y1": top-left-y, "x2": bottom-right-x, "y2": bottom-right-y}.
 
             The final output must be a single JSON array containing one object for each identified item. If only one item is found, return an array with a single object. If no items are found, return an empty array.

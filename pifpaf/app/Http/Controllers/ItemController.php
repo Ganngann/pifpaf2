@@ -248,6 +248,9 @@ class ItemController extends Controller
         $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
         $croppedImageName = 'cropped_' . uniqid() . '.jpg';
 
+        $volume = ($itemData['length'] * $itemData['width'] * $itemData['height']) / 1000000; // in m3
+        $delivery_available = $volume < 2; // Sendcloud allows up to 2m3
+
         $item = Item::create([
             'user_id' => Auth::id(),
             'title' => $itemData['title'],
@@ -255,6 +258,12 @@ class ItemController extends Controller
             'price' => $itemData['price'],
             'category' => $itemData['category'],
             'status' => ItemStatus::UNPUBLISHED,
+            'weight' => $itemData['weight'],
+            'length' => $itemData['length'],
+            'width' => $itemData['width'],
+            'height' => $itemData['height'],
+            'pickup_available' => true,
+            'delivery_available' => $delivery_available,
         ]);
 
         $croppedImagePath = "item_images/{$item->id}/" . $croppedImageName;
