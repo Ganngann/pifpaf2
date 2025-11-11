@@ -58,8 +58,14 @@
                         Confirmer la réception
                     </button>
                 </form>
-            @elseif ($transaction->status === \App\Enums\TransactionStatus::SHIPPING_INITIATED)
-                 <a href="#" class="btn-secondary">Suivre le colis</a> {{-- Lien de suivi à implémenter --}}
+            @elseif (in_array($transaction->status, [\App\Enums\TransactionStatus::SHIPPED, \App\Enums\TransactionStatus::IN_TRANSIT, \App\Enums\TransactionStatus::DELIVERED]))
+                @if ($transaction->label_url)
+                    <a href="{{ $transaction->label_url }}" target="_blank" class="btn-secondary">Voir l'étiquette</a>
+                @endif
+                @if ($transaction->tracking_code)
+                    {{-- Idéalement, ce lien pointerait vers le site du transporteur avec le code de suivi --}}
+                    <a href="#" class="btn-secondary-outline mt-2">Suivre le colis</a>
+                @endif
             @endif
 
         @else
@@ -83,7 +89,7 @@
                         </button>
                     </form>
                 @endif
-            @elseif ($transaction->status === \App\Enums\TransactionStatus::SHIPPING_INITIATED)
+            @elseif ($transaction->status === \App\Enums\TransactionStatus::SHIPPED)
                  <a href="#" class="btn-secondary">Suivre le colis</a> {{-- Lien de suivi à implémenter --}}
             @endif
         @endif

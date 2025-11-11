@@ -150,7 +150,7 @@ class TransactionController extends Controller
                 'sendcloud_parcel_id' => data_get($parcelData, 'id'),
                 'tracking_code' => data_get($parcelData, 'tracking_number'),
                 'label_url' => data_get($parcelData, 'label.label_printer'),
-                'status' => TransactionStatus::SHIPPING_INITIATED,
+                'status' => TransactionStatus::SHIPPED,
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
