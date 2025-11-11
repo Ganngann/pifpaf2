@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,8 +14,16 @@ return new class extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             // Drop the old foreign key constraint that points to shipping_addresses
-            $table->dropForeign('transactions_shipping_address_id_foreign');
+            // We need to check if the constraint exists before dropping it to avoid errors on fresh installs
+            if (DB::getSchemaBuilder()->hasForeignKey('transactions', ['address_id'])) {
+                $table->dropForeign('transactions_shipping_address_id_foreign');
+            }
+        });
 
+        // Clean up orphaned address_id records before creating the new constraint
+        DB::statement('UPDATE transactions SET address_id = NULL WHERE address_id IS NOT NULL AND address_id NOT IN (SELECT id FROM addresses)');
+
+        Schema::table('transactions', function (Blueprint $table) {
             // Add the new foreign key constraint that points to the unified addresses table
             $table->foreign('address_id')->references('id')->on('addresses')->onDelete('set null');
         });
