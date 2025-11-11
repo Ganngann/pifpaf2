@@ -248,8 +248,16 @@ class ItemController extends Controller
         $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
         $croppedImageName = 'cropped_' . uniqid() . '.jpg';
 
-        $volume = ($itemData['length'] * $itemData['width'] * $itemData['height']) / 1000000; // in m3
-        $delivery_available = $volume < 2; // Sendcloud allows up to 2m3
+        $length = $itemData['length'] ?? null;
+        $width = $itemData['width'] ?? null;
+        $height = $itemData['height'] ?? null;
+        $weight = $itemData['weight'] ?? null;
+
+        $delivery_available = false;
+        if ($length && $width && $height) {
+            $volume = ($length * $width * $height) / 1000000; // in m3
+            $delivery_available = $volume < 2; // Sendcloud allows up to 2m3
+        }
 
         $item = Item::create([
             'user_id' => Auth::id(),
@@ -258,10 +266,10 @@ class ItemController extends Controller
             'price' => $itemData['price'],
             'category' => $itemData['category'],
             'status' => ItemStatus::UNPUBLISHED,
-            'weight' => $itemData['weight'],
-            'length' => $itemData['length'],
-            'width' => $itemData['width'],
-            'height' => $itemData['height'],
+            'weight' => $weight,
+            'length' => $length,
+            'width' => $width,
+            'height' => $height,
             'pickup_available' => true,
             'delivery_available' => $delivery_available,
         ]);
