@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\BankAccount;
 use App\Models\WalletHistory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -62,29 +63,39 @@ class WalletHistoryTest extends TestCase
     }
 
     /**
-     * Teste le retrait de fonds.
+     * Teste la demande de virement.
      *
      * @return void
      */
-    public function test_user_can_withdraw_funds()
+    public function test_user_can_request_a_withdrawal()
     {
         $user = User::factory()->create(['wallet' => 100]);
+        $bankAccount = BankAccount::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user)->post(route('wallet.withdraw'), ['amount' => 50]);
+        $response = $this->actingAs($user)->post(route('wallet.withdraw'), [
+            'amount' => 50,
+            'bank_account_id' => $bankAccount->id,
+        ]);
 
         $response->assertRedirect(route('wallet.show'));
-        $response->assertSessionHas('success', 'Retrait effectué avec succès.');
+        $response->assertSessionHas('success', 'Votre demande de virement a bien été enregistrée.');
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'wallet' => 50,
+            'wallet' => 50, // Wallet is reduced immediately to "freeze" funds
+        ]);
+
+        $this->assertDatabaseHas('withdrawal_requests', [
+            'user_id' => $user->id,
+            'bank_account_id' => $bankAccount->id,
+            'amount' => 50,
+            'status' => 'pending',
         ]);
 
         $this->assertDatabaseHas('wallet_histories', [
             'user_id' => $user->id,
-            'type' => 'withdrawal',
+            'type' => 'debit',
             'amount' => 50,
-            'description' => 'Retrait de fonds',
         ]);
     }
 }
