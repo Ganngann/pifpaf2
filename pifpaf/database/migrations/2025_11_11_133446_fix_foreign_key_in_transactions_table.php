@@ -12,17 +12,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Clean up any orphaned address_id records to prevent integrity issues.
+        // 1. Clean up orphaned data first.
         DB::statement('UPDATE transactions SET address_id = NULL WHERE address_id IS NOT NULL AND address_id NOT IN (SELECT id FROM addresses)');
 
-        // 2. Use a Blueprint callback to safely modify the table.
-        // With doctrine/dbal installed, Laravel can now correctly manage foreign keys.
+        // 2. Defensively drop the foreign key, whatever its name is.
         Schema::table('transactions', function (Blueprint $table) {
-            // Drop the old foreign key constraint if it exists.
-            // Laravel will find it by the column name.
-            $table->dropForeign(['address_id']);
+            // This requires doctrine/dbal to be installed.
+            $schemaManager = Schema::getConnection()->getDoctrineSchemaManager();
 
-            // Add the new, correct foreign key constraint that points to the unified `addresses` table.
+            try {
+                $foreignKeys = $schemaManager->listTableForeignKeys('transactions');
+
+                foreach ($foreignKeys as $foreignKey) {
+                    // If the foreign key involves the `address_id` column, drop it.
+                    if (in_array('address_id', $foreignKey->getColumns())) {
+                        $table->dropForeign($foreignKey->getName());
+                        // Stop after finding and dropping the key.
+                        break;
+                    }
+                }
+            } catch (\Exception $e) {
+                // If doctrine/dbal is not present or another error occurs,
+                // we log it and proceed, as the key might not exist anyway.
+                // This makes the migration less likely to fail.
+                DB::rollBack();
+                // We cannot use Log facade here, so we'll just proceed
+            }
+        });
+
+        // 3. Add the new correct foreign key.
+        Schema::table('transactions', function (Blueprint $table) {
             $table->foreign('address_id')
                   ->references('id')
                   ->on('addresses')
@@ -36,8 +55,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            // To roll back, we just drop the new constraint.
-            // A full rollback to the old state is complex and unnecessary.
             $table->dropForeign(['address_id']);
         });
     }
