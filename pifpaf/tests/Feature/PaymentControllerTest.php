@@ -28,14 +28,16 @@ class PaymentControllerTest extends TestCase
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
         $unauthorizedUser = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $address = \App\Models\Address::factory()->for($buyer)->create(['is_for_delivery' => true]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'delivery_available' => true]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'status' => 'accepted',
+            'delivery_method' => 'delivery',
         ]);
 
-        $response = $this->actingAs($unauthorizedUser)->get(route('payment.create', $offer));
+        $response = $this->actingAs($unauthorizedUser)->get(route('payment.create', ['offer' => $offer, 'address_id' => $address->id]));
 
         $response->assertStatus(403);
     }
@@ -45,14 +47,16 @@ class PaymentControllerTest extends TestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $address = \App\Models\Address::factory()->for($buyer)->create(['is_for_delivery' => true]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'delivery_available' => true]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'status' => 'pending',
+            'delivery_method' => 'delivery',
         ]);
 
-        $response = $this->actingAs($buyer)->get(route('payment.create', $offer));
+        $response = $this->actingAs($buyer)->get(route('payment.create', ['offer' => $offer, 'address_id' => $address->id]));
 
         $response->assertRedirect(route('dashboard'));
         $response->assertSessionHasErrors('payment');
@@ -71,15 +75,17 @@ class PaymentControllerTest extends TestCase
 
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 5.00]);
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $address = \App\Models\Address::factory()->for($buyer)->create(['is_for_delivery' => true]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'delivery_available' => true]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'amount' => 20.00,
             'status' => 'accepted',
+            'delivery_method' => 'delivery',
         ]);
 
-        $response = $this->actingAs($buyer)->get(route('payment.create', $offer));
+        $response = $this->actingAs($buyer)->get(route('payment.create', ['offer' => $offer, 'address_id' => $address->id]));
 
         $response->assertStatus(200);
         $response->assertViewIs('payment.create');
@@ -92,15 +98,17 @@ class PaymentControllerTest extends TestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $address = \App\Models\Address::factory()->for($buyer)->create(['is_for_delivery' => true]);
+        $item = Item::factory()->create(['user_id' => $seller->id, 'delivery_available' => true]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'amount' => 0.40,
             'status' => 'accepted',
+            'delivery_method' => 'delivery',
         ]);
 
-        $response = $this->actingAs($buyer)->get(route('payment.create', $offer));
+        $response = $this->actingAs($buyer)->get(route('payment.create', ['offer' => $offer, 'address_id' => $address->id]));
 
         $response->assertStatus(200);
         $response->assertViewIs('payment.create');

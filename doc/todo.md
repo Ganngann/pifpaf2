@@ -13,7 +13,7 @@
 ## 🚚 Thème : Intégration Sendcloud
 *Objectif : Mettre en place une gestion des expéditions automatisée.*
 
-- [x] **US-BUG-1:** Réparer le bouton "Créer l'envoi" sur le tableau de bord vendeur.
+- [ ] **US-BUG-1:** Réparer le bouton "Créer l'envoi" sur le tableau de bord vendeur.
 - [x] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
 - [x] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.
 - [x] **US-TRS-12:** Envoyer une notification par e-mail à l'acheteur lors de la livraison.

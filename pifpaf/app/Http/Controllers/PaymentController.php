@@ -16,11 +16,30 @@ class PaymentController extends Controller
     /**
      * Affiche le formulaire de paiement.
      */
-    public function create(Offer $offer)
+    public function create(Request $request, Offer $offer)
     {
         // On s'assure que l'utilisateur connecté est bien l'acheteur
         if (Auth::id() !== $offer->user_id) {
             abort(403, 'Accès non autorisé.');
+        }
+
+        // Si la livraison est requise, on valide la présence de l'adresse
+        if ($offer->delivery_method != 'pickup') {
+            $validated = $request->validate([
+                'address_id' => 'required|integer|exists:addresses,id',
+            ]);
+
+            // On vérifie que l'adresse appartient bien à l'utilisateur
+            $address = Auth::user()->addresses()->find($validated['address_id']);
+            if (!$address) {
+                return redirect()->route('checkout.summary', $offer)->with('error', 'L\'adresse sélectionnée est invalide.');
+            }
+
+            // On stocke l'ID de l'adresse en session pour la retrouver après le paiement
+            session(['payment_address_id' => $address->id]);
+        } else {
+            // S'il n'y a pas de livraison, on s'assure qu'il n'y a pas d'ID d'adresse en session
+            session()->forget('payment_address_id');
         }
 
         // On vérifie que l'offre a bien été acceptée
@@ -122,6 +141,9 @@ class PaymentController extends Controller
 
         // Début de la transaction de base de données pour garantir l'intégrité
         $transaction = DB::transaction(function () use ($user, $offer, $cardAmount, $offerAmount, $cardPaymentSuccessful) {
+            // On récupère l'adresse de la session
+            $addressId = session()->pull('payment_address_id');
+
             // 1. Créditer le portefeuille si un paiement par carte a été effectué
             if ($cardPaymentSuccessful && $cardAmount > 0) {
                 $user->wallet += $cardAmount;
@@ -136,6 +158,7 @@ class PaymentController extends Controller
                 'card_amount' => 0,             // Le paiement par carte est maintenant une transaction de portefeuille
                 'status' => 'payment_received',
                 'pickup_code' => $offer->item->pickup_available ? Str::random(6) : null,
+                'address_id' => $addressId,
             ]);
 
             // 3. Créer les entrées dans l'historique du portefeuille

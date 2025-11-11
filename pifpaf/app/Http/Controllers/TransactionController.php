@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Enums\TransactionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -144,19 +145,38 @@ class TransactionController extends Controller
             $shippingMethodId
         );
 
-        if ($response->successful()) {
-            $parcelData = $response->json('parcel');
-            $transaction->update([
-                'sendcloud_parcel_id' => data_get($parcelData, 'id'),
-                'tracking_code' => data_get($parcelData, 'tracking_number'),
-                'label_url' => data_get($parcelData, 'label.label_printer'),
-                'status' => TransactionStatus::SHIPPED,
+        try {
+            if ($response->successful()) {
+                $parcelData = $response->json('parcel');
+                $transaction->update([
+                    'sendcloud_parcel_id' => data_get($parcelData, 'id'),
+                    'tracking_code' => data_get($parcelData, 'tracking_number'),
+                    'label_url' => data_get($parcelData, 'label.label_printer'),
+                    'status' => TransactionStatus::SHIPPED,
+                ]);
+
+                return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
+            }
+
+            // Si la réponse n'est pas réussie, on log l'erreur et on affiche un message à l'utilisateur
+            $errorDetails = $response->json() ?? ['raw_response' => $response->body()];
+            $errorMessage = data_get($errorDetails, 'error.message', 'Une erreur inconnue est survenue.');
+
+            Log::error('Erreur API Sendcloud lors de la création d\'un envoi', [
+                'transaction_id' => $transaction->id,
+                'status_code' => $response->status(),
+                'response_body' => $errorDetails
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Envoi créé avec succès.');
-        }
+            return redirect()->route('dashboard')->with('error', 'Erreur Sendcloud : ' . $errorMessage);
+        } catch (\Exception $e) {
+            Log::error('Exception in TransactionController@ship', [
+                'transaction_id' => $transaction->id,
+                'exception_message' => $e->getMessage()
+            ]);
 
-        return redirect()->route('dashboard')->with('error', 'Erreur lors de la création de l\'envoi.');
+            return redirect()->route('dashboard')->with('error', 'Une erreur technique est survenue lors de la création de l\'envoi.');
+        }
     }
 
     /**
