@@ -31,12 +31,19 @@ class GoogleAiService
             }
 
             $prompt = <<<'EOT'
-            Analyze the image to identify all distinct second-hand items suitable for individual sale. For each item found, provide a JSON object with the following details:
+            Analyze the image to identify all distinct second-hand items suitable for individual sale. For each item found, you MUST provide a JSON object with the following details. All fields are mandatory.
+
             - "title": A compelling and descriptive title for the item in French.
             - "description": A detailed description of the item in French, including its condition, features, and potential use cases.
             - "category": Suggest a category from this list: 'Vêtements', 'Électronique', 'Maison', 'Sport', 'Loisirs', 'Autre'.
             - "price": A suggested price in EUR (float).
+            - "weight": The estimated weight of the item in grams (integer). If you cannot determine the weight, return null.
+            - "length": The estimated length of the item in centimeters (integer). If you cannot determine the length, return null.
+            - "width": The estimated width of the item in centimeters (integer). If you cannot determine the width, return null.
+            - "height": The estimated height of the item in centimeters (integer). If you cannot determine the height, return null.
             - "box": A bounding box object with coordinates from 0 to 1000 for the item's location in the image, defined by four points: {"x1": top-left-x, "y1": top-left-y, "x2": bottom-right-x, "y2": bottom-right-y}.
+
+            It is very important that you provide an estimate for weight and dimensions (length, width, height). Do not omit these keys.
 
             The final output must be a single JSON array containing one object for each identified item. If only one item is found, return an array with a single object. If no items are found, return an empty array.
             EOT;
@@ -48,6 +55,7 @@ class GoogleAiService
             }
 
             Log::info('Received response from Gemini API for multi-object analysis.');
+            Log::info('Raw Gemini Response: ' . $response['data']);
 
             $jsonResponse = trim(str_replace(['```json', '```'], '', $response['data']));
             $data = json_decode($jsonResponse, true);
