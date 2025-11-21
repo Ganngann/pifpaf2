@@ -373,9 +373,296 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 - **[TERMINÉ] US-BUG-5: Empêcher les paiements multiples (Issue #136)**
 
 ---
+    - Une page "Mon Portefeuille" est accessible depuis le menu utilisateur.
+    - Elle affiche le solde actuel.
+    - Elle liste toutes les transactions (crédit, débit, retrait) avec date, libellé et montant.
+
+### Epic 8: Expérience de Checkout Améliorée
+*Améliorer le parcours de paiement pour le rendre plus clair, plus rassurant et augmenter le taux de conversion.*
+
+- **[TERMINÉ] US-CHK-1: Accéder au récapitulatif de commande**
+  - **En tant que** acheteur, **Je veux** être notifié et avoir un accès direct à une page de finalisation de commande dès que mon offre est acceptée, **Afin de** pouvoir payer rapidement et sans confusion.
+  - **Critères d'acceptation :**
+    - Quand un vendeur accepte une offre, l'acheteur est notifié (un message flash sur son dashboard est suffisant pour le MVP).
+    - Dans le dashboard de l'acheteur, les offres acceptées en attente de paiement ont un bouton proéminent "Finaliser la commande".
+    - Le parcours "Achat Immédiat" redirige également directement vers la page de récapitulatif.
+
+- **[TERMINÉ] US-CHK-2: Valider le récapitulatif de commande**
+  - **En tant que** acheteur, **Je veux** voir une page qui récapitule tous les détails de ma commande avant de payer, **Afin d'**être sûr de mon achat.
+  - **Critères d'acceptation :**
+    - Une nouvelle page `/checkout/{offer}/summary` est créée.
+    - Elle affiche : l'article (photo, titre), le prix final, le mode de livraison choisi.
+    - Si la livraison est "Livraison à domicile", mon adresse de livraison par défaut est affichée, avec un lien pour la changer (utilisant la fonctionnalité de US-LOG-5).
+    - Si la livraison est "Remise en main propre", l'adresse du vendeur est clairement affichée.
+    - Un bouton unique "Procéder au paiement" mène à la page de paiement.
+
+- **[TERMINÉ] US-CHK-3: Voir la confirmation de paiement**
+  - **En tant que** acheteur, **Je veux** être redirigé vers une page de confirmation claire après avoir payé, **Afin de** savoir que tout s'est bien passé et connaître les prochaines étapes.
+  - **Critères d'acceptation :**
+    - Après un paiement réussi, l'utilisateur est redirigé vers une nouvelle page `/checkout/{transaction}/success`.
+    - Cette page affiche "Paiement réussi !" et un résumé de la commande.
+    - Elle affiche les prochaines étapes en fonction du mode de livraison (ex: "Contactez le vendeur pour le retrait" ou "Le vendeur va expédier votre colis").
+    - Elle contient un lien vers le détail de la transaction (`transactions.show`).
+
+---
+## 🚀 Sprint 6: Communauté & IA de Masse
+
+### Epic 8: Confiance et Avis
+*Construire une communauté fiable grâce aux évaluations.*
+
+- **[TERMINÉ] US-COM-1: Laisser un avis**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir noter une transaction finalisée.
+  - **Critères d'acceptation :**
+    - Après qu'une transaction soit "Terminée", un bouton "Laisser un avis" apparaît dans le détail de la transaction.
+    - Il ouvre un formulaire simple : une note de 1 à 5 étoiles et un champ de commentaire.
+    - Un utilisateur ne peut laisser qu'un seul avis par transaction.
+
+- **[TERMINÉ] US-COM-2: Consulter les avis**
+  - **En tant qu'** utilisateur, **Je veux** consulter les avis sur le profil public des autres.
+  - **Critères d'acceptation :**
+    - Le profil public d'un utilisateur affiche sa note moyenne et le nombre d'avis.
+    - Une section liste tous les avis reçus (note, commentaire, auteur).
+
+- **[TERMINÉ] US-COM-5: Gestion des litiges**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir ouvrir un litige sur une transaction.
+  - **Critères d'acceptation :**
+    - Un bouton "Signaler un problème" est visible sur le détail de la transaction après le paiement.
+    - Il ouvre un formulaire où l'utilisateur peut décrire le problème.
+    - La soumission change le statut de la transaction en "En litige" et notifie l'administrateur.
+
+### Epic 9: Messagerie Interne
+*Permettre la communication directe entre utilisateurs.*
+
+- **[TERMINÉ] US-COM-3: Contacter un utilisateur**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir envoyer un message à un vendeur depuis une annonce.
+  - **Critères d'acceptation :**
+    - Un bouton "Contacter le vendeur" est présent sur la page de l'article.
+    - S'il n'y a pas de conversation existante, une nouvelle est créée.
+    - L'utilisateur est redirigé vers l'interface de messagerie.
+
+- **[TERMINÉ] US-COM-4: Interface de messagerie**
+  - **En tant qu'** utilisateur, **Je veux** une boîte de réception pour lire et répondre à mes messages.
+  - **Critères d'acceptation :**
+    - Une page "Messagerie" liste toutes les conversations, triées par date du dernier message.
+    - Un indicateur de messages non lus est visible.
+    - L'interface de chat permet d'envoyer et de voir les messages et est optimisée pour mobile.
+
+### Epic 10: IA v2 - Création en Masse
+*Faire passer l'IA à la vitesse supérieure.*
+
+- **[TERMINÉ] US-IA-5: Traitement d'image multi-objets**
+  - **En tant que** vendeur, **Je veux** uploader une photo avec plusieurs articles et que l'IA me propose de créer une annonce pour chacun.
+  - **Critères d'acceptation :**
+    - L'IA analyse l'image et détecte plusieurs objets.
+    - La page de résultat affiche l'image avec des cadres cliquables autour de chaque objet détecté.
+    - Cliquer sur un cadre lance le flux de création assistée (US-IA-2) pour cet objet spécifique.
+
+---
+## 🚀 Sprint 7: Conformité
+
+### Epic 11: RGPD
+*Garantir aux utilisateurs le contrôle de leurs données.*
+
+- **[TERMINÉ] US-ADM-1: Portabilité des données**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir télécharger une archive de mes données personnelles.
+  - **Critères d'acceptation :**
+    - Dans les paramètres du compte, un bouton "Télécharger mes données".
+    - Au clic, un fichier JSON contenant les informations du compte, adresses, annonces, et transactions est généré et téléchargé.
+
+- **[TERMINÉ] US-ADM-2: Droit à l'oubli**
+  - **En tant qu'** utilisateur, **Je veux** pouvoir supprimer mon compte et mes données.
+  - **Critères d'acceptation :**
+    - Dans les paramètres, un bouton "Supprimer mon compte".
+    - Une confirmation (ex: taper le mot de passe) est requise.
+    - Le compte de l'utilisateur est désactivé et ses données personnelles sont anonymisées ou supprimées.
+
+---
+## 🚀 Sprint 8: Administration & Modération
+
+### Epic 12: Interface d'Administration (MVP)
+*Fournir à l'équipe de Pifpaf les outils nécessaires pour gérer la plateforme.*
+
+- **[TERMINÉ] US-ADM-10: Accès Sécurisé**
+  - **En tant qu'** administrateur, **Je veux** une interface de connexion sécurisée et distincte.
+  - **Critères d'acceptation :**
+    - Un rôle "admin" est défini dans la base de données.
+    - Seuls les utilisateurs avec ce rôle peuvent accéder aux routes préfixées par `/admin`.
+
+- **[TERMINÉ] US-ADM-11: Dashboard Statistique**
+  - **En tant qu'** administrateur, **Je veux** un tableau de bord avec les statistiques clés.
+  - **Critères d'acceptation :**
+    - La page d'accueil de l'admin affiche : nombre total d'utilisateurs, d'annonces, de transactions.
+    - Des liens vers les sections de gestion sont présents.
+
+- **[TERMINÉ] US-ADM-12: Gestion des Utilisateurs**
+  - **En tant qu'** administrateur, **Je veux** pouvoir lister et bannir des utilisateurs.
+  - **Critères d'acceptation :**
+    - Une page liste tous les utilisateurs avec une fonction de recherche.
+    - Chaque utilisateur a un bouton "Bannir" / "Réactiver" qui change son statut et l'empêche/autorise sa connexion.
+
+- **[TERMINÉ] US-ADM-13: Gestion des Annonces**
+  - **En tant qu'** administrateur, **Je veux** pouvoir lister et supprimer des annonces.
+  - **Critères d'acceptation :**
+    - Une page liste toutes les annonces avec une fonction de recherche.
+    - Chaque annonce a un bouton "Supprimer" pour la modération.
+
+- **[TERMINÉ] US-ADM-14: Gestion des Litiges**
+  - **En tant qu'** administrateur, **Je veux** pouvoir consulter et intervenir sur les litiges.
+  - **Critères d'acceptation :**
+    - Une page liste les transactions avec le statut "En litige".
+    - L'admin peut voir les détails de la transaction et les messages échangés pour prendre une décision (rembourser, etc.).
+
+---
+## 🚀 Sprint 9: Amélioration de la Qualité et de la Stabilité
+
+### Epic 13: Couverture de Test
+*Augmenter la couverture de test du code pour garantir la stabilité, la maintenabilité et réduire les régressions futures.*
+
+- **[TERMINÉ] US-TEST-1: Couverture du `PaymentController`**
+  - **En tant que** développeur, **Je veux** écrire des tests unitaires et fonctionnels complets pour le `PaymentController`, **Afin de** sécuriser le processus de paiement qui est critique pour l'application.
+  - **Critères d'acceptation :**
+    - La méthode `create` est couverte par un test qui vérifie la création correcte de l'intention de paiement.
+    - La méthode `store` est couverte par des tests simulant un paiement réussi et un paiement échoué.
+    - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
+
+- **[TERMINÉ] US-TEST-2: Couverture du `PickupAddressController`**
+  - **En tant que** développeur, **Je veux** écrire des tests fonctionnels pour toutes les méthodes CRUD du `PickupAddressController`, **Afin de** garantir la fiabilité de la gestion des adresses de retrait pour les vendeurs.
+  - **Critères d'acceptation :**
+    - Les actions `index`, `create`, `store`, `edit`, `update`, et `destroy` sont entièrement testées.
+    - Les tests vérifient que les autorisations (policies) sont correctement appliquées pour chaque action.
+    - La couverture des lignes du contrôleur doit atteindre un minimum de 90%.
+
+- **[TERMINÉ] US-TEST-3: Couverture de la Logique IA**
+  - **En tant que** développeur, **Je veux** écrire des tests pour le `AiRequestController` et le job `ProcessAiImage`, **Afin de** fiabiliser l'ensemble du processus de création d'annonce assistée par IA.
+  - **Critères d'acceptation :**
+    - Les différentes méthodes du `AiRequestController` sont testées.
+    - Le job `ProcessAiImage` est testé unitairement pour les cas de succès et d'échec, en simulant la réponse de l'API externe.
+    - La couverture des lignes des deux classes doit atteindre un minimum de 90%.
+
+- **[TERMINÉ] US-TEST-4: Couverture des `Policies` d'autorisation**
+  - **En tant que** développeur, **Je veux** écrire des tests unitaires pour les `Policies` de l'application qui ont une faible couverture, **Afin de** s'assurer que les permissions des utilisateurs sont appliquées de manière stricte et correcte.
+  - **Critères d'acceptation :**
+    - Les méthodes des policies `ConversationPolicy`, `ItemPolicy`, `PickupAddressPolicy`, `ShippingAddressPolicy`, et `TransactionPolicy` sont rigoureusement testées.
+    - Chaque test couvre les cas où une autorisation doit être accordée et ceux où elle doit être refusée.
+    - La couverture globale des lignes pour chaque classe de Policy testée doit atteindre un minimum de 90%.
+
+- **[TERMINÉ] US-TEST-5: Couverture des Contrôleurs Orphelins**
+  - **En tant que** développeur, **Je veux** augmenter la couverture de test pour les contrôleurs ayant une couverture partielle, **Afin de** renforcer la robustesse globale de l'application et de finaliser l'effort de fiabilisation.
+  - **Critères d'acceptation :**
+    - La couverture des méthodes `store` et `destroy` de `AuthenticatedSessionController` est améliorée.
+    - La couverture de la méthode `store` de `RegisteredUserController` est améliorée.
+    - La couverture des méthodes CRUD de `ItemImageController` est améliorée.
+    - La couverture des lignes pour ces contrôleurs doit atteindre un minimum de 90%.
+
+---
+## 🚀 Sprint 10: Améliorations & Corrections
+
+- **[TERMINÉ] US-WAL-1: Lier l'historique du portefeuille**
+- **[TERMINÉ] US-WAL-2: Centraliser les paiements via le portefeuille**
+- **[TERMINÉ] US-UX-1: Corriger le design des filtres**
+- **[TERMINÉ] US-BUG-2: Corriger l'affichage du menu déroulant (Issue #188)**
+- **[TERMINÉ] US-UX-2: Organiser le tableau de bord vendeur**
+- **[TERMINÉ] US-BUG-3: Persistance du sélecteur de statut (Issue #189)**
+- **[TERMINÉ] US-BUG-4: Image manquante au checkout (Issue #173)**
+- **[TERMINÉ] US-TRS-3: Sécuriser la confirmation de réception**
+- **[TERMINÉ] US-BUG-5: Empêcher les paiements multiples (Issue #136)**
+
+---
 ## 💬 Messagerie (Fonctionnalités de base)
 
 - **[TERMINÉ] US-MSG-001: Démarrer une conversation**
 - **[TERMINÉ] US-MSG-002: Envoyer un message**
 - **[TERMINÉ] US-MSG-003: Voir les messages**
 - **[TERMINÉ] US-MSG-004: Voir mes conversations**
+
+---
+## 🚀 Sprint 11: Intégrations & Paiements
+
+### Epic: Intégration Sendcloud
+*Automatiser et simplifier le processus d'expédition pour les vendeurs.*
+
+- **[TERMINÉ] US-BUG-1: Réparer la création d'envoi**
+  - **En tant que** vendeur, **Je veux** que le bouton "Créer l'envoi" fonctionne, **Afin de** pouvoir expédier mes commandes.
+  - **Critères d'acceptation :**
+    - Le clic sur le bouton déclenche l'appel à l'API Sendcloud.
+    - Le problème (JS, route, etc.) est corrigé.
+
+- **[TERMINÉ] US-TRS-10: Génération de l'étiquette d'expédition**
+  - **En tant que** vendeur, **Je veux** générer et télécharger une étiquette d'expédition, **Afin de** faciliter l'envoi.
+  - **Critères d'acceptation :**
+    - Un bouton "Générer l'étiquette" appelle le `SendcloudService`.
+    - La transaction est mise à jour avec l'ID du colis et le numéro de suivi.
+    - Un lien de téléchargement pour l'étiquette est affiché.
+
+- **[TERMINÉ] US-TRS-11: Traitement des webhooks Sendcloud**
+  - **En tant que** système, **Je veux** recevoir et traiter les webhooks Sendcloud, **Afin d'**automatiser le suivi.
+  - **Critères d'acceptation :**
+    - Un endpoint `POST /webhooks/sendcloud` est sécurisé et fonctionnel.
+    - Le statut de la transaction est mis à jour en fonction des événements reçus (`shipped`, `in_transit`, `delivered`).
+
+- **[TERMINÉ] US-TRS-12: Notification de livraison à l'acheteur**
+  - **En tant qu'** acheteur, **Je veux** recevoir un e-mail lorsque mon colis est "Livré", **Afin d'**être informé rapidement.
+  - **Critères d'acceptation :**
+    - Le passage au statut `delivered` déclenche l'envoi d'un e-mail à l'acheteur.
+    - L'e-mail contient un lien vers la page de la transaction.
+
+### Epic: Gestion Financière et Virements
+*Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds.*
+
+- **[TERMINÉ] US-W1: Enregistrement des informations bancaires**
+  - **En tant que** vendeur, **Je veux** pouvoir enregistrer et gérer mes informations de paiement (coordonnées bancaires) de manière sécurisée.
+  - **Critères d'acceptation :**
+    - Un formulaire dédié permet de saisir les informations bancaires (IBAN, etc.).
+    - Les informations sont stockées de manière sécurisée (chiffrées en base de données).
+    - Je peux modifier ou supprimer mes informations bancaires.
+    - Le système valide le format des informations saisies (ex: format IBAN).
+
+- **[TERMINÉ] US-W2: Demande de virement**
+  - **En tant que** vendeur, **Je veux** pouvoir initier une demande de virement depuis la page de mon portefeuille.
+  - **Critères d'acceptation :**
+    - Sur la page de mon portefeuille, un bouton "Effectuer un virement" est visible.
+    - Un formulaire me permet de spécifier le montant que je souhaite retirer.
+    - Le montant demandé ne peut pas dépasser mon solde disponible.
+    - Une fois la demande soumise, un enregistrement de "demande de virement" est créé avec le statut "En attente".
+    - Le montant demandé est "gelé" dans mon portefeuille : il n'est plus disponible pour d'autres transactions, mais n'est pas encore débité.
+    - Je reçois une confirmation que ma demande a bien été prise en compte.
+
+- **[TERMINÉ] US-W3: Suivi du statut d'une demande de virement**
+  - **En tant que** vendeur, **Je veux** voir l'historique de mes demandes de virement et leur statut (ex: En attente, Approuvé, Payé, Rejeté, Échoué).
+  - **Critères d'acceptation :**
+    - Une section dans mon portefeuille liste toutes mes demandes de virement passées et présentes.
+    - Pour chaque demande, je peux voir le montant, la date et le statut actuel.
+    - Les statuts sont clairs pour l'utilisateur : "En attente", "Approuvé" (en attente de paiement), "Payé", "Rejeté", "Échoué".
+    - Si une demande échoue ou est rejetée, je peux voir la raison (si disponible).
+
+- **[TERMINÉ] US-W4: Gestion et validation des demandes de virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** accéder à un tableau de bord listant toutes les demandes de virement.
+  - **Critères d'acceptation :**
+    - Une interface d'administration affiche la liste des demandes de virement, filtrable par statut (`pending`, `approved`, `paid`, etc.).
+    - La vue par défaut montre les demandes `pending` qui nécessitent une action.
+    - Je peux consulter les détails de chaque demande (utilisateur, montant, informations bancaires).
+    - Je dispose de boutons pour "Approuver" ou "Rejeter" une demande `pending`.
+    - Si je rejette une demande, je peux fournir une raison. Les fonds gelés sont alors restitués au portefeuille de l'utilisateur.
+    - Si j'approuve une demande, le statut passe à `approved` et la demande apparaît dans la liste des virements à exécuter.
+
+- **[TERMINÉ] US-W5: Traitement manuel du virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** avoir une vue claire des virements approuvés à effectuer.
+  - **Critères d'acceptation :**
+    - Une section du tableau de bord liste spécifiquement les demandes avec le statut `approved`.
+    - Cette vue affiche toutes les informations nécessaires pour effectuer le virement (Nom, IBAN, Montant).
+    - L'interface est conçue pour éviter les erreurs (par exemple, copier facilement les informations).
+
+- **[TERMINÉ] US-W6: Confirmation de paiement du virement (Admin)**
+  - **En tant qu'** administrateur, **Je veux** pouvoir marquer un virement comme "Payé" ou "Échoué" après avoir tenté de l'exécuter.
+  - **Critères d'acceptation :**
+    - Sur une demande `approved`, des boutons "Marquer comme Payé" et "Marquer comme Échoué" sont disponibles.
+    - Si je clique sur "Marquer comme Payé", le statut passe à `paid`, et les fonds sont définitivement débités du portefeuille et du solde gelé du vendeur.
+    - Si je clique sur "Marquer comme Échoué", je peux indiquer une raison, le statut passe à `failed`, et les fonds sont restitués au portefeuille du vendeur.
+    - L'utilisateur est notifié du changement de statut.
+
+- **[TERMINÉ] US-W7: Notifications par email**
+  - **En tant que** vendeur, **Je veux** recevoir des notifications par email concernant mes demandes de virement.
+  - **Critères d'acceptation :**
+    - Je reçois un email de confirmation lorsque je soumets une demande.
+    - Je reçois un email lorsque ma demande est approuvée par un administrateur.
+    - Je reçois un email final pour m'informer si le virement a été payé avec succès ou s'il a échoué.
