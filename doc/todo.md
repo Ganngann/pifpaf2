@@ -10,27 +10,6 @@
 - [ ] **US-LOG-10:** (Issue #107) Mettre en place la vérification d'adresse avec une carte.
 
 ---
-## 🚚 Thème : Intégration Sendcloud
-*Objectif : Mettre en place une gestion des expéditions automatisée.*
-
-- [x] **US-BUG-1:** Réparer le bouton "Créer l'envoi" sur le tableau de bord vendeur.
-- [x] **US-TRS-10:** Mettre en place la génération d'étiquettes d'expédition via Sendcloud.
-- [x] **US-TRS-11:** Mettre en place le traitement des webhooks Sendcloud pour le suivi automatique.
-- [x] **US-TRS-12:** Envoyer une notification par e-mail à l'acheteur lors de la livraison.
-
----
-## 🏦 Thème : Gestion Financière et Virements
-*Objectif : Permettre aux vendeurs de retirer leurs gains en toute sécurité.*
-
-- [x] **US-W1 :** Enregistrement des informations bancaires.
-- [x] **US-W2 :** Demande de virement.
-- [x] **US-W3 :** Suivi du statut d'une demande de virement.
-- [x] **US-W4 :** Gestion et validation des demandes de virement (Admin).
-- [x] **US-W5 :** Traitement manuel du virement (Admin).
-- [x] **US-W6 :** Confirmation de paiement du virement (Admin).
-- [x] **US-W7 :** Notifications par email.
-
----
 ## 💬 Thème : Messagerie
 *Objectif : Améliorer l'expérience de communication entre les utilisateurs.*
 

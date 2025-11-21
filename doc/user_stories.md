@@ -62,58 +62,9 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
     - Message d'erreur si l'adresse est invalide.
 
 ---
-## 🚚 Epic: Intégration Sendcloud
-*Automatiser et simplifier le processus d'expédition pour les vendeurs.*
-
-- **US-BUG-1: Réparer la création d'envoi**
-  - **En tant que** vendeur, **Je veux** que le bouton "Créer l'envoi" fonctionne, **Afin de** pouvoir expédier mes commandes.
-  - **Critères d'acceptation :**
-    - Le clic sur le bouton déclenche l'appel à l'API Sendcloud.
-    - Le problème (JS, route, etc.) est corrigé.
-
-- **US-TRS-10: Génération de l'étiquette d'expédition**
-  - **En tant que** vendeur, **Je veux** générer et télécharger une étiquette d'expédition, **Afin de** faciliter l'envoi.
-  - **Critères d'acceptation :**
-    - Un bouton "Générer l'étiquette" appelle le `SendcloudService`.
-    - La transaction est mise à jour avec l'ID du colis et le numéro de suivi.
-    - Un lien de téléchargement pour l'étiquette est affiché.
-
-- **US-TRS-11: Traitement des webhooks Sendcloud**
-  - **En tant que** système, **Je veux** recevoir et traiter les webhooks Sendcloud, **Afin d'**automatiser le suivi.
-  - **Critères d'acceptation :**
-    - Un endpoint `POST /webhooks/sendcloud` est sécurisé et fonctionnel.
-    - Le statut de la transaction est mis à jour en fonction des événements reçus (`shipped`, `in_transit`, `delivered`).
-
-- **US-TRS-12: Notification de livraison à l'acheteur**
-  - **En tant qu'** acheteur, **Je veux** recevoir un e-mail lorsque mon colis est "Livré", **Afin d'**être informé rapidement.
-  - **Critères d'acceptation :**
-    - Le passage au statut `delivered` déclenche l'envoi d'un e-mail à l'acheteur.
-    - L'e-mail contient un lien vers la page de la transaction.
 
 ---
-## 🏦 Epic: Gestion Financière et Virements
-*Mettre en place le cycle de vie complet pour que les vendeurs puissent retirer leurs fonds.*
 
-- **US-W1: Enregistrement des informations bancaires**
-  - **En tant que** vendeur, **Je veux** pouvoir enregistrer et gérer mes informations de paiement (coordonnées bancaires) de manière sécurisée.
-
-- **US-W2: Demande de virement**
-  - **En tant que** vendeur, **Je veux** pouvoir initier une demande de virement depuis la page de mon portefeuille.
-
-- **US-W3: Suivi du statut d'une demande de virement**
-  - **En tant que** vendeur, **Je veux** voir l'historique de mes demandes de virement et leur statut (ex: En attente, Approuvé, Payé, Rejeté, Échoué).
-
-- **US-W4: Gestion et validation des demandes de virement (Admin)**
-  - **En tant qu'** administrateur, **Je veux** accéder à un tableau de bord pour valider ou rejeter les demandes de virement en attente.
-
-- **US-W5: Traitement manuel du virement (Admin)**
-  - **En tant qu'** administrateur, **Je veux** avoir une vue claire des virements approuvés à effectuer manuellement.
-
-- **US-W6: Confirmation de paiement du virement (Admin)**
-  - **En tant qu'** administrateur, **Je veux** pouvoir marquer un virement comme "Payé" ou "Échoué" après l'avoir traité.
-
-- **US-W7: Notifications par email**
-  - **En tant que** vendeur, **Je veux** recevoir des notifications par email m'informant des étapes importantes de ma demande de virement.
 
 ---
 ## 💬 Epic: Messagerie
