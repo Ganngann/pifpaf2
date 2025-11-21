@@ -127,3 +127,14 @@ Ce document détaille les fonctionnalités du projet Pifpaf sous forme de User S
 
 - **[TERMINÉ] US-NOTIF-09: Notification de Nouveau Message (Acheteur)**
   - **En tant qu'** acheteur, **Je veux** être notifié d'un nouveau message, **Afin de** ne pas manquer une réponse.
+
+---
+## 🛠️ Epic: Améliorations & Corrections
+*Résoudre les bugs critiques et améliorer la stabilité de la plateforme.*
+
+- **US-BUG-211: Correction des couleurs de la pagination (Issue #211)**
+  - **En tant que** utilisateur, **Je veux** une pagination lisible et cohérente avec le design, **Afin de** naviguer facilement dans les listes.
+  - **Critères d'acceptation :**
+    - Les couleurs de fond et de texte de la pagination correspondent à la charte graphique du site.
+    - Les boutons "Précédent" et "Suivant" sont bien visibles et alignés.
+    - La page active est clairement mise en évidence.

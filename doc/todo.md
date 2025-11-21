@@ -19,3 +19,9 @@
 - [ ] **US-MSG-008:** Supprimer une conversation.
 - [ ] **US-MSG-009:** Rechercher dans les conversations.
 - [ ] **US-MSG-010:** Statut en ligne.
+
+---
+## 🛠️ Thème : Améliorations & Corrections
+*Objectif : Résoudre les bugs et améliorer la stabilité.*
+
+- [ ] **US-BUG-211:** (Issue #211) Correction des couleurs de la pagination.
