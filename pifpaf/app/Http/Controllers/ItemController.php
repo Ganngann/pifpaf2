@@ -25,7 +25,7 @@ class ItemController extends Controller
      */
     public function welcome(Request $request)
     {
-        $query = Item::query()->with(['designatedPrimaryImage', 'images'])->available()->latest();
+        $query = Item::query()->with(['designatedPrimaryImage', 'images', 'user', 'address'])->available()->latest();
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
