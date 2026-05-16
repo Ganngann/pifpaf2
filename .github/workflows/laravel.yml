@@ -55,7 +55,7 @@ jobs:
       uses: browser-actions/setup-chrome@latest
     - name: Upgrade Chrome Driver
       working-directory: pifpaf
-      run: php artisan dusk:chrome-driver --require-previous
+      run: php artisan dusk:chrome-driver
     - name: Start Chrome Driver
       working-directory: pifpaf
       run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
