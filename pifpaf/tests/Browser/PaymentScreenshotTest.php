@@ -19,7 +19,11 @@ class PaymentScreenshotTest extends DuskTestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 10.00]);
-        $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 25.00]);
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'price' => 25.00,
+            'status' => \App\Enums\ItemStatus::AVAILABLE
+        ]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
