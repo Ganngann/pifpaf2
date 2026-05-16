@@ -49,5 +49,28 @@ jobs:
       working-directory: pifpaf
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
       run: ./vendor/bin/phpunit --coverage-text
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@latest
+    - name: Upgrade Chrome Driver
+      working-directory: pifpaf
+      run: php artisan dusk:chrome-driver
+    - name: Start Chrome Driver
+      working-directory: pifpaf
+      run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+    - name: Run Laravel Server
+      working-directory: pifpaf
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ${{ github.workspace }}/pifpaf/database/database.sqlite
+      run: php artisan serve > /dev/null 2>&1 &
+    - name: Wait for Server
+      working-directory: pifpaf
+      run: sleep 3
+    - name: Execute Dusk Tests
+      working-directory: pifpaf
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ${{ github.workspace }}/pifpaf/database/database.sqlite
+        APP_URL: "http://127.0.0.1:8000"
+      run: php artisan dusk

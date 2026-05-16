@@ -20,8 +20,16 @@ class ProfilePageTest extends DuskTestCase
     public function testUserProfilePage(): void
     {
         $user = User::factory()->create();
-        $item1 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon premier objet à tester']);
-        $item2 = Item::factory()->create(['user_id' => $user->id, 'title' => 'Mon deuxième objet à tester']);
+        $item1 = Item::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Mon premier objet à tester',
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
+        $item2 = Item::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Mon deuxième objet à tester',
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
 
         $this->browse(function (Browser $browser) use ($user, $item1, $item2) {
             $browser->visit(route('items.show', $item1))

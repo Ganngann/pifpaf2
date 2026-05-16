@@ -20,7 +20,10 @@ class BuyerProfileLinkTest extends DuskTestCase
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,

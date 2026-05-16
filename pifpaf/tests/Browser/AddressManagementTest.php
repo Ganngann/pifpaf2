@@ -52,7 +52,7 @@ class AddressManagementTest extends DuskTestCase
                 ->type('street', '123 rue de Paris')
                 ->type('city', 'Paris')
                 ->type('postal_code', '75001')
-                ->type('country', 'France')
+                ->select('country', 'FR')
                 ->check('is_for_pickup')
                 ->check('is_for_delivery')
                 ->press('button[type="submit"]')

@@ -6,8 +6,11 @@ use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class BankAccountController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */

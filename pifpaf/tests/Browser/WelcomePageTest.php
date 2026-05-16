@@ -22,7 +22,10 @@ class WelcomePageTest extends DuskTestCase
     public function welcome_page_displays_latest_items()
     {
         $user = User::factory()->create();
-        $items = Item::factory()->count(5)->create(['user_id' => $user->id]);
+        $items = Item::factory()->count(5)->create([
+            'user_id' => $user->id,
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
 
         $this->browse(function (Browser $browser) use ($items) {
             $browser->visit('/')
@@ -45,7 +48,10 @@ class WelcomePageTest extends DuskTestCase
     public function clicking_item_leads_to_item_details_page()
     {
         $user = User::factory()->create();
-        $item = Item::factory()->create(['user_id' => $user->id]);
+        $item = Item::factory()->create([
+            'user_id' => $user->id,
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
+        ]);
 
         $this->browse(function (Browser $browser) use ($item) {
             $formattedPrice = number_format($item->price, 2, ',', ' ');
