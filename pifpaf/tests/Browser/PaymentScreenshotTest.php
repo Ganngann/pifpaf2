@@ -24,7 +24,8 @@ class PaymentScreenshotTest extends DuskTestCase
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'amount' => 20.00,
-            'status' => 'accepted'
+            'status' => 'accepted',
+            'delivery_method' => 'pickup'
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $offer) {

@@ -34,6 +34,7 @@ class OfferFlowTest extends DuskTestCase
             'delivery_available' => true,
             'pickup_available' => true,
             'address_id' => $address->id,
+            'status' => \App\Enums\ItemStatus::AVAILABLE,
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $item, $seller) {
@@ -50,7 +51,7 @@ class OfferFlowTest extends DuskTestCase
             // 4. Le vendeur se connecte et voit l'offre sur son tableau de bord
             $browser->loginAs($seller)
                     ->visit('/dashboard')
-                    ->waitForText('Offres reçues')
+                    ->waitForText('Offres reçues :')
                     ->assertSee($buyer->name)
                     ->assertSee('80,00 €')
                     ->assertSee('Livraison');
