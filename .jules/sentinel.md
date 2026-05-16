@@ -1,0 +1,4 @@
+## 2025-05-16 - [Fix Mass Assignment Vulnerability in BankAccountController]
+**Vulnerability:** A mass assignment vulnerability existed in `BankAccountController.php` because `store()` and `update()` methods used `$request->all()` while the `user_id` attribute was listed in the model's `$fillable` array. This could potentially allow users to manipulate the `user_id` during creation or updates.
+**Learning:** Even if `create()` is chained to a relationship like `Auth::user()->bankAccounts()->create($request->all())`, using `$request->all()` remains risky because it includes all payload data, not just the data intentionally allowed by validation logic.
+**Prevention:** Always use the validated data array returned by `$request->validate()` (e.g. `$validated = $request->validate(...)`) instead of `$request->all()` when creating or updating models, particularly when foreign keys are mass-assignable.

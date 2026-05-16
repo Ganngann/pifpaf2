@@ -32,13 +32,13 @@ class BankAccountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'account_holder_name' => 'required|string|max:255',
             'iban' => 'required|string|max:34', // Assuming IBAN max length
             'bic' => 'required|string|max:11', // Assuming BIC max length
         ]);
 
-        Auth::user()->bankAccounts()->create($request->all());
+        Auth::user()->bankAccounts()->create($validated);
 
         return redirect()->route('profile.bank-accounts.index')->with('success', 'Compte bancaire ajouté avec succès.');
     }
@@ -68,13 +68,13 @@ class BankAccountController extends Controller
     {
         $this->authorize('update', $bankAccount);
 
-        $request->validate([
+        $validated = $request->validate([
             'account_holder_name' => 'required|string|max:255',
             'iban' => 'required|string|max:34',
             'bic' => 'required|string|max:11',
         ]);
 
-        $bankAccount->update($request->all());
+        $bankAccount->update($validated);
 
         return redirect()->route('profile.bank-accounts.index')->with('success', 'Compte bancaire mis à jour avec succès.');
     }
