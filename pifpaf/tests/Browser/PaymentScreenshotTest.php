@@ -35,7 +35,7 @@ class PaymentScreenshotTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($buyer, $offer) {
             $browser->loginAs($buyer)
                 ->visit(route('payment.create', $offer))
-                ->waitForText('Récapitulatif de la commande')
+                ->waitForText('Récapitulatif de la commande', 10)
                 ->assertSee('Récapitulatif de la commande');
 
             // Desktop screenshot
