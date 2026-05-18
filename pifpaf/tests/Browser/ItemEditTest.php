@@ -31,8 +31,10 @@ class ItemEditTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $item, $filePath, $address) {
             $browser->loginAs($user)
                     ->visit('/dashboard')
+                    ->waitFor("#item-row-{$item->id} a")
                     // On cible le lien dans la première rangée du tableau, qui est sur le titre de l'item.
                     ->click("#item-row-{$item->id} a")
+                    ->waitForLocation("/items/{$item->id}/edit")
                     ->assertPathIs("/items/{$item->id}/edit")
                     ->assertInputValue('title', $item->title)
                     ->type('title', 'Nouveau Titre d\'Annonce')
@@ -48,7 +50,9 @@ class ItemEditTest extends DuskTestCase
                     ->select('address_id', $address->id)
                     ->attach('images[]', $filePath)
                     ->press('Mettre à jour')
+                    ->waitForLocation('/dashboard')
                     ->assertPathIs('/dashboard')
+                    ->waitForText('Annonce mise à jour avec succès.')
                     ->assertSee('Annonce mise à jour avec succès.')
                     ->assertSee('Nouveau Titre d\'Annonce');
         });
