@@ -24,13 +24,19 @@ class PaymentFlowTest extends DuskTestCase
         $offer = Offer::factory()->create([
             'user_id' => $buyer->id,
             'item_id' => $item->id,
-            'status' => 'accepted'
+            'status' => 'accepted',
+            'delivery_method' => 'pickup'
+        ]);
+
+        $transaction = \App\Models\Transaction::factory()->create([
+            'offer_id' => $offer->id,
+            'status' => 'initiated',
         ]);
 
         $this->browse(function (Browser $browser) use ($buyer, $offer) {
             $browser->loginAs($buyer)
                 ->visit('/dashboard')
-                ->assertSee('Mes offres')
+                ->assertSee('Transactions en cours')
                 ->assertSee($offer->item->title)
                 ->clickLink('Payer')
                 ->assertPathIs('/payment/' . $offer->id)
