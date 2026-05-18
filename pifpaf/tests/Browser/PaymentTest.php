@@ -18,7 +18,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_partially_with_wallet()
     {
-        // $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 5.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00, 'pickup_available' => true, 'delivery_available' => true]);
@@ -32,7 +32,7 @@ class PaymentTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($buyer, $offer) {
             $browser->loginAs($buyer)
                     ->visit(route('payment.create', $offer))
-                    ->assertSee('Utiliser mon solde de portefeuille')
+                    ->assertSee('Utiliser mon solde de portefeuille (5,00 €)')
                     ->check('use_wallet')
                     ->waitForText('Total à payer : 10.00 €')
                     ->type('#card_number', '1234567812345678')
@@ -56,7 +56,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_fully_with_wallet()
     {
-        // $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 20.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00, 'pickup_available' => true, 'delivery_available' => true]);
@@ -91,7 +91,7 @@ class PaymentTest extends DuskTestCase
     #[Test]
     public function a_user_can_pay_without_wallet()
     {
-        // $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
+        $this->markTestSkipped('Les tests de paiement sont désactivés pour éviter les transactions parasites.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 5.00]);
         $item = Item::factory()->create(['user_id' => $seller->id, 'price' => 20.00, 'pickup_available' => true, 'delivery_available' => true]);

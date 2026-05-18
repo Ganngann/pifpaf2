@@ -5,15 +5,14 @@ namespace Tests\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RegistrationTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    /**
-     * A Dusk test for user registration.
-     */
-    public function testUserRegistration(): void
+    #[Test]
+    public function user_registration(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/register')
@@ -22,6 +21,7 @@ class RegistrationTest extends DuskTestCase
                     ->type('password', 'password')
                     ->type('password_confirmation', 'password')
                     ->press('button[type="submit"]')
+                    ->waitForLocation('/dashboard')
                     ->assertPathIs('/dashboard');
         });
     }
