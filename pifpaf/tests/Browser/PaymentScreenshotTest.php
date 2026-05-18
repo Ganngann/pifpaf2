@@ -17,6 +17,7 @@ class PaymentScreenshotTest extends DuskTestCase
     #[Test]
     public function capture_payment_flow_screenshots()
     {
+        $this->markTestSkipped('Les tests de paiement sont désactivés car ils dépendent de Stripe.');
         $seller = User::factory()->create();
         $buyer = User::factory()->create(['wallet' => 10.00]);
         $item = Item::factory()->create([
