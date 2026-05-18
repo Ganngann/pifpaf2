@@ -49,7 +49,7 @@ class AiRequestController extends Controller
     public function cropPreview(Request $request)
     {
         $validated = $request->validate([
-            'image_path' => 'required|string',
+            'image_path' => ['required', 'string', 'regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/'],
             'box' => 'required|string', // The box is now a JSON string
         ]);
 

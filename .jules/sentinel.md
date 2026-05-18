@@ -1,4 +1,4 @@
-## 2025-05-16 - [Fix Mass Assignment Vulnerability in BankAccountController]
-**Vulnerability:** A mass assignment vulnerability existed in `BankAccountController.php` because `store()` and `update()` methods used `$request->all()` while the `user_id` attribute was listed in the model's `$fillable` array. This could potentially allow users to manipulate the `user_id` during creation or updates.
-**Learning:** Even if `create()` is chained to a relationship like `Auth::user()->bankAccounts()->create($request->all())`, using `$request->all()` remains risky because it includes all payload data, not just the data intentionally allowed by validation logic.
-**Prevention:** Always use the validated data array returned by `$request->validate()` (e.g. `$validated = $request->validate(...)`) instead of `$request->all()` when creating or updating models, particularly when foreign keys are mass-assignable.
+## 2025-05-18 - Prevent Path Traversal in Storage Operations
+**Vulnerability:** User-controlled `image_path` parameters were passed directly to `Storage::disk('public')->path()`, `exists()`, and `move()` without validation, allowing path traversal attacks via inputs like `../../../.env`.
+**Learning:** Laravel's `Storage` methods do not inherently protect against path traversal if the input itself contains directory traversal characters like `..`. File paths must be strictly validated.
+**Prevention:** Always validate file paths from requests using a strict regex (e.g., `regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/`) to restrict them to specific expected directories and prevent traversal sequences.
