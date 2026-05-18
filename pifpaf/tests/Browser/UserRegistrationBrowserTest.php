@@ -26,6 +26,7 @@ class UserRegistrationBrowserTest extends DuskTestCase
                     ->type('password', 'password')
                     ->type('password_confirmation', 'password')
                     ->press('button[type="submit"]')
+                    ->waitForLocation('/dashboard')
                     ->assertPathIs('/dashboard')
                     ->assertSee("Tableau de bord")
                     ->screenshot('dashboard');
