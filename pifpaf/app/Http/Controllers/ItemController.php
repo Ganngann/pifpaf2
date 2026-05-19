@@ -202,7 +202,7 @@ class ItemController extends Controller
     public function createFromAi(Request $request)
     {
         $validated = $request->validate([
-            'original_image_path' => 'required|string',
+            'original_image_path' => ['required', 'string', 'regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/'],
             'item_data' => 'required|string',
             'item_index' => 'required|integer',
         ]);
@@ -303,7 +303,7 @@ class ItemController extends Controller
             'price' => 'required|numeric|min:0',
             'images' => 'required_without:image_path|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'image_path' => 'sometimes|string',
+            'image_path' => ['sometimes', 'string', 'regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/'],
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
             'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
