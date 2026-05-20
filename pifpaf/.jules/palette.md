@@ -1,0 +1,3 @@
+## 2024-05-20 - Standardizing Empty States
+**Learning:** Found multiple instances where "empty states" (e.g., no addresses, no bank accounts, no ads) were implemented with unstyled `<p>` tags or custom centered divs. The project already has a well-designed `x-ui.empty-state` component. Using standardized empty components provides better visual affordance, is more accessible, and gives users a clearer path forward.
+**Action:** Replace ad-hoc empty state messages across profile and dashboard views with the `x-ui.empty-state` component, ensuring consistent visual language and incorporating relevant CTAs inside the `actions` slot.
