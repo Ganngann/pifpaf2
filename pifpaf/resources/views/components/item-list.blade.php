@@ -4,8 +4,8 @@
     @forelse ($items as $item)
         <x-ui.item-card :item="$item" />
     @empty
-        <div class="col-span-full text-center text-gray-500">
-            <p>Aucun article trouvé.</p>
+        <div class="col-span-full">
+            <x-ui.empty-state>Aucun article trouvé.</x-ui.empty-state>
         </div>
     @endforelse
 </div>
