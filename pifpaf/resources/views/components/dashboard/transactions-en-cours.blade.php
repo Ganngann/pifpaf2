@@ -5,7 +5,9 @@
         <h3 class="text-2xl font-bold mb-6 text-center sm:text-left">Transactions en cours</h3>
         @if ($openTransactions->isEmpty())
             <div class="text-center text-gray-500">
-                <p>Vous n'avez aucune transaction en cours.</p>
+                <x-ui.empty-state>
+                    Vous n'avez aucune transaction en cours.
+                </x-ui.empty-state>
             </div>
         @else
             <div class="space-y-4">

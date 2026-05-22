@@ -243,7 +243,9 @@
                             </div>
                         </div>
                     @empty
-                        <p>Vous n'avez aucune analyse IA pour le moment.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez aucune analyse IA pour le moment.
+                        </x-ui.empty-state>
                     @endforelse
                 </div>
             </div>

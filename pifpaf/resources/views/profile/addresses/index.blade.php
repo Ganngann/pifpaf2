@@ -16,7 +16,9 @@
                         </a>
                     </div>
                     @if($addresses->isEmpty())
-                        <p>Vous n'avez pas encore d'adresse enregistrée.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez pas encore d'adresse enregistrée.
+                        </x-ui.empty-state>
                     @else
                         <div class="space-y-4">
                             @foreach($addresses as $address)
