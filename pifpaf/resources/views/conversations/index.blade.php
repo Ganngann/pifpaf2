@@ -12,7 +12,9 @@
                     <h3 class="text-2xl font-bold mb-6">Vos Conversations</h3>
 
                     @if($conversations->isEmpty())
-                        <p>Vous n'avez aucune conversation pour le moment.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez aucune conversation pour le moment.
+                        </x-ui.empty-state>
                     @else
                         <div class="space-y-4">
                             @foreach($conversations as $conversation)

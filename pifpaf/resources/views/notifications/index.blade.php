@@ -29,7 +29,9 @@
                             @endif
                         </div>
                     @empty
-                        <p>Vous n'avez aucune notification.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez aucune notification.
+                        </x-ui.empty-state>
                     @endforelse
 
                     <div class="mt-4">

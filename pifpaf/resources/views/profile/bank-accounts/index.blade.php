@@ -24,7 +24,9 @@
 
                     <div class="mt-6">
                         @if ($bankAccounts->isEmpty())
-                            <p>Vous n'avez pas encore de compte bancaire enregistré.</p>
+                            <x-ui.empty-state>
+                                Vous n'avez pas encore de compte bancaire enregistré.
+                            </x-ui.empty-state>
                         @else
                             <ul>
                                 @foreach ($bankAccounts as $account)

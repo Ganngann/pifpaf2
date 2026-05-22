@@ -12,7 +12,9 @@
                     @forelse ($purchases as $transaction)
                         <x-purchase-card :transaction="$transaction" />
                     @empty
-                        <p>Vous n'avez effectué aucun achat pour le moment.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez effectué aucun achat pour le moment.
+                        </x-ui.empty-state>
                     @endforelse
 
                     @if ($purchases->hasPages())
