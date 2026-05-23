@@ -80,13 +80,14 @@ class ProfileController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('reviewsReceived.reviewer');
+        // ⚡ Bolt optimization: Use pagination and DB aggregate methods to avoid loading all reviews into memory
+        $reviews = $user->reviewsReceived()->with('reviewer')->latest()->paginate(10, ['*'], 'reviews_page');
         $items = $user->items()->available()->with(['designatedPrimaryImage', 'images'])->latest()->paginate(8);
 
-        $averageRating = $user->reviewsReceived->avg('rating');
-        $reviewCount = $user->reviewsReceived->count();
+        $averageRating = $user->reviewsReceived()->avg('rating');
+        $reviewCount = $user->reviewsReceived()->count();
 
-        return view('profile.show', compact('user', 'items', 'averageRating', 'reviewCount'));
+        return view('profile.show', compact('user', 'items', 'averageRating', 'reviewCount', 'reviews'));
     }
 
     /**

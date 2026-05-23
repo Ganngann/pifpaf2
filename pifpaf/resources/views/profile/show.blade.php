@@ -18,7 +18,7 @@
 
             <div class="mt-8 pt-8 border-t">
                 <h2 class="text-2xl font-bold mb-4">Avis reçus</h2>
-                @forelse($user->reviewsReceived as $review)
+                @forelse($reviews as $review)
                     <div class="border-b py-4">
                         <div class="flex items-center mb-2">
                             <span class="font-semibold">{{ $review->reviewer->name }}</span>
@@ -30,6 +30,10 @@
                 @empty
                     <p>Cet utilisateur n'a pas encore reçu d'avis.</p>
                 @endforelse
+
+                <div class="mt-4">
+                    {{ $reviews->withQueryString()->links() }}
+                </div>
             </div>
 
             <div class="mt-8 pt-8 border-t">
