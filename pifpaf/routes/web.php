@@ -102,9 +102,9 @@ Route::middleware('auth')->group(function () {
     // Routes pour les notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-});
 
-Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
+    Route::get('/ai-requests/crop-preview', [AiRequestController::class, 'cropPreview'])->name('ai.requests.crop_preview');
+});
 
 Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
