@@ -218,6 +218,11 @@ class ItemController extends Controller
             return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
         }
 
+        // Security: Prevent IDOR (Insecure Direct Object Reference)
+        if ($aiRequest->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Non autorisé.'], 403);
+        }
+
         if ($aiRequest->status !== 'completed') {
             return response()->json(['success' => false, 'message' => 'L\'analyse IA n\'est pas terminée.']);
         }
