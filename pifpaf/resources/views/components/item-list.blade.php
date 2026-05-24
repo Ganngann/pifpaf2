@@ -4,8 +4,15 @@
     @forelse ($items as $item)
         <x-ui.item-card :item="$item" />
     @empty
-        <div class="col-span-full text-center text-gray-500">
-            <p>Aucun article trouvé.</p>
+        <div class="col-span-full">
+            <x-ui.empty-state>
+                Aucun article trouvé.
+                <x-slot name="actions">
+                    <a href="{{ route('welcome') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                        Réinitialiser la recherche
+                    </a>
+                </x-slot>
+            </x-ui.empty-state>
         </div>
     @endforelse
 </div>
