@@ -28,7 +28,9 @@
                         <p class="text-gray-700">{{ $review->comment }}</p>
                     </div>
                 @empty
-                    <p>Cet utilisateur n'a pas encore reçu d'avis.</p>
+                    <x-ui.empty-state>
+                        Cet utilisateur n'a pas encore reçu d'avis.
+                    </x-ui.empty-state>
                 @endforelse
             </div>
 
