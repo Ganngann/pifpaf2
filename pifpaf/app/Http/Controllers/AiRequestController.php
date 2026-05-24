@@ -60,8 +60,15 @@ class AiRequestController extends Controller
 
         $originalPath = $validated['image_path'];
 
-        if (!Storage::disk('public')->exists($originalPath)) {
+        $aiRequest = AiRequest::where('image_path', $originalPath)->first();
+
+        if (!$aiRequest || !Storage::disk('public')->exists($originalPath)) {
             return response('Image not found.', 404);
+        }
+
+        // Security: Prevent IDOR (Insecure Direct Object Reference)
+        if ($aiRequest->user_id !== Auth::id()) {
+            return response('Non autorisé.', 403);
         }
 
         $manager = new ImageManager(new Driver());
