@@ -169,6 +169,10 @@ class AdminController extends Controller
      */
     public function resolveForBuyer(Dispute $dispute)
     {
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige a déjà été traité.');
+        }
+
         $transaction = $dispute->transaction;
         $buyer = $transaction->offer->user;
 
@@ -191,6 +195,10 @@ class AdminController extends Controller
      */
     public function resolveForSeller(Dispute $dispute)
     {
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige a déjà été traité.');
+        }
+
         $transaction = $dispute->transaction;
         $seller = $transaction->offer->item->user;
 
