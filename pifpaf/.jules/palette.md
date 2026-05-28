@@ -1,0 +1,3 @@
+## 2024-05-28 - Styled Links vs Primary Buttons
+**Learning:** The `<x-primary-button>` Blade component in this codebase only renders a `<button>` element and does not support rendering an `href` attribute to act as a link. When implementing call-to-actions (CTAs) within elements like empty states that require navigation, developers must extract and manually apply the button's Tailwind classes to a standard `<a>` tag to achieve visual consistency.
+**Action:** When adding link-based CTAs to UI components, avoid attempting to use `<x-primary-button href="...">`. Instead, directly apply the standard button utility classes (e.g., `inline-flex items-center px-4 py-2 bg-gray-800...`) to an anchor tag.
