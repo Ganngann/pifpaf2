@@ -60,6 +60,12 @@ class AiRequestController extends Controller
 
         $originalPath = $validated['image_path'];
 
+        // Security: Prevent IDOR - ensure the authenticated user owns the AI request
+        $aiRequest = AiRequest::where('image_path', $originalPath)->first();
+        if (!$aiRequest || $aiRequest->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to image.');
+        }
+
         if (!Storage::disk('public')->exists($originalPath)) {
             return response('Image not found.', 404);
         }
