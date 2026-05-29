@@ -2,3 +2,7 @@
 **Learning:** Checking `Auth::user()->unreadNotifications->count()` inside the navigation layout triggers an N+1 query issue since notifications might not be loaded, and `count()` triggers a separate count query on the relation each time it's called (or loads all notifications). Actually, it loads the relation because it uses the property `unreadNotifications` and then calls `count()` on the collection. In this case, `unreadNotifications()->count()` is much more efficient as it performs an aggregate query, but even better is doing it right in a View Composer if needed, or just `unreadNotifications()->count()`. Wait, since it's `Auth::user()->unreadNotifications->count()`, it loads ALL unread notifications into memory just to count them!
 
 **Action:** Replace `$user->unreadNotifications->count()` with `$user->unreadNotifications()->count()`. This executes a simple `COUNT(*)` query without fetching the actual model records.
+
+## 2024-05-16 - [N+1 query inside loop in ItemController]
+**Learning:** Calling `$item->images()->count()` inside a foreach loop executes a `SELECT COUNT(*)` query on the database during every single iteration.
+**Action:** Always cache the result of relationship aggregates like `count()` outside the loop and increment the cached variable internally to prevent N+1 query performance issues.
