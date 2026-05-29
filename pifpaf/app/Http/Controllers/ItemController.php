@@ -218,6 +218,11 @@ class ItemController extends Controller
             return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
         }
 
+        // Security: Prevent IDOR - ensure the authenticated user owns the AI request
+        if ($aiRequest->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         if ($aiRequest->status !== 'completed') {
             return response()->json(['success' => false, 'message' => 'L\'analyse IA n\'est pas terminée.']);
         }
@@ -328,6 +333,13 @@ class ItemController extends Controller
         // 1. Gérer l'image venant du flux IA
         if ($request->has('image_path')) {
             $tempPath = $request->input('image_path');
+
+            // Security: Prevent IDOR - ensure the authenticated user owns the AI request associated with this image_path
+            $aiRequest = AiRequest::where('image_path', $tempPath)->first();
+            if (!$aiRequest || $aiRequest->user_id !== Auth::id()) {
+                abort(403, 'Unauthorized access to image.');
+            }
+
             if (Storage::disk('public')->exists($tempPath)) {
                 $newPath = "item_images/{$item->id}/" . basename($tempPath);
                 Storage::disk('public')->move($tempPath, $newPath);
