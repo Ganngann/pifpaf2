@@ -1,0 +1,3 @@
+## 2024-05-29 - WCAG 2.1 Success Criterion 2.5.3 (Label in Name)
+**Learning:** When improving accessibility by adding an `aria-label` to elements that contain visible dynamic text (such as a user's name), the `aria-label` must explicitly include that visible text to comply with WCAG 2.1 Success Criterion 2.5.3 (Label in Name) and prevent breaking voice control. For example, replacing a button containing `{{ Auth::user()->name }}` with an `aria-label="Menu utilisateur"` breaks voice control as the user cannot call it by the name displayed.
+**Action:** Always include the visible text in the `aria-label` string (e.g. `aria-label="Menu utilisateur pour {{ Auth::user()->name }}"`).
