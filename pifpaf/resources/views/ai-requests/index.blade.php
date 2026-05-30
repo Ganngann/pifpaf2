@@ -14,11 +14,13 @@
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-                    <div class="mb-4">
-                        <a href="{{ route('items.create-with-ai') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {{ __('Lancer une nouvelle analyse') }}
-                        </a>
-                    </div>
+                    @if($requests->isNotEmpty())
+                        <div class="mb-4">
+                            <a href="{{ route('items.create-with-ai') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                {{ __('Lancer une nouvelle analyse') }}
+                            </a>
+                        </div>
+                    @endif
 
                     @forelse ($requests as $request)
                         <div class="mb-6 p-4 border rounded-lg shadow-sm" x-data="{ open: false }" dusk="ai-request-{{ $request->id }}">
@@ -243,7 +245,14 @@
                             </div>
                         </div>
                     @empty
-                        <p>Vous n'avez aucune analyse IA pour le moment.</p>
+                        <x-ui.empty-state>
+                            Vous n'avez aucune analyse IA pour le moment.
+                            <x-slot name="actions">
+                                <a href="{{ route('items.create-with-ai') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    {{ __('Lancer une nouvelle analyse') }}
+                                </a>
+                            </x-slot>
+                        </x-ui.empty-state>
                     @endforelse
                 </div>
             </div>
