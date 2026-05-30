@@ -169,6 +169,11 @@ class AdminController extends Controller
      */
     public function resolveForBuyer(Dispute $dispute)
     {
+        // Prevent replay attacks and double-crediting by verifying the dispute is still open
+        if ($dispute->status !== 'open') {
+            return back()->with('error', 'Ce litige n\'est plus ouvert.');
+        }
+
         $transaction = $dispute->transaction;
         $buyer = $transaction->offer->user;
 
@@ -191,6 +196,11 @@ class AdminController extends Controller
      */
     public function resolveForSeller(Dispute $dispute)
     {
+        // Prevent replay attacks and double-crediting by verifying the dispute is still open
+        if ($dispute->status !== 'open') {
+            return back()->with('error', 'Ce litige n\'est plus ouvert.');
+        }
+
         $transaction = $dispute->transaction;
         $seller = $transaction->offer->item->user;
 
