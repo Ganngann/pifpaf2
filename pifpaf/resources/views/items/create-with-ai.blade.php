@@ -33,7 +33,10 @@
                             </div>
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" :disabled="loading">
                                 <span x-show="!loading">{{ __('Analyser l\'image') }}</span>
-                                <span x-show="loading">{{ __('Veuillez patienter...') }}</span>
+                                <span x-show="loading" class="flex items-center">
+                                    <div class="animate-spin mr-2 h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                                    {{ __('Veuillez patienter...') }}
+                                </span>
                             </button>
                         </div>
                     </form>
