@@ -72,7 +72,8 @@
                                     dusk="submit-payment-button"
                                     class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                                     :disabled="loading">
-                                <span x-show="loading" class="animate-spin mr-2">Processing...</span>
+                                <div x-show="loading" class="inline-block animate-spin mr-2 h-5 w-5 border-2 border-white border-t-transparent rounded-full align-middle"></div>
+                                <span x-show="loading">Processing...</span>
                                 <span x-show="!loading">
                                     <span x-show="!walletCoversAll">Payer</span>
                                     <span x-show="walletCoversAll">Confirmer et payer avec le solde</span>
