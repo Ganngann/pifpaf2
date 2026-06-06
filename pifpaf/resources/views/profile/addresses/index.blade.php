@@ -11,12 +11,28 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Toutes mes adresses</h3>
-                        <a href="{{ route('profile.addresses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            Ajouter une adresse
-                        </a>
+                        @if($addresses->isNotEmpty())
+                            <a href="{{ route('profile.addresses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                Ajouter une adresse
+                            </a>
+                        @endif
                     </div>
                     @if($addresses->isEmpty())
-                        <p>Vous n'avez pas encore d'adresse enregistrée.</p>
+                        <x-ui.empty-state description="Ajoutez une adresse pour faciliter vos prochains achats ou retraits.">
+                            Vous n'avez pas encore d'adresse enregistrée
+
+                            <x-slot name="icon">
+                                <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                            </x-slot>
+
+                            <x-slot name="actions">
+                                <a href="{{ route('profile.addresses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Ajouter une adresse
+                                </a>
+                            </x-slot>
+                        </x-ui.empty-state>
                     @else
                         <div class="space-y-4">
                             @foreach($addresses as $address)
