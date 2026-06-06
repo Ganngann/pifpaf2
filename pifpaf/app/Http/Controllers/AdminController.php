@@ -169,6 +169,11 @@ class AdminController extends Controller
      */
     public function resolveForBuyer(Dispute $dispute)
     {
+        // 🛡️ Sentinel: Prevent double-crediting if dispute is already closed
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige a déjà été traité.');
+        }
+
         $transaction = $dispute->transaction;
         $buyer = $transaction->offer->user;
 
@@ -191,6 +196,11 @@ class AdminController extends Controller
      */
     public function resolveForSeller(Dispute $dispute)
     {
+        // 🛡️ Sentinel: Prevent double-crediting if dispute is already closed
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige a déjà été traité.');
+        }
+
         $transaction = $dispute->transaction;
         $seller = $transaction->offer->item->user;
 
@@ -213,6 +223,11 @@ class AdminController extends Controller
      */
     public function closeDispute(Dispute $dispute)
     {
+        // 🛡️ Sentinel: Prevent processing if dispute is already closed
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige a déjà été traité.');
+        }
+
         $dispute->update(['status' => 'closed']);
         return redirect()->route('admin.disputes.index')->with('success', 'Le litige a été clôturé.');
     }
