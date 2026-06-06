@@ -6,3 +6,7 @@
 **Vulnerability:** The application had a critical path traversal vulnerability in `AiRequestController.php` and `ItemController.php` where user-controlled input (`image_path`, `original_image_path`) was passed directly to `Storage::disk('public')->path()` and `Storage::disk('public')->move()` without proper sanitization. This allowed attackers to potentially read or move arbitrary files on the server using `../../` sequences.
 **Learning:** Even when using Laravel's storage facade, unsanitized user input passed to methods like `path()`, `exists()`, or `move()` is unsafe. Path parameters received from external requests must be strictly validated.
 **Prevention:** Always validate file paths from external input using strict regex constraints (e.g., `regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/`) to ensure they only point to expected directories and do not contain directory traversal sequences.
+## 2024-06-06 - Prevent Double Processing in Admin Actions
+**Vulnerability:** Race condition / Replay attack risk in dispute resolution (financial transaction) methods.
+**Learning:** `AdminController` methods `resolveForBuyer`, `resolveForSeller`, and `closeDispute` processed financial transactions without checking if the dispute was already resolved (`status !== 'open'`), which could lead to double-crediting if a user double-clicks or via a race condition.
+**Prevention:** Always check the entity state (`if ($entity->status !== 'expected_status')`) at the top of controller methods that perform critical state changes or financial transactions.
