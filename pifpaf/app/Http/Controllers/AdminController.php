@@ -169,6 +169,10 @@ class AdminController extends Controller
      */
     public function resolveForBuyer(Dispute $dispute)
     {
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige est déjà fermé.');
+        }
+
         $transaction = $dispute->transaction;
         $buyer = $transaction->offer->user;
 
@@ -191,6 +195,10 @@ class AdminController extends Controller
      */
     public function resolveForSeller(Dispute $dispute)
     {
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige est déjà fermé.');
+        }
+
         $transaction = $dispute->transaction;
         $seller = $transaction->offer->item->user;
 
@@ -213,6 +221,10 @@ class AdminController extends Controller
      */
     public function closeDispute(Dispute $dispute)
     {
+        if ($dispute->status !== 'open') {
+            return redirect()->route('admin.disputes.index')->with('error', 'Ce litige est déjà fermé.');
+        }
+
         $dispute->update(['status' => 'closed']);
         return redirect()->route('admin.disputes.index')->with('success', 'Le litige a été clôturé.');
     }
