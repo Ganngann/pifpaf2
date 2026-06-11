@@ -60,6 +60,11 @@ class AiRequestController extends Controller
 
         $originalPath = $validated['image_path'];
 
+        $aiRequest = \App\Models\AiRequest::where('image_path', $originalPath)->first();
+        if (!$aiRequest || $aiRequest->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            return response('Accès non autorisé.', 403);
+        }
+
         if (!Storage::disk('public')->exists($originalPath)) {
             return response('Image not found.', 404);
         }
