@@ -218,6 +218,10 @@ class ItemController extends Controller
             return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
         }
 
+        if ($aiRequest->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Accès non autorisé.'], 403);
+        }
+
         if ($aiRequest->status !== 'completed') {
             return response()->json(['success' => false, 'message' => 'L\'analyse IA n\'est pas terminée.']);
         }

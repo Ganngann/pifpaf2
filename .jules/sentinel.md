@@ -6,3 +6,7 @@
 **Vulnerability:** The application had a critical path traversal vulnerability in `AiRequestController.php` and `ItemController.php` where user-controlled input (`image_path`, `original_image_path`) was passed directly to `Storage::disk('public')->path()` and `Storage::disk('public')->move()` without proper sanitization. This allowed attackers to potentially read or move arbitrary files on the server using `../../` sequences.
 **Learning:** Even when using Laravel's storage facade, unsanitized user input passed to methods like `path()`, `exists()`, or `move()` is unsafe. Path parameters received from external requests must be strictly validated.
 **Prevention:** Always validate file paths from external input using strict regex constraints (e.g., `regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/`) to ensure they only point to expected directories and do not contain directory traversal sequences.
+## 2025-02-12 - Insecure Direct Object Reference via Secondary Identifiers
+**Vulnerability:** IDOR vulnerability when looking up resources via secondary identifiers (like image_path) without verifying model ownership.
+**Learning:** Always verify model ownership (e.g., user_id === Auth::id()) when retrieving models via secondary identifiers or file paths, such as querying by image_path.
+**Prevention:** Check Auth::id() against the model's user_id before returning or modifying data based on user input.
