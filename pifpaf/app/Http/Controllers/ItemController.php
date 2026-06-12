@@ -406,9 +406,12 @@ class ItemController extends Controller
             // On récupère le dernier ordre pour continuer la séquence
             $order = $item->images()->max('order') + 1;
 
+            // On met en cache le nombre d'images pour éviter le problème de requête N+1 dans la boucle
+            $currentImageCount = $item->images()->count();
+
             foreach ($request->file('images') as $imageFile) {
                 // On vérifie qu'on ne dépasse pas la limite totale de 10 images
-                if ($item->images()->count() >= 10) {
+                if ($currentImageCount >= 10) {
                     break;
                 }
 
@@ -417,6 +420,7 @@ class ItemController extends Controller
                     'path' => $path,
                     'order' => $order++,
                 ]);
+                $currentImageCount++;
             }
         }
 
