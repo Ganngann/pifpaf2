@@ -69,8 +69,13 @@ class ItemImageController extends Controller
             'ids.*' => 'exists:item_images,id',
         ]);
 
-        $itemImage = ItemImage::find($request->ids[0]);
-        $this->authorize('update', $itemImage->item);
+        // 🛡️ Sentinel: Fetch all requested images to verify ownership
+        // and prevent IDOR where a user reorders images they don't own
+        $images = ItemImage::with('item')->whereIn('id', $request->ids)->get();
+
+        foreach ($images as $itemImage) {
+            $this->authorize('update', $itemImage->item);
+        }
 
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
