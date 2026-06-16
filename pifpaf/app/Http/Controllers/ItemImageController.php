@@ -69,8 +69,11 @@ class ItemImageController extends Controller
             'ids.*' => 'exists:item_images,id',
         ]);
 
-        $itemImage = ItemImage::find($request->ids[0]);
-        $this->authorize('update', $itemImage->item);
+        // Security fix: Authorize ALL images being reordered, not just the first one
+        $images = ItemImage::with('item')->whereIn('id', $request->ids)->get();
+        foreach ($images as $image) {
+            $this->authorize('update', $image->item);
+        }
 
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
