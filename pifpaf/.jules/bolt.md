@@ -1,0 +1,3 @@
+## 2024-06-17 - [N+1 Query in File Upload Loops]
+**Learning:** Checking `$item->images()->count()` repeatedly inside a loop (like a `foreach` loop processing multiple file uploads) will execute a new database query on each iteration. This N+1 query issue occurs because the query builder method `count()` runs every time it is invoked, which is especially problematic and unnecessary during file processing loops.
+**Action:** Always evaluate relational counts (e.g., `$count = $item->images()->count()`) outside the loop into a local variable and increment it manually inside the loop if the state changes.
