@@ -69,8 +69,13 @@ class ItemImageController extends Controller
             'ids.*' => 'exists:item_images,id',
         ]);
 
-        $itemImage = ItemImage::find($request->ids[0]);
-        $this->authorize('update', $itemImage->item);
+        // Security Fix: Prevent IDOR by authorizing each individual item.
+        // Previously, only the first image was checked, allowing attackers to reorder other users' images.
+        $itemImages = ItemImage::with('item')->whereIn('id', $request->ids)->get();
+
+        foreach ($itemImages as $itemImage) {
+            $this->authorize('update', $itemImage->item);
+        }
 
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
