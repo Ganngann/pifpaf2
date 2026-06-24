@@ -69,8 +69,13 @@ class ItemImageController extends Controller
             'ids.*' => 'exists:item_images,id',
         ]);
 
-        $itemImage = ItemImage::find($request->ids[0]);
-        $this->authorize('update', $itemImage->item);
+        // Eager load the item relationship to prevent N+1 issues
+        $images = ItemImage::with('item')->whereIn('id', $request->ids)->get();
+
+        // Explicitly authorize every image to prevent IDOR via mixed array elements
+        foreach ($images as $image) {
+            $this->authorize('update', $image->item);
+        }
 
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
