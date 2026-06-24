@@ -128,4 +128,41 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_other_users_images_via_mixed_ids(): void
+    {
+        $attacker = User::factory()->create();
+        $attackerItem = Item::factory()->create(['user_id' => $attacker->id]);
+
+        $victim = User::factory()->create();
+        $victimItem = Item::factory()->create(['user_id' => $victim->id]);
+
+        $attackerImage = ItemImage::create([
+            'item_id' => $attackerItem->id,
+            'path' => 'attacker.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $victimImage = ItemImage::create([
+            'item_id' => $victimItem->id,
+            'path' => 'victim.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        // Attempt to pass attacker's own image ID first to bypass the old auth check,
+        // then include the victim's image ID.
+        $responseReorder = $this->actingAs($attacker)->postJson(route('item-images.reorder'), [
+            'ids' => [$attackerImage->id, $victimImage->id],
+        ]);
+
+        $responseReorder->assertForbidden();
+
+        // Assert the order was not updated
+        $this->assertDatabaseHas('item_images', [
+            'id' => $victimImage->id,
+            'order' => 0,
+        ]);
+    }
 }
