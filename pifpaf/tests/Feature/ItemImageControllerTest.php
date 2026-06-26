@@ -128,4 +128,35 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_other_users_images_with_mixed_array(): void
+    {
+        $attacker = User::factory()->create();
+        $victim = User::factory()->create();
+
+        $attackerItem = Item::factory()->create(['user_id' => $attacker->id]);
+        $victimItem = Item::factory()->create(['user_id' => $victim->id]);
+
+        $attackerImage = ItemImage::create([
+            'item_id' => $attackerItem->id,
+            'path' => 'fake_attacker.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $victimImage = ItemImage::create([
+            'item_id' => $victimItem->id,
+            'path' => 'fake_victim.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        // Attempting to reorder victim's image by putting attacker's image ID first
+        // to bypass authorization check on the first element
+        $response = $this->actingAs($attacker)->postJson(route('item-images.reorder'), [
+            'ids' => [$attackerImage->id, $victimImage->id],
+        ]);
+
+        $response->assertForbidden();
+    }
 }
