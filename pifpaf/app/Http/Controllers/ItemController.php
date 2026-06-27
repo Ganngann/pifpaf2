@@ -406,9 +406,12 @@ class ItemController extends Controller
             // On récupère le dernier ordre pour continuer la séquence
             $order = $item->images()->max('order') + 1;
 
+            // ⚡ Bolt: Pre-calculate current image count outside the loop to prevent N+1 queries
+            $imageCount = $item->images()->count();
+
             foreach ($request->file('images') as $imageFile) {
                 // On vérifie qu'on ne dépasse pas la limite totale de 10 images
-                if ($item->images()->count() >= 10) {
+                if ($imageCount >= 10) {
                     break;
                 }
 
@@ -417,6 +420,9 @@ class ItemController extends Controller
                     'path' => $path,
                     'order' => $order++,
                 ]);
+
+                // ⚡ Bolt: Increment local counter instead of running another query
+                $imageCount++;
             }
         }
 
