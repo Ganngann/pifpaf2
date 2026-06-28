@@ -70,10 +70,11 @@ class ItemImageController extends Controller
         ]);
 
         $itemImage = ItemImage::find($request->ids[0]);
-        $this->authorize('update', $itemImage->item);
+        $item = $itemImage->item;
+        $this->authorize('update', $item);
 
         foreach ($request->ids as $index => $id) {
-            ItemImage::where('id', $id)->update(['order' => $index]);
+            ItemImage::where('id', $id)->where('item_id', $item->id)->update(['order' => $index]);
         }
 
         return response()->json(['success' => true]);
