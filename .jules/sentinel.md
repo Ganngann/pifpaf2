@@ -6,3 +6,7 @@
 **Vulnerability:** The application had a critical path traversal vulnerability in `AiRequestController.php` and `ItemController.php` where user-controlled input (`image_path`, `original_image_path`) was passed directly to `Storage::disk('public')->path()` and `Storage::disk('public')->move()` without proper sanitization. This allowed attackers to potentially read or move arbitrary files on the server using `../../` sequences.
 **Learning:** Even when using Laravel's storage facade, unsanitized user input passed to methods like `path()`, `exists()`, or `move()` is unsafe. Path parameters received from external requests must be strictly validated.
 **Prevention:** Always validate file paths from external input using strict regex constraints (e.g., `regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/`) to ensure they only point to expected directories and do not contain directory traversal sequences.
+## 2026-07-03 - [Fix IDOR Vulnerability in ItemController Address Assignment]
+**Vulnerability:** An IDOR vulnerability existed in `ItemController@store` and `ItemController@update` where users could assign any existing `address_id` to their items, even if the address belonged to another user.
+**Learning:** Relying solely on `exists:addresses,id` validation rule for foreign keys is insufficient when the resource belongs to a specific user.
+**Prevention:** Always scope `exists` validation rules using `Rule::exists('table', 'id')->where('user_id', Auth::id())` to ensure the referenced resource belongs to the authenticated user.
