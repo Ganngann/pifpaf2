@@ -73,7 +73,8 @@ class ItemImageController extends Controller
         $this->authorize('update', $itemImage->item);
 
         foreach ($request->ids as $index => $id) {
-            ItemImage::where('id', $id)->update(['order' => $index]);
+            // 🛡️ Sentinel: Scope update to authorized item_id to prevent IDOR via mixed ID arrays
+            ItemImage::where('id', $id)->where('item_id', $itemImage->item_id)->update(['order' => $index]);
         }
 
         return response()->json(['success' => true]);
