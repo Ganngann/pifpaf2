@@ -22,7 +22,7 @@
 
                     @forelse ($requests as $request)
                         <div class="mb-6 p-4 border rounded-lg shadow-sm" x-data="{ open: false }" dusk="ai-request-{{ $request->id }}">
-                            <div class="flex justify-between items-center cursor-pointer" @click="open = !open" dusk="ai-request-header-{{ $request->id }}">
+                            <button type="button" class="w-full flex justify-between items-center cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md" @click="open = !open" :aria-expanded="open.toString()" aria-label="Détails de la demande du {{ $request->created_at->format('d/m/Y à H:i') }}" dusk="ai-request-header-{{ $request->id }}">
                                 <div class="flex items-center">
                                     <img src="{{ asset('storage/' . $request->image_path) }}" alt="Image analysée" class="w-16 h-16 object-cover rounded-lg mr-4">
                                     <div>
@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                                 <div x-text="open ? '-' : '+'" class="text-2xl font-bold"></div>
-                            </div>
+                            </button>
 
                             <div x-show="open" class="mt-4">
                                 @if ($request->status === 'completed')
@@ -215,7 +215,7 @@
                                             <p class="text-red-500">{{ $request->error_message }}</p>
                                             <div class="flex items-center space-x-2">
                                                 @if ($request->raw_error_response)
-                                                    <button @click="showDetails = !showDetails" class="text-sm text-blue-500 hover:underline">
+                                                    <button type="button" @click="showDetails = !showDetails" :aria-expanded="showDetails.toString()" class="text-sm text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
                                                         <span x-show="!showDetails">Voir les détails</span>
                                                         <span x-show="showDetails">Cacher les détails</span>
                                                     </button>
