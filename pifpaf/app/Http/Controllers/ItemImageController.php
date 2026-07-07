@@ -73,7 +73,11 @@ class ItemImageController extends Controller
         $this->authorize('update', $itemImage->item);
 
         foreach ($request->ids as $index => $id) {
-            ItemImage::where('id', $id)->update(['order' => $index]);
+            // SECURITY: Ensure we only update images belonging to the authorized item
+            // to prevent IDOR where a user passes a mixed array of IDs.
+            ItemImage::where('id', $id)
+                ->where('item_id', $itemImage->item_id)
+                ->update(['order' => $index]);
         }
 
         return response()->json(['success' => true]);
