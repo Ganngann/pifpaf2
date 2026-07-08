@@ -128,4 +128,39 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_other_users_images_via_mixed_array(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $userItem = Item::factory()->create(['user_id' => $user->id]);
+        $otherItem = Item::factory()->create(['user_id' => $otherUser->id]);
+
+        $userImage = ItemImage::create([
+            'item_id' => $userItem->id,
+            'path' => 'fake1.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $otherImage = ItemImage::create([
+            'item_id' => $otherItem->id,
+            'path' => 'fake2.jpg',
+            'is_primary' => false,
+            'order' => 5, // original order is 5
+        ]);
+
+        $response = $this->actingAs($user)->postJson(route('item-images.reorder'), [
+            'ids' => [$userImage->id, $otherImage->id], // First ID is valid, second is victim's
+        ]);
+
+        $response->assertOk();
+
+        // The second image's order should not be updated to 1 because of the scoped update
+        $this->assertDatabaseHas('item_images', [
+            'id' => $otherImage->id,
+            'order' => 5, // it should remain 5
+        ]);
+    }
 }
