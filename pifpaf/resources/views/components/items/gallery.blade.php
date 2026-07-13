@@ -20,6 +20,7 @@
                         $imageUrl = asset('storage/' . $image->path);
                     @endphp
                     <button @click="mainImageUrl = '{{ $imageUrl }}'"
+                            aria-label="Afficher l'image {{ $item->title }}"
                             class="w-24 h-24 rounded-md overflow-hidden border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             :class="{ 'border-blue-500': mainImageUrl === '{{ $imageUrl }}', 'border-transparent': mainImageUrl !== '{{ $imageUrl }}' }">
                         <img src="{{ $imageUrl }}"
