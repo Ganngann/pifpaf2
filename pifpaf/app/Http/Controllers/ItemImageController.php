@@ -72,6 +72,13 @@ class ItemImageController extends Controller
         $itemImage = ItemImage::find($request->ids[0]);
         $this->authorize('update', $itemImage->item);
 
+        $item = $itemImage->item;
+
+        $validIdsCount = $item->images()->whereIn('id', $request->ids)->count();
+        if ($validIdsCount !== count($request->ids)) {
+            abort(403, 'Accès non autorisé.');
+        }
+
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
         }
