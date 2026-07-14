@@ -128,4 +128,51 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_mixed_images_via_partial_authorization_idor(): void
+    {
+        $attacker = User::factory()->create();
+        $attackerItem = Item::factory()->create(['user_id' => $attacker->id]);
+        $attackerImage = ItemImage::create([
+            'item_id' => $attackerItem->id,
+            'path' => 'attacker.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $victim = User::factory()->create();
+        $victimItem = Item::factory()->create(['user_id' => $victim->id]);
+        $victimImage = ItemImage::create([
+            'item_id' => $victimItem->id,
+            'path' => 'victim.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        // Attacker attempts to reorder using their own image first (to pass authorization),
+        // but includes the victim's image ID in the list
+        $response = $this->actingAs($attacker)->postJson(route('item-images.reorder'), [
+            'ids' => [$attackerImage->id, $victimImage->id],
+        ]);
+
+        $response->assertOk();
+
+        // Attacker's image gets updated
+        $this->assertDatabaseHas('item_images', [
+            'id' => $attackerImage->id,
+            'order' => 0,
+        ]);
+
+        // Victim's image should be silently ignored and not updated (order should remain 0)
+        // Since we attempt to update it to index 1, if it was vulnerable, it would be 1
+        $this->assertDatabaseHas('item_images', [
+            'id' => $victimImage->id,
+            'order' => 0,
+        ]);
+
+        $this->assertDatabaseMissing('item_images', [
+            'id' => $victimImage->id,
+            'order' => 1,
+        ]);
+    }
 }
