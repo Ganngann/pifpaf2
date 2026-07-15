@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
 {
@@ -26,7 +27,14 @@ class PaymentController extends Controller
         // Si la livraison est requise, on valide la présence de l'adresse
         if ($offer->delivery_method != 'pickup') {
             $validated = $request->validate([
-                'address_id' => 'required|integer|exists:addresses,id',
+                // Security Fix: Scoped exist rule to prevent IDOR vulnerability
+                'address_id' => [
+                    'required',
+                    'integer',
+                    Rule::exists('addresses', 'id')->where(function ($query) {
+                        $query->where('user_id', Auth::id());
+                    }),
+                ],
             ]);
 
             // On vérifie que l'adresse appartient bien à l'utilisateur
