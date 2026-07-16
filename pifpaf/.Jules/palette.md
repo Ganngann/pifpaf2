@@ -1,0 +1,3 @@
+## 2026-07-16 - Form Accessibility & Focus States
+**Learning:** The welcome page search form grouped inputs (like min/max price and location/distance) under a single visual label without explicitly associating them with `id` or `aria-label`. Additionally, these inputs were missing clear focus rings for keyboard navigation.
+**Action:** When working on complex forms with grouped inputs in this project, explicitly add `aria-label` attributes to individual inputs when standard `<label for="...">` isn't practical, and ensure all interactive elements include explicit focus states (e.g. `focus:ring-2 focus:ring-blue-500 focus:outline-none`).
