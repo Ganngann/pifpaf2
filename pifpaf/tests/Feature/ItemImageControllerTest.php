@@ -128,4 +128,47 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_other_users_images_via_idor(): void
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $user->id]);
+
+        $image1 = ItemImage::create([
+            'item_id' => $item->id,
+            'path' => 'fake1.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $otherUser = User::factory()->create();
+        $otherItem = Item::factory()->create(['user_id' => $otherUser->id]);
+
+        $otherImage = ItemImage::create([
+            'item_id' => $otherItem->id,
+            'path' => 'fake2.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        // Attempt to reorder by passing own image first (to pass authorize check),
+        // then the other user's image.
+        $response = $this->actingAs($user)->postJson(route('item-images.reorder'), [
+            'ids' => [$image1->id, $otherImage->id],
+        ]);
+
+        $response->assertOk();
+
+        // Own image is updated.
+        $this->assertDatabaseHas('item_images', [
+            'id' => $image1->id,
+            'order' => 0,
+        ]);
+
+        // Other user's image remains unchanged (order is still 0, not 1).
+        $this->assertDatabaseHas('item_images', [
+            'id' => $otherImage->id,
+            'order' => 0,
+        ]);
+    }
 }
