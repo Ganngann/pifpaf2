@@ -72,6 +72,13 @@ class ItemImageController extends Controller
         $itemImage = ItemImage::find($request->ids[0]);
         $this->authorize('update', $itemImage->item);
 
+        // Security: Prevent IDOR by ensuring all submitted image IDs belong to the authorized item
+        $item = $itemImage->item;
+        $count = $item->images()->whereIn('id', $request->ids)->count();
+        if ($count !== count($request->ids)) {
+            abort(403, 'Accès non autorisé aux images spécifiées.');
+        }
+
         foreach ($request->ids as $index => $id) {
             ItemImage::where('id', $id)->update(['order' => $index]);
         }
