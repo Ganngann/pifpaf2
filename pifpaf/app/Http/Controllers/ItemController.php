@@ -8,6 +8,7 @@ use App\Models\AiRequest;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -306,7 +307,14 @@ class ItemController extends Controller
             'image_path' => ['sometimes', 'string', 'regex:/^ai_images\/[a-zA-Z0-9_\-\.]+$/'],
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            // Security: Prevent IDOR by ensuring the provided address belongs to the authenticated user.
+            'address_id' => [
+                'required_if:pickup_available,true',
+                'nullable',
+                Rule::exists('addresses', 'id')->where(function ($query) {
+                    $query->where('user_id', Auth::id());
+                }),
+            ],
             'weight' => 'required_if:delivery_available,true|nullable|numeric|min:1',
             'length' => 'required_if:delivery_available,true|nullable|numeric|min:1',
             'width' => 'required_if:delivery_available,true|nullable|numeric|min:1',
@@ -387,7 +395,14 @@ class ItemController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'delivery_available' => 'sometimes|boolean',
             'pickup_available' => 'sometimes|boolean',
-            'address_id' => 'required_if:pickup_available,true|nullable|exists:addresses,id',
+            // Security: Prevent IDOR by ensuring the provided address belongs to the authenticated user.
+            'address_id' => [
+                'required_if:pickup_available,true',
+                'nullable',
+                Rule::exists('addresses', 'id')->where(function ($query) {
+                    $query->where('user_id', Auth::id());
+                }),
+            ],
             'weight' => 'required_if:delivery_available,true|nullable|numeric|min:1',
             'length' => 'required_if:delivery_available,true|nullable|numeric|min:1',
             'width' => 'required_if:delivery_available,true|nullable|numeric|min:1',
