@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Item;
 
+use App\Models\Address;
+use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -59,7 +61,7 @@ class ItemCreationTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $item = \App\Models\Item::first();
+        $item = Item::first();
         $this->assertCount(1, $item->images);
         Storage::disk('public')->assertExists($item->images->first()->path);
     }
@@ -90,5 +92,31 @@ class ItemCreationTest extends TestCase
         // Test sans la catégorie
         $response = $this->post(route('items.store'), ['title' => 'test', 'description' => 'test', 'price' => 10, 'images' => $fakeImage]);
         $response->assertSessionHasErrors('category');
+    }
+
+    #[Test]
+    public function it_fails_when_address_id_belongs_to_another_user()
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $otherUserAddress = Address::factory()->create([
+            'user_id' => $otherUser->id,
+            'is_for_pickup' => true,
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->post(route('items.store'), [
+            'title' => 'Titre de test',
+            'description' => 'Description de test',
+            'category' => 'Électronique',
+            'price' => 10.50,
+            'images' => [UploadedFile::fake()->image('test.jpg')],
+            'pickup_available' => true,
+            'address_id' => $otherUserAddress->id,
+        ]);
+
+        $response->assertSessionHasErrors('address_id');
     }
 }
