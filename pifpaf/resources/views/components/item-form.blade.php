@@ -18,19 +18,19 @@
     <!-- Titre -->
     <div class="mb-4">
         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Titre</label>
-        <input type="text" name="title" id="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('title', $item->title ?? session('ai_data')['title'] ?? '') }}" required>
+        <input type="text" name="title" id="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('title', $item->title ?? session('ai_data')['title'] ?? '') }}" required>
     </div>
 
     <!-- Description -->
     <div class="mb-4">
         <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-        <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description', $item->description ?? session('ai_data')['description'] ?? '') }}</textarea>
+        <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>{{ old('description', $item->description ?? session('ai_data')['description'] ?? '') }}</textarea>
     </div>
 
     <!-- Catégorie -->
     <div class="mb-4">
         <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Catégorie</label>
-        <select name="category" id="category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <select name="category" id="category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
             <option value="">-- Choisir une catégorie --</option>
             @php
                 $selectedCategory = old('category', $item->category ?? session('ai_data')['category'] ?? '');
@@ -45,26 +45,26 @@
     <!-- Prix -->
     <div class="mb-4">
         <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Prix</label>
-        <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('price', $item->price ?? session('ai_data')['price'] ?? '') }}" required>
+        <input type="number" step="0.01" name="price" id="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('price', $item->price ?? session('ai_data')['price'] ?? '') }}" required>
     </div>
 
     <!-- Poids et Dimensions -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <div>
             <label for="weight" class="block text-gray-700 text-sm font-bold mb-2">Poids (g)</label>
-            <input type="number" name="weight" id="weight" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('weight', $item->weight ?? session('ai_data')['weight'] ?? '') }}">
+            <input type="number" name="weight" id="weight" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('weight', $item->weight ?? session('ai_data')['weight'] ?? '') }}">
         </div>
         <div>
             <label for="width" class="block text-gray-700 text-sm font-bold mb-2">Largeur (cm)</label>
-            <input type="number" name="width" id="width" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('width', $item->width ?? session('ai_data')['width'] ?? '') }}">
+            <input type="number" name="width" id="width" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('width', $item->width ?? session('ai_data')['width'] ?? '') }}">
         </div>
         <div>
             <label for="height" class="block text-gray-700 text-sm font-bold mb-2">Hauteur (cm)</label>
-            <input type="number" name="height" id="height" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('height', $item->height ?? session('ai_data')['height'] ?? '') }}">
+            <input type="number" name="height" id="height" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('height', $item->height ?? session('ai_data')['height'] ?? '') }}">
         </div>
         <div>
             <label for="length" class="block text-gray-700 text-sm font-bold mb-2">Longeur (cm)</label>
-            <input type="number" name="length" id="length" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('length', $item->length ?? session('ai_data')['length'] ?? '') }}">
+            <input type="number" name="length" id="length" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('length', $item->length ?? session('ai_data')['length'] ?? '') }}">
         </div>
     </div>
 
@@ -92,7 +92,7 @@
         <!-- Sélection de l'adresse de retrait (conditionnelle) -->
         <div x-show="pickupAvailable" class="mb-4">
             <label for="address_id" class="block text-gray-700 text-sm font-bold mb-2">Adresse de retrait</label>
-            <select name="address_id" id="address_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select name="address_id" id="address_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">-- Choisir une adresse --</option>
                 @foreach($pickupAddresses as $address)
                     <option value="{{ $address->id }}" @if(old('address_id', $item->address_id ?? null) == $address->id) selected @endif>
@@ -106,7 +106,7 @@
 
     <!-- Bouton de soumission -->
     <div class="flex items-center justify-end mt-4">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             {{ $submitText }}
         </button>
     </div>
