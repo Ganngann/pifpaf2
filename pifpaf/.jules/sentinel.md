@@ -1,0 +1,5 @@
+
+## 2026-07-23 - Insecure Direct Object Reference in Bulk Reorder
+**Vulnerability:** IDOR in the ItemImageController@reorder method. When users passed an array of image IDs, the controller only validated authorization against the first ID. A malicious user could pass their own image ID as the first element, and another user's image ID in subsequent elements, allowing them to modify the order of images they didn't own.
+**Learning:** When performing bulk updates based on an array of IDs, it is insufficient to check authorization against just one ID. The authorization check must ensure all submitted IDs belong to the authorized parent model.
+**Prevention:** When mitigating IDOR for bulk updates, authorize the parent model and ensure *all* submitted IDs belong to it by querying the relationship (e.g., `$model->children()->whereIn('id', $ids)->count()`) and asserting the retrieved count exactly matches the input array length. Alternatively, scope the update query to the authorized model's relationship instead of updating the child model directly.
