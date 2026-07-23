@@ -128,4 +128,39 @@ class ItemImageControllerTest extends TestCase
         ]);
         $responseReorder->assertForbidden();
     }
+
+    public function test_user_cannot_reorder_other_users_images_in_bulk(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $item = Item::factory()->create(['user_id' => $user->id]);
+        $otherItem = Item::factory()->create(['user_id' => $otherUser->id]);
+
+        $image1 = ItemImage::create([
+            'item_id' => $item->id,
+            'path' => 'fake1.jpg',
+            'is_primary' => false,
+            'order' => 0,
+        ]);
+
+        $image2 = ItemImage::create([
+            'item_id' => $otherItem->id,
+            'path' => 'fake2.jpg',
+            'is_primary' => false,
+            'order' => 1,
+        ]);
+
+        $response = $this->actingAs($user)->postJson(route('item-images.reorder'), [
+            'ids' => [$image1->id, $image2->id],
+        ]);
+
+        $response->assertForbidden();
+
+        // Assert victim's image was not modified
+        $this->assertDatabaseHas('item_images', [
+            'id' => $image2->id,
+            'order' => 1,
+        ]);
+    }
 }
