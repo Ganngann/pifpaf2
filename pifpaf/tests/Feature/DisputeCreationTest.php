@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Enums\TransactionStatus;
-use App\Models\Dispute;
 use App\Models\Item;
 use App\Models\Offer;
 use App\Models\Transaction;
@@ -76,5 +75,42 @@ class DisputeCreationTest extends TestCase
             'reason' => 'This is a test reason for the dispute. It is long enough to pass validation.',
         ]);
         $this->assertEquals(TransactionStatus::DISPUTED, $transaction->fresh()->status);
+    }
+
+    public function test_unauthorized_user_cannot_create_a_dispute()
+    {
+        $buyer = User::factory()->create();
+        $seller = User::factory()->create();
+        $unauthorizedUser = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::PAYMENT_RECEIVED]);
+
+        $response = $this->actingAs($unauthorizedUser)->post(route('disputes.store', $transaction), [
+            'reason' => 'This is a test reason for the dispute. It is long enough to pass validation.',
+        ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('disputes', [
+            'transaction_id' => $transaction->id,
+        ]);
+    }
+
+    public function test_seller_cannot_create_a_dispute()
+    {
+        $buyer = User::factory()->create();
+        $seller = User::factory()->create();
+        $item = Item::factory()->create(['user_id' => $seller->id]);
+        $offer = Offer::factory()->create(['item_id' => $item->id, 'user_id' => $buyer->id]);
+        $transaction = Transaction::factory()->create(['offer_id' => $offer->id, 'status' => TransactionStatus::PAYMENT_RECEIVED]);
+
+        $response = $this->actingAs($seller)->post(route('disputes.store', $transaction), [
+            'reason' => 'This is a test reason for the dispute. It is long enough to pass validation.',
+        ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('disputes', [
+            'transaction_id' => $transaction->id,
+        ]);
     }
 }

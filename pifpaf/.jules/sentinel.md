@@ -1,0 +1,4 @@
+## 2026-07-25 - Insecure Direct Object Reference (IDOR) in Dispute Creation
+**Vulnerability:** The `DisputeController`'s `create` and `store` methods lacked authorization checks, allowing any authenticated user to open a dispute for any transaction by explicitly calling the endpoint with a valid transaction ID.
+**Learning:** Controllers that handle business actions (like creating disputes for transactions) but do not extend a base controller with `AuthorizesRequests` can easily miss crucial permission checks if relying solely on UI hidden buttons.
+**Prevention:** Always enforce authorization at the controller level using `abort_unless()` or by explicitly importing the `AuthorizesRequests` trait and using `$this->authorize()` to verify model ownership or relationship permissions on every protected endpoint.
