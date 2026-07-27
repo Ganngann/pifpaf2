@@ -9,13 +9,13 @@
                     <!-- Champ de recherche par mot-clé -->
                     <div class="flex-grow min-w-[200px] md:flex-grow-[2]">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Recherche</label>
-                        <input type="text" id="search" name="search" placeholder="Que recherchez-vous ?" class="w-full px-4 py-2 border rounded-lg" value="{{ request('search') }}">
+                        <input type="text" id="search" name="search" placeholder="Que recherchez-vous ?" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" value="{{ request('search') }}">
                     </div>
 
                     <!-- Filtre par catégorie -->
                     <div class="flex-grow min-w-[150px]">
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-                        <select id="category" name="category" class="w-full px-4 py-2 border rounded-lg">
+                        <select id="category" name="category" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                             <option value="">Toutes</option>
                             <option value="Vêtements" @if(request('category') == 'Vêtements') selected @endif>Vêtements</option>
                             <option value="Électronique" @if(request('category') == 'Électronique') selected @endif>Électronique</option>
@@ -30,9 +30,9 @@
                     <div class="flex-grow min-w-[180px]">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
                         <div class="flex items-center gap-2">
-                            <input type="number" name="min_price" placeholder="Min" class="w-full px-2 py-2 border rounded-lg" value="{{ request('min_price') }}">
+                            <input type="number" name="min_price" aria-label="Prix minimum" placeholder="Min" class="w-full px-2 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" value="{{ request('min_price') }}">
                             <span>-</span>
-                            <input type="number" name="max_price" placeholder="Max" class="w-full px-2 py-2 border rounded-lg" value="{{ request('max_price') }}">
+                            <input type="number" name="max_price" aria-label="Prix maximum" placeholder="Max" class="w-full px-2 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" value="{{ request('max_price') }}">
                         </div>
                     </div>
 
@@ -40,8 +40,8 @@
                     <div class="flex-grow min-w-[180px]">
                          <label class="block text-sm font-medium text-gray-700 mb-1">Localisation</label>
                          <div class="flex items-center gap-2">
-                            <input type="text" name="location" placeholder="Autour de..." class="w-full px-4 py-2 border rounded-lg" value="{{ request('location') }}">
-                            <select name="distance" class="w-full px-4 py-2 border rounded-lg">
+                            <input type="text" name="location" aria-label="Localisation" placeholder="Autour de..." class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" value="{{ request('location') }}">
+                            <select name="distance" aria-label="Distance maximale" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                                 <option value="">Dist.</option>
                                 <option value="10" @if(request('distance') == '10') selected @endif>10 km</option>
                                 <option value="25" @if(request('distance') == '25') selected @endif>25 km</option>
