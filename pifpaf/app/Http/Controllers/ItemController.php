@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ItemStatus;
-use App\Models\Address;
 use App\Models\AiRequest;
 use App\Models\Item;
+use App\Models\Transaction;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use App\Services\GoogleAiService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class ItemController extends Controller
 {
@@ -29,10 +28,10 @@ class ItemController extends Controller
 
         // Recherche par mot-clé dans le titre ou la description
         $query->when($request->filled('search'), function ($q) use ($request) {
-            $searchTerm = '%' . $request->input('search') . '%';
+            $searchTerm = '%'.$request->input('search').'%';
             $q->where(function ($subQuery) use ($searchTerm) {
                 $subQuery->where('title', 'like', $searchTerm)
-                         ->orWhere('description', 'like', $searchTerm);
+                    ->orWhere('description', 'like', $searchTerm);
             });
         });
 
@@ -69,7 +68,7 @@ class ItemController extends Controller
 
                 // Formule de Haversine pour calculer la distance
                 // 6371 est le rayon de la Terre en kilomètres.
-                $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+                $haversine = '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))';
 
                 $addressIds = DB::table('addresses')
                     ->select('id')
@@ -78,7 +77,7 @@ class ItemController extends Controller
                     ->pluck('id');
 
                 $query->whereIn('address_id', $addressIds)
-                      ->where('pickup_available', true);
+                    ->where('pickup_available', true);
             }
         }
 
@@ -111,7 +110,7 @@ class ItemController extends Controller
         $status = $request->query('status');
         $validStatuses = [ItemStatus::AVAILABLE->value, ItemStatus::UNPUBLISHED->value, ItemStatus::SOLD->value];
 
-        if ($status && !in_array($status, $validStatuses)) {
+        if ($status && ! in_array($status, $validStatuses)) {
             abort(400, 'Invalid status filter.');
         }
 
@@ -122,7 +121,7 @@ class ItemController extends Controller
                 'images',
                 'offers' => function ($query) {
                     $query->with(['transaction', 'user']);
-                }
+                },
             ]);
 
         if ($status) {
@@ -144,34 +143,34 @@ class ItemController extends Controller
 
         $items = $itemsQuery->paginate(10)->appends($request->query());
 
-
         // Récupérer les transactions ouvertes (achats et ventes)
-        $openTransactions = \App\Models\Transaction::where(function ($query) use ($userId) {
+        $openTransactions = Transaction::where(function ($query) use ($userId) {
             $query->whereHas('offer', function ($q) use ($userId) {
                 $q->where('user_id', $userId); // Achats
             })->orWhereHas('offer.item', function ($q) use ($userId) {
                 $q->where('user_id', $userId); // Ventes
             });
         })
-        ->whereNotIn('status', ['completed', 'pickup_completed'])
-        ->with(['offer.item.designatedPrimaryImage', 'offer.item.images', 'offer.item.user', 'offer.user'])
-        ->latest('updated_at')
-        ->get();
+            ->whereNotIn('status', ['completed', 'pickup_completed'])
+            ->with(['offer.item.designatedPrimaryImage', 'offer.item.images', 'offer.item.user', 'offer.user'])
+            ->latest('updated_at')
+            ->get();
 
         // Filtrer les articles vendus en attente de retrait
         $soldItemsForPickup = $items->filter(function ($item) {
-            if ($item->status !== \App\Enums\ItemStatus::SOLD || !$item->pickup_available) {
+            if ($item->status !== ItemStatus::SOLD || ! $item->pickup_available) {
                 return false;
             }
             // Trouver l'offre qui a été payée
             $paidOffer = $item->offers->firstWhere('status', 'paid');
+
             // Vérifier si l'offre a une transaction et si cette transaction n'est pas encore complétée
             return $paidOffer && $paidOffer->transaction && $paidOffer->transaction->status !== 'pickup_completed';
         });
 
         // Récupérer les dernières ventes terminées pour l'historique
         $completedSales = $items->filter(function ($item) {
-            return $item->status === \App\Enums\ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
+            return $item->status === ItemStatus::SOLD && $item->offers->where('status', 'paid')->contains(function ($offer) {
                 return $offer->transaction && $offer->transaction->status === 'completed';
             });
         })->take(5);
@@ -185,16 +184,15 @@ class ItemController extends Controller
         ]);
     }
 
-
     /**
      * Affiche le formulaire de création d'annonce.
      */
     public function create()
     {
         $pickupAddresses = Auth::user()->pickupAddresses;
+
         return view('items.create', compact('pickupAddresses'));
     }
-
 
     /**
      * Crée une annonce non publiée à partir d'une sélection IA (AJAX).
@@ -214,7 +212,7 @@ class ItemController extends Controller
 
         $aiRequest = AiRequest::where('image_path', $originalPath)->first();
 
-        if (!$aiRequest) {
+        if (! $aiRequest) {
             return response()->json(['success' => false, 'message' => 'Requête IA non trouvée.']);
         }
 
@@ -227,12 +225,11 @@ class ItemController extends Controller
             return response()->json(['success' => false, 'message' => 'Cet objet a déjà été créé.']);
         }
 
-
-        if (!Storage::disk('public')->exists($originalPath)) {
+        if (! Storage::disk('public')->exists($originalPath)) {
             return response()->json(['success' => false, 'message' => 'Image originale non trouvée.']);
         }
 
-        $manager = new ImageManager(new Driver());
+        $manager = new ImageManager(new Driver);
         $image = $manager->read(Storage::disk('public')->path($originalPath));
 
         $x1 = $box['x1'] / 1000.0;
@@ -245,8 +242,8 @@ class ItemController extends Controller
         $x = $x1 * $image->width();
         $y = $y1 * $image->height();
 
-        $croppedImage = $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
-        $croppedImageName = 'cropped_' . uniqid() . '.jpg';
+        $croppedImage = $image->crop((int) $width, (int) $height, (int) $x, (int) $y);
+        $croppedImageName = 'cropped_'.uniqid().'.jpg';
 
         $length = $itemData['length'] ?? null;
         $width = $itemData['width'] ?? null;
@@ -274,7 +271,7 @@ class ItemController extends Controller
             'delivery_available' => $delivery_available,
         ]);
 
-        $croppedImagePath = "item_images/{$item->id}/" . $croppedImageName;
+        $croppedImagePath = "item_images/{$item->id}/".$croppedImageName;
         Storage::disk('public')->put($croppedImagePath, (string) $croppedImage->encode());
 
         $item->images()->create([
@@ -286,10 +283,8 @@ class ItemController extends Controller
         $createdItemIds[$itemIndex] = $item->id;
         $aiRequest->update(['created_item_ids' => $createdItemIds]);
 
-
         return response()->json(['success' => true, 'item_url' => route('items.show', $item)]);
     }
-
 
     /**
      * Enregistre une nouvelle annonce dans la base de données.
@@ -329,7 +324,7 @@ class ItemController extends Controller
         if ($request->has('image_path')) {
             $tempPath = $request->input('image_path');
             if (Storage::disk('public')->exists($tempPath)) {
-                $newPath = "item_images/{$item->id}/" . basename($tempPath);
+                $newPath = "item_images/{$item->id}/".basename($tempPath);
                 Storage::disk('public')->move($tempPath, $newPath);
 
                 $item->images()->create([
@@ -406,9 +401,12 @@ class ItemController extends Controller
             // On récupère le dernier ordre pour continuer la séquence
             $order = $item->images()->max('order') + 1;
 
+            // Pre-calculate count to avoid N+1 query inside loop
+            $currentImageCount = $item->images()->count();
+
             foreach ($request->file('images') as $imageFile) {
                 // On vérifie qu'on ne dépasse pas la limite totale de 10 images
-                if ($item->images()->count() >= 10) {
+                if ($currentImageCount >= 10) {
                     break;
                 }
 
@@ -417,9 +415,10 @@ class ItemController extends Controller
                     'path' => $path,
                     'order' => $order++,
                 ]);
+
+                $currentImageCount++;
             }
         }
-
 
         return redirect()->route('dashboard')->with('success', 'Annonce mise à jour avec succès.');
     }
@@ -471,6 +470,7 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         $item->load('offers.transaction');
+
         return view('items.show', [
             'item' => $item,
         ]);
@@ -480,18 +480,18 @@ class ItemController extends Controller
     {
         $this->authorize('update', $item);
 
-        if ($item->status === \App\Enums\ItemStatus::AVAILABLE) {
-            $item->status = \App\Enums\ItemStatus::UNPUBLISHED;
+        if ($item->status === ItemStatus::AVAILABLE) {
+            $item->status = ItemStatus::UNPUBLISHED;
         } else {
-            $item->status = \App\Enums\ItemStatus::AVAILABLE;
+            $item->status = ItemStatus::AVAILABLE;
         }
 
         $item->save();
 
         return response()->json([
             'newStatus' => $item->status,
-            'newStatusText' => $item->status === \App\Enums\ItemStatus::AVAILABLE ? 'En ligne' : 'Hors ligne',
-            'isAvailable' => $item->status === \App\Enums\ItemStatus::AVAILABLE,
+            'newStatusText' => $item->status === ItemStatus::AVAILABLE ? 'En ligne' : 'Hors ligne',
+            'isAvailable' => $item->status === ItemStatus::AVAILABLE,
         ]);
     }
 }
