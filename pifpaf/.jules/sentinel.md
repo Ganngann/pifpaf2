@@ -1,0 +1,4 @@
+## 2025-05-18 - IDOR in Bulk Image Reordering
+**Vulnerability:** In `ItemImageController@reorder`, the authorization was only checked for the first item ID in the submitted array `ItemImage::find($request->ids[0])`. The subsequent loop blindly updated any `ItemImage` by ID, allowing an attacker to submit an array containing their own image ID first, followed by another user's image ID, thereby reordering images they do not own (IDOR).
+**Learning:** Checking authorization only on the first element of an array in bulk operations is a common pattern that fails to protect subsequent elements. Bulk endpoints are highly susceptible to IDOR if the operation inside the loop isn't scoped.
+**Prevention:** Always scope the database operation inside the loop to the authorized parent entity. E.g., `ItemImage::where('id', $id)->where('item_id', $itemImage->item_id)->update(...)`.

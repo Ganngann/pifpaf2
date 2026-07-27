@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemImage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ItemImageController extends Controller
 {
@@ -14,8 +15,7 @@ class ItemImageController extends Controller
     /**
      * Supprime une image d'annonce.
      *
-     * @param  \App\Models\ItemImage  $itemImage
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy(ItemImage $itemImage)
     {
@@ -37,8 +37,7 @@ class ItemImageController extends Controller
     /**
      * Définit une image comme principale.
      *
-     * @param  \App\Models\ItemImage  $itemImage
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function setPrimary(ItemImage $itemImage)
     {
@@ -59,8 +58,7 @@ class ItemImageController extends Controller
     /**
      * Réorganise l'ordre des images.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function reorder(Request $request)
     {
@@ -72,8 +70,12 @@ class ItemImageController extends Controller
         $itemImage = ItemImage::find($request->ids[0]);
         $this->authorize('update', $itemImage->item);
 
+        // 🛡️ SECURITY: Scope update to only images belonging to the authorized item
+        // This prevents Insecure Direct Object Reference (IDOR) during bulk update
         foreach ($request->ids as $index => $id) {
-            ItemImage::where('id', $id)->update(['order' => $index]);
+            ItemImage::where('id', $id)
+                ->where('item_id', $itemImage->item_id)
+                ->update(['order' => $index]);
         }
 
         return response()->json(['success' => true]);
